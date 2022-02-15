@@ -1,9 +1,6 @@
 -- @description Copy selected item notes to clipboard
 -- @author Thomas Imbert
--- @version 1.0 
--- @metapackage
--- @provides
---   [main] . > timbert_Copy selected item notes to clipboard.lua
+-- @version 1.0
 -- @link 
 -- @about 
 -- @changelog
