@@ -1,9 +1,6 @@
 -- @description Clear clipboard
 -- @author Thomas Imbert
 -- @version 1.0 
--- @metapackage
--- @provides
---   [main] . > timbert_Clear clipboard.lua
 -- @link 
 -- @about 
 -- @changelog
