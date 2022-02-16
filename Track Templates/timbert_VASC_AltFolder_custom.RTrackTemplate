@@ -3,7 +3,8 @@
 @author Thomas Imbert
 @version 1.0
 @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
-@about A template to add a folder track "ALT" with 10 children "Alt_01, Alt_02"... tracks.  
+@about
+A template to add a folder track "ALT" with 10 children "Alt_01, Alt_02"... tracks.  
 The parent track is muted by default, and all the children track solo lead the parent in a group.  
 Made to be used with VASC tool.  
 I recommend using the default version of the template.  
