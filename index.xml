@@ -41,10 +41,19 @@
     </reapack>
   </category>
   <category name="Track Templates">
-    <reapack name="timbert_VASC_AltFolder.RTrackTemplate" type="tracktpl" desc="VASC ALT folder track template">
+    <reapack name="timbert_VASC_AltFolder_custom.RTrackTemplate" type="tracktpl" desc="VASC ALT folder track template (custom theme)">
       <version name="1.0.0" author="Thomas Imbert" time="2022-02-16T16:07:00Z">
         <changelog><![CDATA[+ Initial Release]]></changelog>
-        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e10a39a69b5a4ef6a5e871a71ffb7fa3ae6f0682/Track%20Templates/VASC_AltFolder.RTrackTemplate</source>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3a6f8160d70add23bfa95f627c7b276d483fb0f4/Track%20Templates/timbert_VASC_AltFolder_custom.RTrackTemplate</source>
+      </version>
+      <metadata>
+        <description><![CDATA[{\rtf1 {\fonttbl {\f0 Helvetica;}} \f0\fs60 A template to add a folder track "ALT" with 10 children "Alt_01, Alt_02"... tracks. The parent track is muted by default, and all the children track solo lead the parent in a group. Made to be used with VASC tool. I recommend using the default version of the template. }]]></description>
+      </metadata>
+    </reapack>
+    <reapack name="timbert_VASC_AltFolder_default.RTrackTemplate" type="tracktpl" desc="VASC ALT folder track template (default)">
+      <version name="1.0.0" author="Thomas Imbert" time="2022-02-16T20:26:00Z">
+        <changelog><![CDATA[+ Initial Release]]></changelog>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3a6f8160d70add23bfa95f627c7b276d483fb0f4/Track%20Templates/timbert_VASC_AltFolder_default.RTrackTemplate</source>
       </version>
       <metadata>
         <description><![CDATA[{\rtf1 {\fonttbl {\f0 Helvetica;}} \f0\fs60 A template to add a folder track "ALT" with 10 children "Alt_01, Alt_02"... tracks. The parent track is muted by default, and all the children track solo lead the parent in a group. Made to be used with VASC tool. }]]></description>
