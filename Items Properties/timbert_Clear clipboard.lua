@@ -1,8 +1,8 @@
--- @description Clear clipboard
--- @author Thomas Imbert
--- @version 1.0 
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Simply clears the current content of the clipboard
+-- @description Clear clipboard
+-- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
+-- @version 1.0 
+-- @author Thomas Imbert
 -- @changelog
 --   # Initial Release (2022-02-13)
 
