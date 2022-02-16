@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="589e138f42d67de12fed21d09afb62a71255c095">
+<index version="1" name="Thomas Imbert Scripts" commit="c073546c8cd9dae023dcd9af9f5d8113181067d3">
   <category name="Items Properties">
     <reapack name="timbert_Clear clipboard.lua" type="script" desc="Clear clipboard">
       <metadata>
@@ -48,7 +48,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-02-16T22:10:06Z">
         <changelog><![CDATA[# Initial Release (2022-02-16)]]></changelog>
-        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/589e138f42d67de12fed21d09afb62a71255c095/Track%20Templates/timbert_VASC_AltFolder_custom.RTrackTemplate</source>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c073546c8cd9dae023dcd9af9f5d8113181067d3/Track%20Templates/timbert_VASC_AltFolder_custom.RTrackTemplate</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC_AltFolder_default.RTrackTemplate" type="tracktpl" desc="VASC Alt track folder template (default)">
@@ -64,7 +64,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-02-16T22:10:06Z">
         <changelog><![CDATA[# Initial Release (2022-02-16)]]></changelog>
-        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/589e138f42d67de12fed21d09afb62a71255c095/Track%20Templates/timbert_VASC_AltFolder_default.RTrackTemplate</source>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c073546c8cd9dae023dcd9af9f5d8113181067d3/Track%20Templates/timbert_VASC_AltFolder_default.RTrackTemplate</source>
       </version>
     </reapack>
   </category>
