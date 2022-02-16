@@ -5,6 +5,7 @@
       <version name="1.0.0">
         <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Clear%20clipboard.lua</source>
       </version>
+    </reapack>
     <reapack name="Copy selected items notes to clipboard" type="script">
       <version name="1.0.0">
         <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
