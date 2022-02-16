@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="55b39acc03f0dd8864754167492c834e9ebc50bb">
+<index version="1" name="Thomas Imbert Scripts" commit="b82412863f38ed4b80336eb036cc9908f0f51889">
   <category name="Items Properties">
     <reapack name="timbert_Clear clipboard.lua" type="script" desc="Clear clipboard">
       <metadata>
@@ -98,12 +98,14 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 Select track by name: exclusively selects 'GUIDE' track.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This script was generated with "Lokasenna_Select tracks by name.lua"\par}
 }
 ]]></description>
         <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-02-16T22:10:06Z">
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/55b39acc03f0dd8864754167492c834e9ebc50bb/Tracks%20Properties/timbert_VASC%20Select%20Guide%20track%20exclusively.lua</source>
+        <changelog><![CDATA[# Initial Release (2022-02-16)]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b82412863f38ed4b80336eb036cc9908f0f51889/Tracks%20Properties/timbert_VASC%20Select%20Guide%20track%20exclusively.lua</source>
       </version>
     </reapack>
   </category>
