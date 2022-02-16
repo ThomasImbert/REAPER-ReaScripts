@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Slybebop Scripts">
-  <category name="Item Properties">
+<index version="1" name="Thomas Imbert">
+  <category name="Items Properties">
     <reapack name="Clear clipboard" type="script">
       <version name="1.0.0">
-        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Clear%20clipboard.lua</source>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/2b51f5c06b95caa63c583e036637504af516628d/Items%20Properties/timbert_Clear%20clipboard.lua</source>
+        <author>Thomas Imbert</author>
       </version>
+      <metadata>
+        <description><![CDATA[{\rtf1 {\fonttbl {\f0 Helvetica;}} \f0\fs60 Simply clears the current content of the clipboard}]]></description>
+      </metadata>
     </reapack>
-    <reapack name="Copy selected items notes to clipboard" type="script">
+    <reapack name="Copy selected item notes to clipboard" type="script">
       <version name="1.0.0">
-        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
+        <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/2b51f5c06b95caa63c583e036637504af516628d/Items%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
+        <author>Thomas Imbert</author>
       </version>
+      <metadata>
+        <description><![CDATA[{\rtf1 {\fonttbl {\f0 Helvetica;}} \f0\fs60 Copies the content of the notes from a single item}]]></description>
+      </metadata>
     </reapack>
   </category>
 </index>
