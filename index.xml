@@ -41,7 +41,7 @@
     </reapack>
   </category>
   <category name="Track Templates">
-    <reapack name="VASC Alt folder track template" type="tracktpl">
+    <reapack name="VASC_AltFolder.RTrackTemplate" type="tracktpl">
       <version name="1.0.0" author="Thomas Imbert" time="2022-02-16T16:07:00Z">
         <changelog><![CDATA[+ Initial Release]]></changelog>
         <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/b0a265a5d0ce1ae7f7a85a08bcd54eef654a4663/Track%20Templates/VASC_AltFolder.RTrackTemplate</source>
