@@ -2,7 +2,7 @@
 -- @author Thomas Imbert
 -- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about
+-- @about 
 --   Select track by name: exclusively selects 'GUIDE' track.  
 --
 --   This script was generated with "Lokasenna_Select tracks by name.lua"  
