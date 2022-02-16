@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <index version="1" name="Thomas I. Scripts" commit="b9e0b2fa56ff3d110571bf50b74677b7399d946f">
   <category name="Item Properties">
-    <reapack name="Clear clipboard" type="reascript">
+    <reapack name="Clear clipboard" type="script">
       <version name="1.0.0">
         <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Clear%20clipboard.lua</source>
       </version>
-    <reapack name="Copy selected items notes to clipboard" type="reascript">
+    <reapack name="Copy selected items notes to clipboard" type="script">
       <version name="1.0.0">
         <source>https://github.com/ThomasImbert/REAPER-ReaScripts/blob/d695d737428a389725d682ca175b9f3341a816ad/Item%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
       </version>
