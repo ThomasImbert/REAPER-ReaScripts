@@ -67,4 +67,24 @@
       </metadata>
     </reapack>
   </category>
+  <metadata>
+    <description>
+      <![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Thomas Imbert's Scripts Repository\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Personal collection of scripts for REAPER.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 Installation\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Copy and paste this URL in Extensions > ReaPack > Import a repository:\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1 https://raw.githubusercontent.com/ThomasImbert/REAPER-ReaScripts/master/index.xml\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs32 Reach out!\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Have a question or some feedback? Send it here! {\field{\*\fldinst{HYPERLINK "thomas.imbert.support@pm.me"}}{\fldrslt{\ul
+development thread
+}}}
+.\par}
+}
+]]>
+    </description>
+  </metadata>
 </index>
