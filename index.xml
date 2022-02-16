@@ -102,4 +102,17 @@
       </version>
     </reapack>
   </category>
+  <metadata>
+    <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Thomas Imbert's Reaper scripts\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 A collection of scripts for Reaper, most notably the Voice Acting Spreadsheet Connect (VASC) tool.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 Installation\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Copy and paste this URL in Extensions > ReaPack > Import a repository:\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1 https://raw.githubusercontent.com/ThomasImbert/REAPER-ReaScripts/master/index.xml\par}
+}
+]]></description>
+  </metadata>
 </index>
