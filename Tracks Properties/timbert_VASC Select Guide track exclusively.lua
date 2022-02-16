@@ -1,9 +1,8 @@
--- @description Select track by name: adds 'ALT' track and its children to track selection
+-- @description VASC Exclusively selects 'GUIDE' track
 -- @author Thomas Imbert
 -- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Select track by name: exclusively selects 'GUIDE' track.
--- This script was generated with "Lokasenna_Select tracks by name.lua"
+-- @about Select track by name: exclusively selects 'GUIDE' track. <br /> This script was generated with "Lokasenna_Select tracks by name.lua"
 -- @changelog 
 --   # Initial Release (2022-02-13)
 

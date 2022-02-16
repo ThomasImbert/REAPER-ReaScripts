@@ -1,10 +1,8 @@
--- @description Select track by name: adds 'ALT' track and its children to track selection
+-- @description VASC Adds 'ALT' track folder track and its children to track selection
 -- @author Thomas Imbert
 -- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Select track by name: adds 'ALT' track and its children to track selection.
---
--- This script was generated with "Lokasenna_Select tracks by name.lua"
+-- @about Select track by name: adds 'ALT' track and its children to track selection. <br /> This script was generated with "Lokasenna_Select tracks by name.lua"
 -- @changelog 
 --   # Initial Release (2022-02-13)
 
