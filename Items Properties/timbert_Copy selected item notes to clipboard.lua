@@ -1,8 +1,8 @@
 -- @description Copy selected item notes to clipboard
 -- @author Thomas Imbert
 -- @version 1.0
--- @link 
--- @about 
+-- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
+-- @about Copies the content of the notes from a single item.
 -- @changelog
 --   # Initial Release (2022-02-13)
 
