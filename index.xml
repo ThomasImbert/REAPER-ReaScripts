@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="a4036831cae383fc1adbac8791506287cc131a8f">
+<index version="1" name="Thomas Imbert Scripts" commit="86794cf3dbe286c6063020a8877c3855a68a05a5">
   <category name="Items Properties">
     <reapack name="timbert_Clear clipboard.lua" type="script" desc="Clear clipboard">
       <metadata>
@@ -31,6 +31,59 @@
       <version name="1.0" author="Thomas Imbert" time="2022-02-16T22:10:06Z">
         <changelog><![CDATA[# Initial Release (2022-02-13)]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3f0bda8d5cdfe0a0072574454123146800029448/Items%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Media Explorer">
+    <reapack name="timbert_Add custom user columns for ASWG Dialog iXML Metadata.lua" type="script" desc="ASWG Dialog iXML Metadata Columns">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG specific to dialog in the Media explorer.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_Add%20custom%20user%20columns%20for%20ASWG%20Dialog%20iXML%20Metadata.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Add custom user columns for ASWG General iXML Metadata.lua" type="script" desc="ASWG General iXML Metadata Columns">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG General, Format and Recording Categories in the Media explorer.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_Add%20custom%20user%20columns%20for%20ASWG%20General%20iXML%20Metadata.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC Add custom user columns for ASWG iXML Metadata.lua" type="script" desc="ASWG iXML Metadata Columns for VASC">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG relevant to VASC tool in the Media explorer.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_VASC%20Add%20custom%20user%20columns%20for%20ASWG%20iXML%20Metadata.lua</source>
       </version>
     </reapack>
   </category>
