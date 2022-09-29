@@ -7,7 +7,6 @@
 --		Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and move to the Alt takes folder.
 --
 --		This script was generated using Lokasenna's "Generate script from custom action" and uses many actions found in various repositories, details found here "https://github.com/ThomasImbert/REAPER-ReaScripts/blob/master/README.md"
---
 -- @metapackage
 -- @provides
 --   [main=mediaexplorer] .

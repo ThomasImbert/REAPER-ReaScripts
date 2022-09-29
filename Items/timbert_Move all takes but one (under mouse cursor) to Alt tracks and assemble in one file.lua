@@ -9,7 +9,6 @@
 --		Note that this version of the script glues the takes together in the process to allow for a ProTools like punch record, found in my cycle actions "Record Punch PT Like" and "VASC Record Punch PT Like"
 --
 --		This script was generated using Lokasenna's "Generate script from custom action" and uses many actions found in various repositories, details found here "https://github.com/ThomasImbert/REAPER-ReaScripts/blob/master/README.md"
---
 -- @metapackage
 -- @provides
 --   [main=mediaexplorer] .
