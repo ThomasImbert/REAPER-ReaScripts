@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="86794cf3dbe286c6063020a8877c3855a68a05a5">
+<index version="1" name="Thomas Imbert Scripts" commit="4e0047cb1bd488cb76536989ccab3a3b4d6c134e">
+  <category name="Items">
+    <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/4e0047cb1bd488cb76536989ccab3a3b4d6c134e/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move all but first takes to Alt tracks.lua" type="script" desc="Move all but first takes to Alt tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/4e0047cb1bd488cb76536989ccab3a3b4d6c134e/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/4e0047cb1bd488cb76536989ccab3a3b4d6c134e/Items/timbert_Move%20all%20takes%20but%20one%20(under%20mouse%20cursor)%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Items Properties">
     <reapack name="timbert_Clear clipboard.lua" type="script" desc="Clear clipboard">
       <metadata>
