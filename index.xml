@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="beb0fccd40c20dfdc7dcb8caf7b1d29599c5f7e5">
+<index version="1" name="Thomas Imbert Scripts" commit="8e550490c0576b247f73ec4c01d478bd21f24bdf">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
@@ -13,7 +13,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/beb0fccd40c20dfdc7dcb8caf7b1d29599c5f7e5/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all but first takes to Alt tracks.lua" type="script" desc="Move all but first takes to Alt tracks">
@@ -28,7 +28,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/beb0fccd40c20dfdc7dcb8caf7b1d29599c5f7e5/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
@@ -43,7 +43,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/beb0fccd40c20dfdc7dcb8caf7b1d29599c5f7e5/Items/timbert_Move%20all%20takes%20but%20one%20(under%20mouse%20cursor)%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20takes%20but%20one%20(under%20mouse%20cursor)%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
   </category>
