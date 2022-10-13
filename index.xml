@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="ff983cd7e94974052d4a8de7ed8e09163c14c135">
+<index version="1" name="Thomas Imbert Scripts" commit="12b1caf8c4d3c233bae50bf738b64c014d4f8818">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
@@ -240,7 +240,7 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 A record punch similar to ProTool's, intended to work with VASC. it copies notes from the Guide track item onto the recorded take.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 A record punch similar to ProTool's, intended to work with VASC. Copies notes from the Guide track item onto the recorded take.\par}
 }
 ]]></description>
         <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
