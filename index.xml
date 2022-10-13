@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="12b1caf8c4d3c233bae50bf738b64c014d4f8818">
+<index version="1" name="Thomas Imbert Scripts" commit="494a07137060585abca05aa912c63cff5f2208cc">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
@@ -248,6 +248,10 @@
       <version name="1.0" author="Thomas Imbert" time="2022-10-13T15:22:28Z">
         <changelog><![CDATA[# Initial Release (2022-10-14)]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/ff983cd7e94974052d4a8de7ed8e09163c14c135/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+      </version>
+      <version name="1.1" author="Thomas Imbert" time="2022-10-13T17:45:02Z">
+        <changelog><![CDATA[# Prevented notes from being copied / pasted if Guide track is empty (or if VASC wasn't used for session setup essentially)]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/494a07137060585abca05aa912c63cff5f2208cc/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
       </version>
     </reapack>
   </category>
