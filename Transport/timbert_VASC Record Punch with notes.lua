@@ -1,10 +1,10 @@
 -- @description VASC Record Punch PT like with notes
 -- @author Thomas Imbert
--- @version 1.0
+-- @version 1.1
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about A record punch similar to ProTool's, intended to work with VASC. Copies notes from the Guide track item onto the recorded take.
 -- @changelog 
---   # Initial Release (2022-10-14)
+--   # Prevented notes from being copied / pasted if Guide track is empty (or if VASC wasn't used for session setup essentially)
 
 -- #local declarations#
 
@@ -30,6 +30,8 @@ local sws_selectItems_editCursor_onSelectedTracks = reaper.NamedCommandLookup("_
 local sws_saveSelectedItems = reaper.NamedCommandLookup("_SWS_SAVEALLSELITEMS1") 
 -- Get computer specific ID of "_SWS_RESTALLSELITEMS1"
 local sws_restoreSelectedItems = reaper.NamedCommandLookup("_SWS_RESTALLSELITEMS1") 
+-- Guide item present
+local isGuideItemPresent = true
 
 reaper.PreventUIRefresh(1)
 
@@ -54,35 +56,47 @@ function main()
 		reaper.Main_OnCommand(vasc_selectGuideTrack, 0)
 		-- _XENAKIOS_SELITEMSUNDEDCURSELTX
 		reaper.Main_OnCommand(sws_selectItems_editCursor_onSelectedTracks, 0)
-		-- timbert_Store selected item notes.lua
-		reaper.Main_OnCommand(vasc_storeItemNotes, 0)
-		-- SWS: Save Selected track(s) selected item(s), slot 1
-		reaper.Main_OnCommand(save_item_slot_1_ID, 0)
-		-- _SWS_RESTORESEL
-		reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
-		-- _SWS_RESTALLSELITEMS1
-		reaper.Main_OnCommand(sws_restoreSelectedItems, 0)
-		-- Script: timbert_Paste to selected item notes.lua
-		reaper.Main_OnCommand(vasc_pasteItemNotes, 0)
-		-- Item: Unselect (clear selection of all items)
-		reaper.Main_OnCommand(40289, 0)
-		-- timbert_VASC Select Guide track exclusively.lua
-		reaper.Main_OnCommand(vasc_selectGuideTrack, 0)
-		-- _SWS_RESTSELITEMS1
-		reaper.Main_OnCommand(restore_item_slot_1_ID, 0)
-		-- _SWS_RESTORESEL
-		reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
+			if reaper.CountSelectedMediaItems( 0 ) == 0 then
+				isGuideItemPresent = false
+			do return end -- Return if there is no Guide track information
+			else
+				-- timbert_Store selected item notes.lua
+				reaper.Main_OnCommand(vasc_storeItemNotes, 0)
+				-- SWS: Save Selected track(s) selected item(s), slot 1
+				reaper.Main_OnCommand(save_item_slot_1_ID, 0)
+				-- _SWS_RESTORESEL
+				reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
+				-- _SWS_RESTALLSELITEMS1
+				reaper.Main_OnCommand(sws_restoreSelectedItems, 0)
+				-- Script: timbert_Paste to selected item notes.lua
+				reaper.Main_OnCommand(vasc_pasteItemNotes, 0)
+				-- Item: Unselect (clear selection of all items)
+				reaper.Main_OnCommand(40289, 0)
+				-- timbert_VASC Select Guide track exclusively.lua
+				reaper.Main_OnCommand(vasc_selectGuideTrack, 0)
+				-- _SWS_RESTSELITEMS1
+				reaper.Main_OnCommand(restore_item_slot_1_ID, 0)
+				-- _SWS_RESTORESEL
+				reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
+			end
 	else
 		-- timbert_VASC Select Guide track exclusively.lua
 		reaper.Main_OnCommand(vasc_selectGuideTrack, 0)
 		-- _XENAKIOS_SELITEMSUNDEDCURSELTX
 		reaper.Main_OnCommand(sws_selectItems_editCursor_onSelectedTracks, 0)
-		-- timbert_Store selected item notes.lua
-		reaper.Main_OnCommand(vasc_storeItemNotes, 0)
-		-- _SWS_RESTORESEL
-		reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
-		-- Transport: Record
-		reaper.Main_OnCommand(1013, 0)	
+			if reaper.CountSelectedMediaItems( 0 ) == 0 then
+				isGuideItemPresent = false
+				-- Transport: Record
+				reaper.Main_OnCommand(1013, 0)	
+			do return end -- Just record if no Guide Track info, then return
+			else
+				-- timbert_Store selected item notes.lua
+				reaper.Main_OnCommand(vasc_storeItemNotes, 0)
+				-- _SWS_RESTORESEL
+				reaper.Main_OnCommand(sws_restoreTrackSelection, 0)
+			end
+				-- Transport: Record
+				reaper.Main_OnCommand(1013, 0)	
 	end
 end
 
