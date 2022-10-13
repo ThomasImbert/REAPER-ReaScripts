@@ -1,10 +1,10 @@
 -- @description VASC Record Punch PT like with notes
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.2
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about A record punch similar to ProTool's, intended to work with VASC. Copies notes from the Guide track item onto the recorded take.
 -- @changelog 
---   # Prevented notes from being copied / pasted if Guide track is empty (or if VASC wasn't used for session setup essentially)
+--   # Corrected the command ID for vasc custom scripts
 
 -- #local declarations#
 
@@ -17,13 +17,13 @@ local restore_item_slot_1_ID = reaper.NamedCommandLookup("_SWS_RESTSELITEMS1")
 -- Get computer specific ID of "_SWS_SAVESEL"
 local sws_saveCurrentTrackSelection = reaper.NamedCommandLookup("_SWS_SAVESEL") 
 -- Get computer specific ID of "timbert_VASC Select Guide track exclusively.lua"
-local vasc_selectGuideTrack = reaper.NamedCommandLookup("_RS09aad089649d67d41b3553419bbc062570f69fe7")
+local vasc_selectGuideTrack = reaper.NamedCommandLookup("_RS09e4c88661415e92899d61b0602828ac39dd57b0") 
 -- Get computer specific ID of "_SWS_RESTORESEL"
 local sws_restoreTrackSelection = reaper.NamedCommandLookup("_SWS_RESTORESEL")  
 -- Get computer specific ID of "timbert_Store selected item notes.lua"
-local vasc_storeItemNotes = reaper.NamedCommandLookup("_RS71a88093363c7138ff37c985534487b02a6738d4") 
+local vasc_storeItemNotes = reaper.NamedCommandLookup("_RSe0a325343212afb2446fd4aadf4ca7f7aeff0910") 
 -- Get computer specific ID of "Script: timbert_Paste to selected item notes.lua"
-local vasc_pasteItemNotes = reaper.NamedCommandLookup("_RS465de87b16682226804d7b9d85cf79e17e6d92e7") 
+local vasc_pasteItemNotes = reaper.NamedCommandLookup("_RScd71bd425b4a290215cef09d7a6b49754aaf970d") 
 -- Get computer specific ID of "_XENAKIOS_SELITEMSUNDEDCURSELTX"
 local sws_selectItems_editCursor_onSelectedTracks = reaper.NamedCommandLookup("_XENAKIOS_SELITEMSUNDEDCURSELTX") 
 -- Get computer specific ID of "_SWS_SAVEALLSELITEMS1"
@@ -60,7 +60,7 @@ function main()
 				isGuideItemPresent = false
 			do return end -- Return if there is no Guide track information
 			else
-				-- timbert_Store selected item notes.lua
+				-- timbert_Store selected item notes.lua 
 				reaper.Main_OnCommand(vasc_storeItemNotes, 0)
 				-- SWS: Save Selected track(s) selected item(s), slot 1
 				reaper.Main_OnCommand(save_item_slot_1_ID, 0)
