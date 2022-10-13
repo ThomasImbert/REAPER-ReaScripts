@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="8e550490c0576b247f73ec4c01d478bd21f24bdf">
+<index version="1" name="Thomas Imbert Scripts" commit="b679dda2c63c8726393a6afacab5d34690b396ea">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
-        <description>
-  <![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
@@ -22,8 +21,7 @@
     </reapack>
     <reapack name="timbert_Move all but first takes to Alt tracks.lua" type="script" desc="Move all but first takes to Alt tracks">
       <metadata>
-        <description>
-  <![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
@@ -40,8 +38,7 @@
     </reapack>
     <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
       <metadata>
-        <description>
-  <![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
@@ -75,20 +72,36 @@
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3f0bda8d5cdfe0a0072574454123146800029448/Items%20Properties/timbert_Clear%20clipboard.lua</source>
       </version>
     </reapack>
-    <reapack name="timbert_Copy selected item notes to clipboard.lua" type="script" desc="Copy selected item notes to clipboard">
+    <reapack name="timbert_Paste to selected item notes.lua" type="script" desc="Paste stored notes from ProjExtState &quot;vascReaper&quot; &quot;vascNotes&quot; to selected item.">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 Copies the content of the notes from a single item.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Paste stored content to selected item notes\par}
 }
 ]]></description>
         <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
       </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-02-16T22:10:06Z">
-        <changelog><![CDATA[# Initial Release (2022-02-13)]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3f0bda8d5cdfe0a0072574454123146800029448/Items%20Properties/timbert_Copy%20selected%20item%20notes%20to%20clipboard.lua</source>
+      <version name="1.0" author="Thomas Imbert" time="2022-10-13T11:04:32Z">
+        <changelog><![CDATA[# Initial Release (2022-10-13)]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b679dda2c63c8726393a6afacab5d34690b396ea/Items%20Properties/timbert_Paste%20to%20selected%20item%20notes.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Store selected item notes.lua" type="script" desc="Stores the selected item's notes">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Copies the content of the notes from a single item into ProjExtState "vascReaper" "vascNotes".\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-10-13T11:04:32Z">
+        <changelog><![CDATA[# Initial Release (2022-10-13)]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b679dda2c63c8726393a6afacab5d34690b396ea/Items%20Properties/timbert_Store%20selected%20item%20notes.lua</source>
       </version>
     </reapack>
   </category>
