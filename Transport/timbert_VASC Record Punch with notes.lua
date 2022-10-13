@@ -1,7 +1,7 @@
 -- @description VASC Record Punch PT like with notes
 -- @author Thomas Imbert
 -- @version 1.0
--- @link 
+-- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about A record punch similar to ProTool's, intended to work with VASC. it copies notes from the Guide track item onto the recorded take.
 -- @changelog 
 --   # Initial Release (2022-10-14)
