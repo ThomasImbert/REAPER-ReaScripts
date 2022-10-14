@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="5464b6bb2510b574e8c08c6cb572086240f5dbd6">
+<index version="1" name="Thomas Imbert Scripts" commit="1846e31620fe036d3aec0c5d042afca7b0db481e">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
@@ -234,6 +234,22 @@
     </reapack>
   </category>
   <category name="Transport">
+    <reapack name="timbert_VASC Play or Stop with notes.lua" type="script" desc="VASC Play/Stop with notes">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Play/Stop command that pastes stored VASC Guide info in selected item.\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-10-14T01:05:52Z">
+        <changelog><![CDATA[# Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/1846e31620fe036d3aec0c5d042afca7b0db481e/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
+      </version>
+    </reapack>
     <reapack name="timbert_VASC Record Punch with notes.lua" type="script" desc="VASC Record Punch PT like with notes">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
