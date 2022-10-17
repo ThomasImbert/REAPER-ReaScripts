@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbertScripts" commit="fe4bc4c8cc702db10e426b1cb074e114f18d9d4d">
+<index version="1" name="TImbertScripts" commit="aa11667d251318134363d9944f4eabdd8c103e58">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -326,22 +326,6 @@
       <version name="1.0" author="Thomas Imbert" time="2022-10-17T14:33:12Z">
         <changelog><![CDATA[# Initial Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/84e395f317666566e2927c355c7aafaa45fa514b/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_VASC Record with context of previous line_LuaUtils.lua" type="script" desc="VASC Record with context of previous line Test LuaUtils">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Record and immediately preview the previous media item on the same track or in the project.\par}
-}
-]]></description>
-        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-10-17T15:49:56Z">
-        <changelog><![CDATA[# Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/0c13881d15a310388429a377289356b48dcf8f97/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line_LuaUtils.lua</source>
       </version>
     </reapack>
   </category>
