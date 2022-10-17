@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.2
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Initial Release
+--   # Added SWS local IDs and GuideTrack functions
 
 --[[
 
@@ -56,6 +56,34 @@ end
 function timbert.retToBool(ret)
   if ret == 1 then return true else return false end
 end
+
+-- sws local command ID
+
+local sws_save_item_slot_1_ID = reaper.NamedCommandLookup("_SWS_SAVESELITEMS1") -- Get computer specific ID of "SWS: Save Selected track(s) selected item(s), slot 1"
+local sws_restore_item_slot_1_ID = reaper.NamedCommandLookup("_SWS_RESTSELITEMS1") -- Get computer specific ID of "SWS: Restore Selected track(s) selected item(s), slot 1"
+local sws_saveCurrentTrackSelection = reaper.NamedCommandLookup("_SWS_SAVESEL") -- Get computer specific ID of "_SWS_SAVESEL"
+local sws_restoreTrackSelection = reaper.NamedCommandLookup("_SWS_RESTORESEL")  -- Get computer specific ID of "_SWS_RESTORESEL"
+local sws_toggleCurrentAndSavedTrackSelection = reaper.NamedCommandLookup("_SWS_TOGSAVESEL") -- Get computer specific ID of "_SWS_TOGSAVESEL" SWS: Toggle between current and saved track selection
+local sws_selectItems_editCursor_onSelectedTracks = reaper.NamedCommandLookup("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Get computer specific ID of "_XENAKIOS_SELITEMSUNDEDCURSELTX"
+local sws_saveSelectedItems = reaper.NamedCommandLookup("_SWS_SAVEALLSELITEMS1") -- Get computer specific ID of "_SWS_SAVEALLSELITEMS1"
+local sws_restoreSelectedItems = reaper.NamedCommandLookup("_SWS_RESTALLSELITEMS1") -- Get computer specific ID of "_SWS_RESTALLSELITEMS1"
+local sws_hozScroll = reaper.NamedCommandLookup("_SWS_HSCROLL10") -- Get computer specific ID of "_SWS_HSCROLL10"
+
+function timbert.swsCommand(nameSWS)
+	reaper.Main_OnCommand(nameSWS,0)
+end
+-- -- nameSWS reference --  -- 
+-- sws_save_item_slot_1_ID
+-- sws_restore_item_slot_1_ID
+-- sws_saveCurrentTrackSelection
+-- sws_restoreTrackSelection
+-- sws_toggleCurrentAndSavedTrackSelection
+-- sws_selectItems_editCursor_onSelectedTracks
+-- sws_saveSelectedItems
+-- sws_restoreSelectedItems
+-- sws_hozScroll
+
+---
 
 function timbert.storeNotes()
 	if reaper.CountSelectedMediaItems( 0 ) > 0 then -- Check that an item is selected
@@ -274,4 +302,30 @@ function timbert.smartRecord() -- amagalma_Smart automatic record mode converted
 	return end
 	reaper.Main_OnCommand(40253, 0) -- Set record mode to item auto-punch
 	reaper.Main_OnCommand(40046, 0) -- Transport: Start/stop recording at edit cursor
+end
+
+function timbert.getGuideTrackInfo()
+	local isGuideTrackInfo = true
+	timbert.swsCommand(sws_saveCurrentTrackSelection) -- Save current track selection
+	timbert.swsCommand(sws_saveSelectedItems) -- Save selected item(s)
+	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
+	timbert.selectTrack("Guide") -- Select Guide track exclusively
+	timbert.swsCommand(sws_selectItems_editCursor_onSelectedTracks) -- _XENAKIOS_SELITEMSUNDEDCURSELTX
+	if reaper.CountSelectedMediaItems( 0 ) == 0 then 
+		isGuideTrackInfo = false
+		timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- SWS: Toggle between current and saved track selection
+		timbert.swsCommand(sws_restoreSelectedItems) -- Restore selected item(s)
+	return isGuideTrackInfo end
+	timbert.storeNotes()
+	timbert.swsCommand(sws_save_item_slot_1_ID) -- Store the Guide Track item selection to get recalled after this function using selectStoredGuideTrackItem()
+	timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- SWS: Toggle between current and saved track selection
+	timbert.swsCommand(sws_restoreSelectedItems) -- Restore selected item(s)
+	return isGuideTrackInfo
+end
+
+function timbert.selectStoredGuideTrackItem() 
+	timbert.swsCommand(sws_saveCurrentTrackSelection) -- Save current track selection
+	timbert.selectTrack("Guide")
+	timbert.swsCommand(sws_restore_item_slot_1_ID) -- Restore Guide Track item selection
+	timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- Restore track selection
 end
