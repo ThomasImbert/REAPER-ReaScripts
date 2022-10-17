@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbertScripts" commit="ed8fd00708103260685a4b563f9478f1840b3b6a">
+<index version="1" name="TImbert Scripts" commit="ed8fd00708103260685a4b563f9478f1840b3b6a">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
