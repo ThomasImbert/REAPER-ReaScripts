@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="f992338d6a499a2e9204c66bb111b8605d62adb9">
+<index version="1" name="TImbert Scripts" commit="d53819c0be201a007ea3e994f7f4d2cbe60731d8">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -19,6 +19,10 @@
       <version name="1.1" author="Thomas Imbert" time="2022-10-17T17:04:50Z">
         <changelog><![CDATA[# Initial Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/47c4b8b369c94ed305e8067f0bf9265bdb2b8168/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.2" author="Thomas Imbert" time="2022-10-17T22:17:51Z">
+        <changelog><![CDATA[# Added SWS local IDs and GuideTrack functions]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d53819c0be201a007ea3e994f7f4d2cbe60731d8/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
