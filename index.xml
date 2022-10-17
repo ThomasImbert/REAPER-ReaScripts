@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="Thomas Imbert Scripts" commit="29776fed9c72c71b8bf0ce4356d20dce6bff1208">
+<index version="1" name="Thomas Imbert Scripts" commit="84e395f317666566e2927c355c7aafaa45fa514b">
   <category name="Items">
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
@@ -292,6 +292,22 @@
       <version name="1.3" author="Thomas Imbert" time="2022-10-13T23:26:46Z">
         <changelog><![CDATA[# Included the code of non-portable actions]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5464b6bb2510b574e8c08c6cb572086240f5dbd6/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC Record with context of previous line.lua" type="script" desc="VASC Record with context of previous line">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Record and immediately preview the previous media item on the same track or in the project.\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-10-17T14:33:12Z">
+        <changelog><![CDATA[# Initial Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/84e395f317666566e2927c355c7aafaa45fa514b/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
       </version>
     </reapack>
   </category>
