@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="85a51075c2ca59ded1164fb524557be1d40d8dca">
+<index version="1" name="TImbert Scripts" commit="f15514d9f8aa5166f80f35ff288358a319824618">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -35,6 +35,22 @@
     </reapack>
   </category>
   <category name="Items">
+    <reapack name="timbert_Move all but first take to Alt tracks.lua" type="script" desc="Move all but first take to Alt tracks">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \f1 Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and moved to the Alt takes folder.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.1" author="Thomas Imbert" time="2022-10-18T16:47:55Z">
+        <changelog><![CDATA[#Included non portable Code]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f15514d9f8aa5166f80f35ff288358a319824618/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks.lua</source>
+      </version>
+    </reapack>
     <reapack name="timbert_Move all but first takes to Alt tracks and assemble in one file.lua" type="script" desc="Move all but first takes to Alt tracks and assemble in one file">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -51,23 +67,6 @@
       <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_Move all but first takes to Alt tracks.lua" type="script" desc="Move all but first takes to Alt tracks">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and move to the Alt takes folder.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 This script was generated using Lokasenna's "Generate script from custom action" and uses many actions found in various repositories, details found here "https://github.com/ThomasImbert/REAPER-ReaScripts/blob/master/README.md"\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
-        <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20but%20first%20takes%20to%20Alt%20tracks.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
