@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="cf3c7bfd2f0c1efc51d13641d2b3fc1d51a43cf1">
+<index version="1" name="TImbert Scripts" commit="c01a1e0d6932372c18418c56a0c000814897675d">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -322,6 +322,10 @@
       <version name="1.3" author="Thomas Imbert" time="2022-10-13T23:26:46Z">
         <changelog><![CDATA[# Included the code of non-portable actions]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5464b6bb2510b574e8c08c6cb572086240f5dbd6/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+      </version>
+      <version name="1.4" author="Thomas Imbert" time="2022-10-18T00:21:50Z">
+        <changelog><![CDATA[# Cleaned up nested conditions and updated Lua Utilities Requirements]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c01a1e0d6932372c18418c56a0c000814897675d/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record with context of previous line.lua" type="script" desc="VASC Record with context of previous line">
