@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.2
+-- @version 1.3
 -- @metapackage
 -- @provides
 --   [main] .
@@ -59,29 +59,11 @@ end
 
 -- sws local command ID
 
-local sws_save_item_slot_1_ID = reaper.NamedCommandLookup("_SWS_SAVESELITEMS1") -- Get computer specific ID of "SWS: Save Selected track(s) selected item(s), slot 1"
-local sws_restore_item_slot_1_ID = reaper.NamedCommandLookup("_SWS_RESTSELITEMS1") -- Get computer specific ID of "SWS: Restore Selected track(s) selected item(s), slot 1"
-local sws_saveCurrentTrackSelection = reaper.NamedCommandLookup("_SWS_SAVESEL") -- Get computer specific ID of "_SWS_SAVESEL"
-local sws_restoreTrackSelection = reaper.NamedCommandLookup("_SWS_RESTORESEL")  -- Get computer specific ID of "_SWS_RESTORESEL"
-local sws_toggleCurrentAndSavedTrackSelection = reaper.NamedCommandLookup("_SWS_TOGSAVESEL") -- Get computer specific ID of "_SWS_TOGSAVESEL" SWS: Toggle between current and saved track selection
-local sws_selectItems_editCursor_onSelectedTracks = reaper.NamedCommandLookup("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Get computer specific ID of "_XENAKIOS_SELITEMSUNDEDCURSELTX"
-local sws_saveSelectedItems = reaper.NamedCommandLookup("_SWS_SAVEALLSELITEMS1") -- Get computer specific ID of "_SWS_SAVEALLSELITEMS1"
-local sws_restoreSelectedItems = reaper.NamedCommandLookup("_SWS_RESTALLSELITEMS1") -- Get computer specific ID of "_SWS_RESTALLSELITEMS1"
-local sws_hozScroll = reaper.NamedCommandLookup("_SWS_HSCROLL10") -- Get computer specific ID of "_SWS_HSCROLL10"
-
 function timbert.swsCommand(nameSWS)
-	reaper.Main_OnCommand(nameSWS,0)
+	swsID = reaper.NamedCommandLookup(nameSWS)
+	-- timbert.dbg(swsID.." is "..nameSWS)
+	reaper.Main_OnCommand(swsID , 0)
 end
--- -- nameSWS reference --  -- 
--- sws_save_item_slot_1_ID
--- sws_restore_item_slot_1_ID
--- sws_saveCurrentTrackSelection
--- sws_restoreTrackSelection
--- sws_toggleCurrentAndSavedTrackSelection
--- sws_selectItems_editCursor_onSelectedTracks
--- sws_saveSelectedItems
--- sws_restoreSelectedItems
--- sws_hozScroll
 
 ---
 
@@ -305,27 +287,36 @@ function timbert.smartRecord() -- amagalma_Smart automatic record mode converted
 end
 
 function timbert.getGuideTrackInfo()
+	reaper.PreventUIRefresh(1)
 	local isGuideTrackInfo = true
-	timbert.swsCommand(sws_saveCurrentTrackSelection) -- Save current track selection
-	timbert.swsCommand(sws_saveSelectedItems) -- Save selected item(s)
+	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection
+	-- timbert.swsCommand("_SWS_SAVESELITEMS1") -- Save selected track's selected item(s)
 	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
 	timbert.selectTrack("Guide") -- Select Guide track exclusively
-	timbert.swsCommand(sws_selectItems_editCursor_onSelectedTracks) -- _XENAKIOS_SELITEMSUNDEDCURSELTX
-	if reaper.CountSelectedMediaItems( 0 ) == 0 then 
+	timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- _XENAKIOS_SELITEMSUNDEDCURSELTX
+
+	if reaper.CountSelectedMediaItems( 0 ) ~= 1 then 
 		isGuideTrackInfo = false
-		timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- SWS: Toggle between current and saved track selection
-		timbert.swsCommand(sws_restoreSelectedItems) -- Restore selected item(s)
+		timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
+		timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore current track's selected item(s)
+		-- timbert.dbg(isGuideTrackInfo)
 	return isGuideTrackInfo end
+
 	timbert.storeNotes()
-	timbert.swsCommand(sws_save_item_slot_1_ID) -- Store the Guide Track item selection to get recalled after this function using selectStoredGuideTrackItem()
-	timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- SWS: Toggle between current and saved track selection
-	timbert.swsCommand(sws_restoreSelectedItems) -- Restore selected item(s)
+	timbert.swsCommand("_SWS_SAVESELITEMS1") -- Store the Guide Track item selection to get recalled after this function using selectStoredGuideTrackItem()
+	timbert.swsCommand("_SWS_RESTORESEL") -- SWS: Toggle between current and saved track selection
+	isGuideTrackInfo = true
+	-- timbert.dbg(isGuideTrackInfo)
+	reaper.PreventUIRefresh(-1)
 	return isGuideTrackInfo
 end
 
 function timbert.selectStoredGuideTrackItem() 
-	timbert.swsCommand(sws_saveCurrentTrackSelection) -- Save current track selection
+	reaper.PreventUIRefresh(1)
+	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection
 	timbert.selectTrack("Guide")
-	timbert.swsCommand(sws_restore_item_slot_1_ID) -- Restore Guide Track item selection
-	timbert.swsCommand(sws_toggleCurrentAndSavedTrackSelection) -- Restore track selection
+	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
+	timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore Guide Track item selection
+	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
+	reaper.PreventUIRefresh(-1)
 end
