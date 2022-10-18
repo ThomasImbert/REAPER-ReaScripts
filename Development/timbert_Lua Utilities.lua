@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.3
+-- @version 1.4
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added SWS local IDs and GuideTrack functions
+--   # Repaired timbert.selectTracks() function
 
 --[[
 
@@ -171,6 +171,81 @@ local function merge_tables(...)
 
 end
 
+-- Returns an array of MediaTrack == true for all parents of the given MediaTrack
+local function recursive_parents(track)
+    if reaper.GetTrackDepth(track) == 0 then
+        return {[track] = true}
+    else
+        local ret = recursive_parents( reaper.GetParentTrack(track) )
+        ret[track] = true
+        return ret
+    end
+end
+
+local function get_children(tracks)
+    local children = {}
+    for idx in pairs(tracks) do
+
+        local tr = reaper.GetTrack(0, idx - 1)
+        local i = idx + 1
+        while i <= reaper.CountTracks(0) do
+            children[i] = recursive_parents( reaper.GetTrack(0, i-1) )[tr] == true
+            if not children[i] then break end
+            i = i + 1
+        end
+    end
+    return children
+end
+
+local function get_parents(tracks)
+    local parents = {}
+    for idx in pairs(tracks) do
+
+        local tr = reaper.GetTrack(0, idx - 1)
+        for tr in pairs( recursive_parents(tr)) do
+            parents[ math.floor( reaper.GetMediaTrackInfo_Value(tr, "IP_TRACKNUMBER") ) ] = true
+        end
+    end
+    return parents
+end
+
+local function get_top_level_tracks()
+    local top = {}
+    for i = 1, reaper.CountTracks() do
+        if reaper.GetTrackDepth( reaper.GetTrack(0, i-1) ) == 0 then
+            top[i] = true
+        end
+    end
+    return top
+end
+
+local function get_siblings(tracks)
+    local siblings = {}
+    for idx in pairs(tracks) do
+
+        local tr = reaper.GetTrack(0, idx - 1)
+        local sibling_depth = reaper.GetTrackDepth(tr)
+
+        if sibling_depth > 0 then
+            local parent = reaper.GetParentTrack(tr)
+
+            local children = get_children( {[reaper.GetMediaTrackInfo_Value(parent, "IP_TRACKNUMBER")] = true} )
+            for child_idx in pairs(children) do
+
+                -- Can't use siblings[idx] = ___ here because we don't want to set existing
+                -- siblings to false
+                if reaper.GetTrackDepth( reaper.GetTrack(0, child_idx-1) ) == sibling_depth then
+                    siblings[child_idx] = true
+                end
+            end
+        else
+            -- Find all top-level tracks
+            siblings = merge_tables(siblings, get_top_level_tracks())
+        end
+    end
+    return siblings
+end
+
 local function get_tracks_to_sel(settings)
     --[[
 	   settings = {
@@ -205,7 +280,11 @@ local function get_tracks_to_sel(settings)
 	   if not k then return {} end
     end
 
-    return merge_tables(matches)
+	local parents = settings.selparents and get_parents(matches)
+    local children = settings.selchildren and get_children(matches)
+	local siblings = settings.selsiblings and get_siblings(matches)
+
+    return merge_tables(matches, parents, children, siblings)
 end
 
 local function set_selection(tracks, settings)
