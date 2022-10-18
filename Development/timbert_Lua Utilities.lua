@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.4
+-- @version 1.5
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Repaired timbert.selectTracks() function
+--   # Updated timbert.pasteNotes() to allow for multi item selection to paste to 
 
 --[[
 
@@ -18,11 +18,9 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/timbert Scripts/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 4.4 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
-
+if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.5 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]]
-
 
 timbert = {}
 
@@ -71,7 +69,8 @@ function timbert.storeNotes()
 	if reaper.CountSelectedMediaItems( 0 ) > 0 then -- Check that an item is selected
 		local selItem = reaper.GetSelectedMediaItem( 0 , 0 )
 		local itemNotes = ""
-		local boolean, itemNotes = reaper.GetSetMediaItemInfo_String(selItem , "P_NOTES", itemNotes, false)
+		local itemCount = reaper.CountSelectedMediaItems(0)
+		boolean, itemNotes = reaper.GetSetMediaItemInfo_String(selItem , "P_NOTES", itemNotes, false)
 		reaper.DeleteExtState( "vascReaper", "vascNotes", false )
 		reaper.SetProjExtState( 0, "vascReaper", "vascNotes", tostring(itemNotes)) 
 	end 
@@ -79,9 +78,13 @@ end
 
 function timbert.pasteNotes()     
 	if reaper.CountSelectedMediaItems( 0 ) > 0 then -- Check that an item is selected
-		local selItem = reaper.GetSelectedMediaItem( 0 , 0 )
-		retval, itemNotes = reaper.GetProjExtState( 0, "vascReaper", "vascNotes")
-		reaper.GetSetMediaItemInfo_String(selItem , "P_NOTES", itemNotes, true)
+		local itemCount = reaper.CountSelectedMediaItems(0)
+		local selItem
+		for i = 1, itemCount do
+			selItem = reaper.GetSelectedMediaItem( 0 , i-1 )
+			retval, itemNotes = reaper.GetProjExtState( 0, "vascReaper", "vascNotes")
+			reaper.GetSetMediaItemInfo_String(selItem , "P_NOTES", itemNotes, true)
+		end
 	end
 end
 
@@ -111,12 +114,12 @@ local function trackSelectionSettings(trackName) -- call this function to setup 
 	if trackName == "Alt" then
 	settings = {
 	  selparents = false,
-	  search = "ALT",
+	  search = "ALT_",
 	  selchildren = true,
 	  matchonlytop = false,
 	  selsiblings = false,
 	  add_selection = true,
-	  matchmultiple = false,
+	  matchmultiple = true,
 	}
 	end
 	return settings

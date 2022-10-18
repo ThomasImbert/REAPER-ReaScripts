@@ -1,10 +1,12 @@
--- @description Move all but first take to Alt tracks
+-- @description Move all but first takes to Alt tracks and assemble in one file
 -- @author Thomas Imbert
 -- @version 1.1
 -- @about
 --      To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".
 --
---          Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and moved to the Alt takes folder.
+--		Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and move to the Alt takes folder.
+--
+--		Note that this version of the script glues the takes together in the process to allow for a ProTools like punch record, found in my cycle actions "Record Punch PT Like" and "VASC Record Punch PT Like"
 -- @changelog
 --   #Included non portable Code
 
@@ -69,17 +71,45 @@ end
 
 -- End of Rename and renumber selected tracks, name by name.lua by juan_r
 
+local function makeItemsSeamless()  
+  local num_sel_items = reaper.CountSelectedMediaItems(0)
+  local item, bool, notes, itemNotes, data, item_chunk, itemData
+  local notes = ""
+  local itemsInfo = {}
+  if num_sel_items > 0 then
+    for i=1, num_sel_items do
+      item = reaper.GetSelectedMediaItem( 0, i-1 )
+      local item_start = reaper.GetMediaItemInfo_Value( item, "D_POSITION" )
+	  itemsInfo[i] = {
+		color =   reaper.GetDisplayedMediaItemColor( item ),
+		-- bool, notes = reaper.GetSetMediaItemInfo_String( item, "P_NOTES", notes, false ),
+		-- notesInfo = notes
+		}
+      local take = reaper.GetActiveTake( item )
+      reaper.AddProjectMarker( 0, 0, item_start, item_start, "#" .. tostring(i), i )
+    end
+	reaper.Main_OnCommand(42432, 0) -- Item: Glue items
+	reaper.Main_OnCommand(40931, 0) -- Item: Split items at project markers
+	reaper.Main_OnCommand(40297, 0) -- Track - Unselect (clear selection of) all tracks
+	reaper.Main_OnCommand(40420, 0) -- Markers: Remove all markers from time selection
+	for i=1, num_sel_items do
+		item = reaper.GetSelectedMediaItem( 0, i-1 )
+		reaper.SetMediaItemInfo_Value( item, "I_CUSTOMCOLOR", itemsInfo[i].color )  
+	end
+  end
+end
+
+
 local function moveItemToTracksEach()
 	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_2")
 	local item, newItem, trackNumber, selectedTrack, previousTrack, namePreviousTrack
     local itemCount = reaper.CountSelectedMediaItems(0)
-    if itemCount == 0 then 
-	return end
+    if itemCount == 0 then return end
 
 	local items = {}
 	for i = 1, itemCount do
 		item = reaper.GetSelectedMediaItem(0,i-1)
-		items[i] = reaper.BR_GetMediaItemGUID (item)
+		items[i] = reaper.BR_GetMediaItemGUID(item)
 	end
 	
 	for i = 1, #items do
@@ -121,32 +151,39 @@ local function main()
 	reaper.ClearConsole()
 	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
 	timbert.swsCommand("_SWS_SAVETIME1")
-	reaper.Main_OnCommand(40297, 0) -- Track - Unselect (clear selection of) all tracks
 	local itemFirst = reaper.GetSelectedMediaItem(0,0)
 	local itemFirstTrack = reaper.GetMediaItem_Track(itemFirst)
 	reaper.SetTrackSelected(itemFirstTrack , true) -- Selects track of the first of currently selected items
 	timbert.swsCommand("_SWS_SAVESEL") 
 	reaper.Main_OnCommand(40290, 0) -- Time Selection: Set time selection to items
+	makeItemsSeamless()
+    timbert.swsCommand("_SWS_SAVEALLSELITEMS1")
 	reaper.Main_OnCommand(40625, 0) -- Time selection: Set start point
 	reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
 	reaper.Main_OnCommand(40297, 0) -- Track - Unselect (clear selection of) all tracks
 	timbert.selectTrack("Alt") -- Add Alt children tracks to track selection
 	moveItemToTracksEach()
+	timbert.swsCommand("_SWS_RESTORESEL") 
+	if timbert.getGuideTrackInfo() == true then
+		timbert.swsCommand("_SWS_RESTALLSELITEMS1")
+		timbert.pasteNotes()
+	end
 	reaper.Main_OnCommand(40289, 0) -- Track - Unselect (clear selection of) all items
+	reaper.Main_OnCommand(40297, 0) -- Track - Unselect (clear selection of) all tracks
 	timbert.swsCommand("_SWS_RESTORESEL") 
 	reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
 	timbert.swsCommand("_SWS_RESTTIME1")
 	timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
-
 reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock()
 
 main()
 
-reaper.Undo_EndBlock('Move all but first take to Alt tracks', 0)
+reaper.Undo_EndBlock('Move all but first take to Alt tracks and assemble in one file', 0)
 
 reaper.PreventUIRefresh(-1)
 
 reaper.UpdateArrange()
+
