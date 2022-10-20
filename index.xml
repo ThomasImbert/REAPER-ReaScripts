@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="a4e9029f1aa0b1ef45df3267308badb66348e967">
+<index version="1" name="TImbert Scripts" commit="801e91c64a682efe9b8774b8a6b897ec4f375669">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -86,6 +86,22 @@
       <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20takes%20but%20one%20(under%20mouse%20cursor)%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Swap take with alt take under mouse cursor.lua" type="script" desc="- Swap take with alt take under mouse cursor">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Swap item under mouse cursor with the item on the main track above it.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-10-20T15:03:44Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/801e91c64a682efe9b8774b8a6b897ec4f375669/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
       </version>
     </reapack>
   </category>
