@@ -10,7 +10,7 @@
 --   # Initial Release (2022-11-03)
 
 local function main() 
-    reaper.ShowConsoleMsg("")
+    -- reaper.ShowConsoleMsg("")
     local cursPos = reaper.GetCursorPositionEx( 0 )
     local markeridx, regionidx = reaper.GetLastMarkerAndCurRegion( 0, cursPos )
     retval, isrgn, pos, rgnend, regionName, markrgnindexnumber = reaper.EnumProjectMarkers2( 0, regionidx )
