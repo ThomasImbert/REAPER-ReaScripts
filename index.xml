@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="801e91c64a682efe9b8774b8a6b897ec4f375669">
+<index version="1" name="TImbert Scripts" commit="d587ef05b5318738eb0f85a1c3dbb194c14c92ef">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -386,6 +386,25 @@
       <version name="1.2" author="Thomas Imbert" time="2022-10-18T01:43:15Z">
         <changelog><![CDATA[# Fixed Alt takes previewing and removed remaining clutter]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/85a51075c2ca59ded1164fb524557be1d40d8dca/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Various">
+    <reapack name="timbert_VASC Store region position for websync.lua" type="script" desc="VASC Store region position for sync">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Get the region at current cursor position and stores it in Proj Ext State\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This script is intended to work with VASC web interface and is called from it.\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-11-03T00:37:32Z">
+        <changelog><![CDATA[# Initial Release (2022-11-03)]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d587ef05b5318738eb0f85a1c3dbb194c14c92ef/Various/timbert_VASC%20Store%20region%20position%20for%20websync.lua</source>
       </version>
     </reapack>
   </category>
