@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="a08a5d8adf919f2d4166710289e37f0056e0c1e0">
+<index version="1" name="TImbert Scripts" commit="2cef231fae722d7aaa38d912a73624dfe75382e9">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -204,7 +204,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-05T23:45:04Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/a08a5d8adf919f2d4166710289e37f0056e0c1e0/Media%20Explorer/timbert_Add%20custom%20VASC%20user%20columns%20iXML%20Metadata%20(delete%20existing%20user%20columns).lua</source>
+        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/2cef231fae722d7aaa38d912a73624dfe75382e9/Media%20Explorer/timbert_Add%20custom%20VASC%20user%20columns%20iXML%20Metadata%20(delete%20existing%20user%20columns).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Add custom user columns for ASWG iXML Metadata.lua" type="script" desc="ASWG iXML Metadata Columns for VASC">
