@@ -18,36 +18,37 @@
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- Table of iXML Columns
-local iXML = {}
-iXML["IXML:USER:Embedder"]      = "Embedder"      
-
+local iXML = {} 
 iXML["ASWG:session"]            = "Session"
-iXML["ASWG:recEngineer"]        = "RecEngineer"
-iXML["ASWG:originatorStudio"]   = "Company"
-iXML["ASWG:recStudio"]          = "StudioRoom"
-iXML["ASWG:micType"]            = "Microphone"
-iXML["ASWG:director"]           = "Director"
-
+iXML["ASWG:language"]           = "Lang"
+iXML["ASWG:characterName"]      = "CharName"
+iXML["ASWG:actorName"]          = "ActorName"
+iXML["ASWG:timingRestriction"]  = "Timing"
 iXML["ASWG:text"]               = "Text"
+iXML["ASWG:direction"]          = "Direction"
+iXML["ASWG:projection"]         = "Projection"
 iXML["ASWG:efforts"]            = "Efforts"
 iXML["ASWG:effortType"]         = "EffortType"
-iXML["ASWG:projection"]         = "Projection"
-iXML["ASWG:language"]           = "Lang"
-iXML["ASWG:timingRestriction"]  = "Timing"
-iXML["ASWG:characterName"]      = "CharName"
-iXML["ASWG:characterGender"]    = "CharGender"
-iXML["ASWG:characterAge"]       = "CharAge"
+iXML["ASWG:notes"]              = "Notes"
 iXML["ASWG:characterRole"]      = "Role"
-iXML["ASWG:actorName"]          = "ActorName"
-iXML["ASWG:actorGender"]        = "ActorGender"
-iXML["ASWG:direction"]          = "Direction"
-iXML["ASWG:fxUsed"]             = "FxUsed"
-iXML["ASWG:usageRights"]        = "Rights"
-iXML["ASWG:isUnion"]            = "Union"
 iXML["ASWG:accent"]             = "Accent"
 iXML["ASWG:emotion"]            = "Emotion"
-iXML["IXML:USER:AnswerFile"]    = "AnswerFile"    
 iXML["IXML:USER:Interlocutor"]  = "Interlocutor"  
+iXML["ASWG:characterGender"]    = "CharGender"
+iXML["ASWG:characterAge"]       = "CharAge"
+
+iXML["ASWG:director"]           = "Director"
+iXML["ASWG:recEngineer"]        = "RecEngineer"
+iXML["ASWG:recStudio"]          = "StudioRoom"
+iXML["ASWG:micType"]            = "Microphone"
+iXML["ASWG:fxUsed"]             = "FxUsed"
+iXML["IXML:USER:AnswerFile"]    = "AnswerFile"    
+iXML["ASWG:originatorStudio"]   = "Company"
+
+iXML["ASWG:usageRights"]        = "Rights"
+iXML["ASWG:isUnion"]            = "Union"
+iXML["ASWG:actorGender"]        = "ActorGender"
+iXML["IXML:USER:Embedder"]      = "Embedder"     
 
 -- Other globals
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
