@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.5
+-- @version 1.6
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Updated timbert.pasteNotes() to allow for multi item selection to paste to 
+--   # Updated Select Guide to search for "VASC_GUIDE"
 
 --[[
 
@@ -104,7 +104,7 @@ local function trackSelectionSettings(trackName) -- call this function to setup 
 	if trackName == "Guide" then
 	settings = {
 	  matchmultiple = false,
-	  search = "GUIDE",
+	  search = "VASC_GUIDE",
 	  selchildren = false,
 	  selparents = false,
 	  selsiblings = false,

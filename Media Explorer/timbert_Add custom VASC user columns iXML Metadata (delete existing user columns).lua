@@ -19,6 +19,7 @@
 
 -- Table of iXML Columns
 local iXML = {} 
+iXML["ASWG:project"]            = "Project"
 iXML["ASWG:session"]            = "Session"
 iXML["ASWG:language"]           = "Lang"
 iXML["ASWG:characterName"]      = "CharName"
@@ -29,13 +30,13 @@ iXML["ASWG:direction"]          = "Direction"
 iXML["ASWG:projection"]         = "Projection"
 iXML["ASWG:efforts"]            = "Efforts"
 iXML["ASWG:effortType"]         = "EffortType"
-iXML["ASWG:notes"]              = "Notes"
 iXML["ASWG:characterRole"]      = "Role"
 iXML["ASWG:accent"]             = "Accent"
 iXML["ASWG:emotion"]            = "Emotion"
 iXML["IXML:USER:Interlocutor"]  = "Interlocutor"  
 iXML["ASWG:characterGender"]    = "CharGender"
 iXML["ASWG:characterAge"]       = "CharAge"
+iXML["ASWG:notes"]              = "Notes"
 
 iXML["ASWG:director"]           = "Director"
 iXML["ASWG:recEngineer"]        = "RecEngineer"
