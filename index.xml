@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="2cef231fae722d7aaa38d912a73624dfe75382e9">
+<index version="1" name="TImbert Scripts" commit="2a8e176a472325beb05f7f83484bf5b6cf41633e">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -35,6 +35,10 @@
       <version name="1.5" author="Thomas Imbert" time="2022-10-18T22:24:13Z">
         <changelog><![CDATA[# Updated timbert.pasteNotes() to allow for multi item selection to paste to ]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6166dc22429c462f6d4fd1067c16583d357528ba/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.6" author="Thomas Imbert" time="2022-11-06T01:59:56Z">
+        <changelog><![CDATA[# Updated Select Guide to search for "VASC_GUIDE"]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/2a8e176a472325beb05f7f83484bf5b6cf41633e/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
