@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="fc6c5ef497b4bbca1587d33e5d5d3251bf666a07">
+<index version="1" name="TImbert Scripts" commit="5f474d8159cb8619f385e647ca11ca9ca0bd7357">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -468,6 +468,16 @@
         <source file="VASC_lib/bootstrap.min.js.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/fc6c5ef497b4bbca1587d33e5d5d3251bf666a07/Web%20Interface/VASC_lib/bootstrap.min.js.map</source>
         <source file="VASC_lib/jquery-3.5.1.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/fc6c5ef497b4bbca1587d33e5d5d3251bf666a07/Web%20Interface/VASC_lib/jquery-3.5.1.min.js</source>
         <source file="VASC_lib/xlsx.full.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/fc6c5ef497b4bbca1587d33e5d5d3251bf666a07/Web%20Interface/VASC_lib/xlsx.full.min.js</source>
+      </version>
+      <version name="0.15" author="Thomas Imbert" time="2022-11-08T23:09:15Z">
+        <changelog><![CDATA[# Fixed script paths]]></changelog>
+        <source file="timbert_VASC.html">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/timbert_VASC.html</source>
+        <source file="VASC_lib/bootstrap.min.css">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/bootstrap.min.css</source>
+        <source file="VASC_lib/bootstrap.min.css.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/bootstrap.min.css.map</source>
+        <source file="VASC_lib/bootstrap.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/bootstrap.min.js</source>
+        <source file="VASC_lib/bootstrap.min.js.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/bootstrap.min.js.map</source>
+        <source file="VASC_lib/jquery-3.5.1.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/jquery-3.5.1.min.js</source>
+        <source file="VASC_lib/xlsx.full.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5f474d8159cb8619f385e647ca11ca9ca0bd7357/Web%20Interface/VASC_lib/xlsx.full.min.js</source>
       </version>
     </reapack>
   </category>
