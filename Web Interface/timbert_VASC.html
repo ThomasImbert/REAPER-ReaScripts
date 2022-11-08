@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--     
+    <link rel="stylesheet" type="text/css" href="ucs_libraries/flags32.css" />     
+    "https://stackoverflow.com/questions/15292114/html-radiobuttons-in-the-form-of-matrix-and-it-has-to-check-only-one-radio-butto"
+    -->
+    <link rel="stylesheet" href="VASC_lib/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>VASC: Voice Acting Spreadsheet Connect</title>
+
+    <style>
+        @media screen and (max-width: 600px) {
+          .column {
+            width: 100%; 
+          }
+        }
+
+        #formColumn {
+            padding-left: 1%;
+            column-gap: 5%;
+        }
+
+        .sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: rgb(252, 242, 236);
+            box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid #ccc;
+            padding: 16px;
+            /* font-size: 25px; */
+        }
+        
+        .stickyBlank {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 231x;
+            background-color: rgb(255, 255, 255);
+            /* box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.4); */
+            /* border-bottom: 1px solid #ccc; */
+        }
+
+        .collapsible {
+            background-color: rgb(253, 236, 227);
+            color: rgb(22, 36, 65);
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            font-size: 15px;
+            /* height: auto; */
+        }
+
+        .infoCard .collapsible {
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 0 18px;
+            overflow: hidden;
+            background-color: #ffffff;
+            transition: max-height 0.2s ease-out;
+            max-height: 0;
+        }
+        
+        .active .collapsible:hover {
+            background-color: rgb(241, 240, 240);
+        }
+/* 
+        #conformMatrix tr:hover {
+            background-color: rgba(255, 255, 0, 0.5);
+        } */
+
+        
+        /* hover Row */
+        .hoverCross td:hover::before { 
+            background: #96b4b6;
+            color:white;
+        }
+
+        #conformTable th {
+            text-align: center;
+        }
+
+        .previewTable tr:nth-child(n+6){
+            display:none            
+        }
+
+        .centeredTable {
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        table.inputTable th,
+        tbody>tr>:nth-child(7),
+        tbody>tr>:nth-child(8),
+        tbody>tr>:nth-child(10),
+        tbody>tr>:nth-child(11),
+        tbody>tr>:nth-child(14),
+        tbody>tr>:nth-child(15),
+        tbody>tr>:nth-child(17),
+        tbody>tr>:nth-child(19) {
+            text-align: center;
+        }
+
+        .stickyHeaderLive {
+            position: -webkit-sticky;
+            position: sticky;
+            inset-block-start: 0;
+            top: 0px;
+            background: rgb(255, 255, 255);
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #ccc;
+        }
+
+        /* Header */
+        .myMatrix thead>:first-child {
+            text-align: center;
+            max-width: calc(90% / 19);
+            height: 50px;
+            /* font-size:1vw; */
+        }
+
+        /* First Column, left panel */
+        .myMatrix tbody>tr>:first-child { 
+            text-align: left;
+            vertical-align: middle;
+            word-wrap: break-word;
+            width: 10%;
+            height: 50px
+        }
+
+        /*  all body cells except left column*/
+        .myMatrix tbody :not(tbody>td>:first-child){
+            text-align: center;
+            vertical-align: middle;
+            width: calc(90% / 19);
+            height: 50px;
+        }
+
+        /* input radio styling */
+        label > input[type="radio"] {
+            width: 25px !important;
+            height: 25px !important;
+        }
+
+
+        .cellDefault td {
+            min-width: 150px;
+        }
+
+        #myInputActor {
+            min-width: 300px;
+            width: 18%;
+            font-size: 16px;
+            /* Increase font-size */
+            padding: 12px 1px 12px 5px;
+            /* Add some padding */
+            border: 1px solid #ddd;
+            /* Add a grey border */
+            margin-bottom: 5px;
+            /* Add some space below the input */
+        }
+
+        #myInputCharacter {
+            min-width: 300px;
+            width: 18%;
+            font-size: 16px;
+            /* Increase font-size */
+            padding: 12px 1px 12px 5px;
+            /* Add some padding */
+            border: 1px solid #ddd;
+            /* Add a grey border */
+            margin-bottom: 5px;
+            /* Add some space below the input */
+        }
+
+        #fromLine {
+            width: 18%;
+            font-size: 16px;
+            /* Increase font-size */
+            padding: 12px 1px 12px 5px;
+            /* Add some padding */
+            border: 1px solid #ddd;
+            /* Add a grey border */
+            margin-bottom: 5px;
+            /* Add some space below the input */
+        }
+
+        #toLine {
+            width: 18%;
+            font-size: 16px;
+            /* Increase font-size */
+            padding: 12px 1px 12px 5px;
+            /* Add some padding */
+            border: 1px solid #ddd;
+            /* Add a grey border */
+            margin-bottom: 5px;
+            /* Add some space below the input */
+        }
+
+        #ignoredLines {
+            width: 18%;
+            font-size: 16px;
+            /* Increase font-size */
+            padding: 12px 1px 12px 5px;
+            /* Add some padding */
+            border: 1px solid #ddd;
+            /* Add a grey border */
+            margin-bottom: 5px;
+            /* Add some space below the input */
+        }
+
+
+        #inputTable tr.header,
+        #inputTable tr:hover {
+            /* Add a grey background color to the table header and on hover */
+            background-color: #f6cbff;
+        }
+
+        #conformTableFull tr.focus {
+            background-color: #cae0fa;
+        }
+
+        #myProgress {
+            margin-left: 40px;
+            width: 20%;
+            max-width: 200px;
+            background-color: rgb(199, 196, 196);
+        }
+
+        #myBar {
+            width: 0%;
+            height: 30px;
+            background-color: rgb(52, 134, 228);
+        }
+
+        /* BUTTON SUBMISSION ANIMATION */
+        .anim-trig {
+            animation: fadeOutRight 1s ease-in-out 0s 1 normal;
+        }
+
+        @-webkit-keyframes fadeOutRight {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(120%, 0, 0) scale3d(0.6, 0.6, 0.6);
+                transform: translate3d(120%, 0, 0) scale3d(0.6, 0.6, 0.6)
+            }
+        }
+
+        @keyframes fadeOutRight {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(120%, 0, 0) scale3d(0.6, 0.6, 0.6);
+                transform: translate3d(120%, 0, 0) scale3d(0.6, 0.6, 0.6)
+            }
+        }
+
+         /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #df2f46;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #4364c0;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        } 
+        
+        .center {
+            margin: 0;
+            position: absolute;
+            /* top: 0%; */
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .focusViewContainer {
+            width: 60%;
+            min-width: 800px;
+            max-width: 1200px;
+            margin-left: auto; 
+            margin-right: auto;
+            align-self: center;
+        }
+
+        .focusViewText {
+            position: relative;
+            font-size: large;
+            background-color: #e1f1e6;
+        }
+
+        .focusContextViewText {
+            position: relative;
+            font-size: medium;
+            color: #353535;
+            background-color: #ececec;
+        }
+
+        .fileName {
+            font-size: 80%;
+            text-align: right !important;
+        }
+
+        .actorName {
+            font-size: 75%;
+            text-align: center;
+            margin-bottom: 2px !important;
+        }
+
+        .interlocutor {
+            font-size: 90%;
+        }
+
+        .characterName {
+            font-size: 100%;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .notes {
+            text-align: left;
+            font-size: 80%;
+            margin-bottom: 4px;
+        }
+        .dialogText {
+            text-align: left;
+            font-size: 150%;
+            margin-bottom: 4px;
+        }
+
+        hr.dashed {
+            border-top: 3px dashed #bbb;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+    </style>
+
+    <!-- 
+    <script type="text/javascript" src="ucs_libraries/popper.min.js"></script>
+    <script type="text/javascript" src="ucs_libraries/bootstrap.min.js"></script>()
+    -->
+    <script src="VASC_lib/xlsx.full.min.js"></script>
+    <script src="/main.js"></script>
+    <script type="text/javascript" src="VASC_lib/jquery-3.5.1.min.js"></script>
+
+</head>
+
+<body>
+    <div id="setupPage">
+        <div class="container-fluid" style="width: 75%">
+            <h2 class="text-center mt-4 mb-4">Voice Acting Spreadsheet Connect</h2>
+            <div class="card">
+                <!-- Import xlsx file -->
+                <div class="card-header button collapsible" data-bs-toggle="collapse" id="infoCardHeader"><b>Fill session info & import spreadsheet</b></div>
+                <div class="content">
+                    <div class="card-body">
+                        <div class="row" id="formColumn">
+                            <div class="column">
+                                <form>
+                                    <label for="ASWGproject">Project Name: </label><br>
+                                    <input type="text" id="ASWGproject" name="ASWGproject">
+                                    <br><br>
+                                    <label for="ASWGdirector">Voice Director: </label><br>
+                                    <input type="text" id="ASWGdirector" name="ASWGdirector">
+                                    <br><br>
+                                    <label for="ASWGrecEngineer">Recording Engineer: </label><br>
+                                    <input type="text" id="ASWGrecEngineer" name="ASWGrecEngineer">
+                                </form>
+                            </div>
+                            <div class="column">
+                                <form>
+                                    <label for="ASWGoriginatorStudio">Studio Company: </label><br>
+                                    <input type="text" id="ASWGoriginatorStudio" name="ASWGoriginatorStudio">
+                                    <br><br>
+                                    <label for="ASWG:recStudio">Recording Studio: </label><br>
+                                    <input type="text" id="ASWG:recStudio" name="ASWG:recStudio">
+                                    <br><br>
+                                    <label for="ASWG:micType">Microphone: </label><br>
+                                    <input type="text" id="ASWG:micType" name="ASWG:micType">
+                                    <!-- Have a fxChainName selector per character? -->
+                                </form>
+                            </div>
+                        </div> 
+                        <br>
+                        <input type="file" id="excel_file" />
+                        <br>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <br>
+        <div class="container-fluid" style="width: 75%;height: fit-content;"> 
+            <div class="card" id="matrixCard" style="display:none">
+                <div class="card-header button collapsible" id="matrixCardHeader"><b>Conforming Matrix</b></div>
+                    <div class="content" id="matrixCardContent">
+                        <div class="card-body" style="align-self: flex-start">
+                            <br>
+                            <!-- Filter columns of the table -->
+                            <input type="text" id="myInputActor" onkeyup="filterActor()" placeholder="Search for actor.."
+                                autocomplete="off">
+                            <input type="text" id="myInputCharacter" onkeyup="filterCharacter()"
+                                placeholder="Search for character.." autocomplete="off">
+                            <!-- <input type="text" id="fromLine" onkeyup="filterLine()" placeholder="From line.." autocomplete="off"> -->
+                            <!-- <input type="text" id="toLine" onkeyup="filterLine()" placeholder="To line.." autocomplete="off"> -->
+                            <!-- <input type="text" id="ignoredLines" onkeyup="ignoredLine()" placeholder="Ignore lines..;..;.." autocomplete="off"> -->
+                            <br>
+                            <br>
+                            <input type="button" value="Reset assignement" onclick="resetMatrix('xlsx');">
+                            <button id="PrepRecordingButton" type="button" class="btn btn-outline-primary"><img
+                                    class="icons filter-blue">&nbsp;&nbsp;<b>Prep Recording</b></button>
+                            <div id="myProgress" style="display:none">
+                                <div id="myBar"></div>
+                            </div>
+                            <br>
+                            <br>
+                            <div id="conformMatrixDiv" style="width: 100%"></div>
+                            <br>
+                            <div id="inputInfoBlock" style="display:none;"></div>
+                                <p style="text-align:center">Preview of the imported data</p>
+                                <div id="excelData" style="width: 100%"></div>
+                            </div>
+                            <br>
+                            <div id="conformInfoBlock" style="display:none">
+                                <p id="conformedDataTitle" style="text-align:center">Preview of the conformed data</p>
+                                <div id="conformTable" style="width: 100%"></div>
+                                <br>
+                                <input type="submit" value="Export to XLSX" onclick="exportXlsx('xlsx');">
+                                <i>Export will follow conform assignement and filtered content</i>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="livePageMain" style="display:none">
+        <div class="sticky">
+            <h2 class="text-center mt-4 mb-4">Voice Acting Spreadsheet Connect</h2>
+            <h3 class="text-center mt-4 mb-4" id="viewNameHeader">View</h3>
+            <br>
+            <!-- Sync Switch -->
+            <div class="container-fluid center" style="width:auto">
+                <label class="switch">
+                  <input type="checkbox" id="syncToggle">
+                  <span class="slider round"></span>
+                </label>
+            </div>  
+            <div id="viewButtonTable" style="display:inline;"><button type="button" onclick="switchView('Table')">Table View</button></div>
+            <div id="viewButtonFocus" style="display:inline;"><button type="button" onclick="switchView('Focus')">Focus View</button></div>
+            <div id="viewButtonEdit" style="display:inline;"><button type="button" onclick="switchView('Edit')">Edit View</button></div>
+        </div>
+        <div class="stickyBlank" id="blankTopSpacing">
+            <br>
+            <br>
+        </div>
+        <!-- Default full table view -->
+        <div class="container-fluid" style="width: 98%" id="tableView">
+            <div class="container-fluid" id="conformTableFull"></div>
+        </div>
+        <!-- Focus view -->
+        <div class="container-fluid focusViewContainer" style="display:none;text-align: center;" id="focusView">
+            <div class="container-fluid focusContextViewText" id="previousFile">
+                <b class="characterName" id="previousCharName"></b>
+                <br>
+                <i class="interlocutor" id="previousInterlocutor"></i>
+                <p class="dialogText" id="previousText"></p>
+                <p class="actorName" id="previousActorName"></p>
+                <i class="fileName" id="previousFileName"></i>
+            </div>
+            <hr class="dashed">
+            <div class="container-fluid focusViewText" id="focusFile">
+                <p class="notes" id="focusNotes"></p>
+                <b class="characterName" id="focusCharName"></b>
+                <br>
+                <i class="interlocutor" id="focusInterlocutor"></i>
+                <p class="direction" id="focusDirection"></p>
+                <p class="dialogText" id="focusText"></p>
+                <p class="actorName" id="focusActorName"></p>
+                <i class="fileName" id="focusFileName"></i>
+            </div>
+            <hr class="dashed">
+            <div class="container-fluid focusContextViewText" id="nextFile">
+                <b class="characterName" id="nextCharName"></b>
+                <br>
+                <i class="interlocutor" id="nextInterlocutor"></i>
+                <p class="dialogText" id="nextText"></p>
+                <p class="actorName" id="nextActorName"></p>
+                <i class="fileName" id="nextFileName"></i>
+            </div>
+        </div>
+        <!-- Edit view -->
+        <div class="container-fluid" style="width: 98%;display: none" id="editView">
+            <p>EDIT VIEW</p>
+            <!-- <div class="container-fluid" id="conformTableFull"></div> -->
+        </div>
+
+
+    </div>
+    <br>
+
+    <!-- Hidden Stored Data -->
+    <table class="table centeredTable inputTable" id="conformTableReference" style="display:none">
+        <thead>
+            <th>File Name</th>
+            <th>Actor Name</th>
+            <th>Character Name</th>
+            <th>Text</th>
+            <th>Direction</th>
+            <th>Notes</th>
+            <th>Timing</th>
+            <th>Efforts</th>
+            <th>Effort Type</th>
+            <th>Projection</th>
+            <th>Language</th>
+            <th>Accent</th>
+            <th>Emotion</th>
+            <th>Character Gender</th>
+            <th>Character Age</th>
+            <th>Character Role</th>
+            <th>Actor Gender</th>
+            <th>Usage Rights</th>
+            <th>is Union</th>
+            <th>Answer File</th>
+            <th>Interlocutor</th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        window.onload = function() {
+        document.getElementById('infoCardHeader').click();
+        };
+    </script>
+
+    <script> // collapse logic on click
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+            } 
+          });
+        } 
+    </script>
+
+<script>
+    function resetMatrix() {
+        var radioList = document.querySelectorAll('input[name^="row-"]:checked');
+        Array.prototype.forEach.call(radioList, callback);
+
+        function callback(element,iterator) {
+            radioList[iterator].checked = false;
+        }
+        document.getElementById('conformTable').innerHTML = "";
+        document.getElementById("conformInfoBlock").style.display = "none";
+    }
+
+</script>
+
+    <script> // Exporting Filtered & modified Table as xlsx
+        function exportXlsx(type, fn, dl) {
+            var elt = document.getElementById('inputTable');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "" });
+            var d = new Date();
+            //var datestring = d.getFullYear() + (d.getMonth()+1) + d.getDate(); 
+            return dl ?
+                XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('YYYY-MM-DD' + '_FILENAME' + '.' + (type || 'xlsx')));
+        }
+    </script>
+
+    <script>
+        var activeView;
+        function switchView(viewName) {
+            if (viewName == "Table") {
+                activeView = viewName; 
+                document.getElementById("viewNameHeader").innerHTML = viewName + " View";
+                document.getElementById("focusView").style.display = "none";
+                document.getElementById("editView").style.display = "none";
+                document.getElementById("tableView").style.display = "block";
+                document.getElementById("viewButtonFocus").style.display = "inline";
+                document.getElementById("viewButtonEdit").style.display = "inline"; 
+                clearInterval(interval)
+            }
+            if (viewName == "Focus") {
+                activeView = viewName;
+                document.getElementById("viewNameHeader").innerHTML = viewName + " View";
+                document.getElementById("tableView").style.display = "none";
+                document.getElementById("editView").style.display = "none";
+                document.getElementById("focusView").style.display = "block";
+                document.getElementById("viewButtonTable").style.display = "inline";
+                document.getElementById("viewButtonEdit").style.display = "inline";
+                setInterval(fetchFocusDialog, 200);
+            }
+            if (viewName == "Edit") {
+                activeView = viewName;
+                document.getElementById("viewNameHeader").innerHTML = viewName + " View";
+                document.getElementById("focusView").style.display = "none";
+                document.getElementById("tableView").style.display = "none";
+                document.getElementById("editView").style.display = "block";
+                document.getElementById("viewButtonTable").style.display = "inline";
+                document.getElementById("viewButtonFocus").style.display = "inline";
+                clearInterval(interval)
+            }
+        }
+    </script>
+
+    <script>
+        const interval = setInterval(() => fetchFocusDialog, 200); // Repeat myFunction every 2 seconds
+
+        var focusFileName;
+        var focusActorName;
+        var focusCharName;
+        var focusText;
+        var focusDirection;
+        var focusNotes;
+        var focusTiming;
+        var focusEfforts;
+        var focusEffortType;
+        var focusProjection;
+        var focusAnswerFile;
+        var focusInterlocutor;
+
+        var previousFileName;
+        var previousActorName;
+        var previousCharName;
+        var previousText;
+        var previousDirection;
+        var previousNotes;
+        var previousTiming;
+        var previousEfforts;
+        var previousEffortType;
+        var previousProjection;
+        var previousAnswerFile;
+        var previousInterlocutor;
+
+        var nextFileName;
+        var nextActorName;
+        var nextCharName;
+        var nextText;
+        var nextDirection;
+        var nextNotes;
+        var nextTiming;
+        var nextEfforts;
+        var nextEffortType;
+        var nextProjection;
+        var nextAnswerFile;
+        var nextInterlocutor;
+
+        var isFirstLine = false;
+        var isLastLine = false;
+        var previousRow;
+        var nextRow;
+        
+        var fetchFocusDialog = () => {
+            if ($( ".focus" ).index() == null) {
+                return;
+            }
+
+            focusedRow = $( ".focus" ).index();
+            previousRow = focusedRow-1;
+            nextRow = focusedRow+1;
+            console.log(previousRow);
+
+            if (previousRow > 0) {
+                isFirstLine = false;
+                previousFileName = $("#conformTableDATA_r"+ previousRow +"_c"+"1").text(); 
+                document.getElementById("previousFileName").innerHTML = previousFileName;
+                previousActorName = $("#conformTableDATA_r"+ previousRow +"_c"+"2").text(); 
+                document.getElementById("previousActorName").innerHTML = previousActorName;
+                previousCharName = $("#conformTableDATA_r"+ previousRow +"_c"+"3").text(); 
+                document.getElementById("previousCharName").innerHTML = previousCharName;
+                previousText = $("#conformTableDATA_r"+ previousRow +"_c"+"4").text(); 
+                document.getElementById("previousText").innerHTML = previousText;
+                previousInterlocutor = $("#conformTableDATA_r"+ previousRow +"_c"+"21").text();
+                document.getElementById("previousInterlocutor").innerHTML = "To: " + previousInterlocutor;
+            }
+            else {
+                document.getElementById("previousFileName").innerHTML = "";
+                document.getElementById("previousActorName").innerHTML = "";
+                document.getElementById("previousCharName").innerHTML = "Focus is on the first line";
+                document.getElementById("previousText").innerHTML = "";
+                document.getElementById("previousInterlocutor").innerHTML = "";
+            }
+            if (nextRow < fileName.length) {
+                isLastLine = true;
+                nextFileName = $("#conformTableDATA_r"+ nextRow +"_c"+"1").text(); 
+                document.getElementById("nextFileName").innerHTML = nextFileName;
+                nextActorName = $("#conformTableDATA_r"+ nextRow +"_c"+"2").text(); 
+                document.getElementById("nextActorName").innerHTML = nextActorName;
+                nextCharName = $("#conformTableDATA_r"+ nextRow +"_c"+"3").text(); 
+                document.getElementById("nextCharName").innerHTML = nextCharName;
+                nextText = $("#conformTableDATA_r"+ nextRow +"_c"+"4").text(); 
+                document.getElementById("nextText").innerHTML = nextText;
+                nextInterlocutor = $("#conformTableDATA_r"+ nextRow +"_c"+"21").text();
+                document.getElementById("nextInterlocutor").innerHTML = "To: " + nextInterlocutor;
+            }
+            else {
+                document.getElementById("nextFileName").innerHTML = "";
+                document.getElementById("nextActorName").innerHTML = "";
+                document.getElementById("nextCharName").innerHTML = "Focus is on the last line";
+                document.getElementById("nextText").innerHTML = "";
+                document.getElementById("nextInterlocutor").innerHTML = "";
+            }
+
+            focusFileName = $("#conformTableDATA_r"+ focusedRow +"_c"+"1").text(); 
+            document.getElementById("focusFileName").innerHTML = focusFileName;
+            focusActorName = $("#conformTableDATA_r"+ focusedRow +"_c"+"2").text(); 
+            document.getElementById("focusActorName").innerHTML = focusActorName;
+            focusCharName = $("#conformTableDATA_r"+ focusedRow +"_c"+"3").text(); 
+            document.getElementById("focusCharName").innerHTML = focusCharName;
+            focusText = $("#conformTableDATA_r"+ focusedRow +"_c"+"4").text(); 
+            document.getElementById("focusText").innerHTML = focusText;
+            focusDirection = $("#conformTableDATA_r"+ focusedRow +"_c"+"5").text(); 
+            document.getElementById("focusDirection").innerHTML = "(" + focusDirection + ")";
+            focusNotes = $("#conformTableDATA_r"+ focusedRow +"_c"+"6").text(); 
+            document.getElementById("focusNotes").innerHTML = "Notes: " + focusNotes;
+            focusTiming = $("#conformTableDATA_r"+ focusedRow +"_c"+"7").text(); 
+            focusEfforts = $("#conformTableDATA_r"+ focusedRow +"_c"+"8").text(); 
+            focusEffortType = $("#conformTableDATA_r"+ focusedRow +"_c"+"9").text(); 
+            focusProjection = $("#conformTableDATA_r"+ focusedRow +"_c"+"10").text(); 
+            focusAnswerFile = $("#conformTableDATA_r"+ focusedRow +"_c"+"20").text(); 
+            focusInterlocutor = $("#conformTableDATA_r"+ focusedRow +"_c"+"21").text();
+            document.getElementById("focusInterlocutor").innerHTML = "To: " + focusInterlocutor;
+        };
+    </script>
+
+    <script> // Filter table by Character
+        function filterCharacter() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInputCharacter");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("conformTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2]; //Tip: Change tr[i].getElementsByTagName('td')[0] to another value if you want to search for a different column value
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script> // Filter table by Actor
+        function filterActor() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInputActor");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("conformTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; //Tip: Change tr[i].getElementsByTagName('td')[0] to another value if you want to search for a different column value
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script> // Convert imported xlsx into html table called "inputTable"
+        const excel_file = document.getElementById('excel_file');
+        excel_file.addEventListener('change', (event) => {
+            if (!['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'].includes(event.target.files[0].type)) {
+                document.getElementById('excelData').innerHTML = '<div class="alert alert-danger">Only .xlsx or .xls file format are allowed</div>';
+                excel_file.value = '';
+                return false;
+            }
+
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(event.target.files[0]);
+            reader.onload = function (event) {
+                var data = new Uint8Array(reader.result);
+                var work_book = XLSX.read(data, { type: 'array' });
+                var sheet_name = work_book.SheetNames;
+                var sheet_data = XLSX.utils.sheet_to_json(work_book.Sheets[sheet_name[0]], { header: 1 });
+                var table_output_row
+                var emptyRow = '<tr></tr>';
+                if (sheet_data.length > 0) {
+                    var table_output = '<div class="table-responsive"><table class="table table-striped table-bordered table-sm centeredTable cellDefault inputTable previewTable" id="inputTable">';
+                    for (var row = 0; row < sheet_data.length; row++) {
+                        table_output_row = '<tr>';
+                        for (var cell = 0; cell < sheet_data[row].length; cell++) {
+                            if (row == 0) {
+                                table_output_row += '<th id ="inputTableData' + "_r" + row + "_c" + (cell+1) + '">' + sheet_data[row][cell] + '</th>';
+                            }
+                            else {
+                                if (sheet_data[row][cell] == null || sheet_data[row][cell] == undefined || sheet_data[row][cell] == "") {
+                                    sheet_data[row][cell] = "";
+                                    table_output_row += '<td id ="inputTableData' + "_r" + row + "_c" + (cell+1) + '">' + sheet_data[row][cell] + '</td>';
+                                }
+                                else {
+                                    table_output_row += '<td id ="inputTableData' + "_r" + row + "_c" + (cell+1) + '">' + sheet_data[row][cell] + '</td>';
+                                }
+                            }
+                        }
+                        table_output_row += '</tr>';
+                        // Compare generated table row to an empty row, deletes if true  
+                        if (table_output_row.includes(emptyRow)) {
+                            table_output_row = "";
+                        } 
+                        table_output += table_output_row;
+                    }
+                    table_output += '</table></div>';
+                    document.getElementById('inputInfoBlock').style.display = "block";
+                    document.getElementById('excelData').innerHTML = table_output;
+                    document.getElementById('infoCardHeader').click();
+                }
+                excel_file.value = '';
+                var matrixCard = document.getElementById("matrixCard");
+                var matrixCardContent = document.getElementById("matrixCardContent");
+                matrixCard.style.display = "block";
+                document.getElementById('matrixCardHeader').click();
+                matrixCardContent.style.height = matrixCardContent.scrollHeight +"px"
+                matrixCardContent.style.maxHeight = matrixCardContent.scrollHeight +"px"
+
+                // Generate Conform Matrix following tableConform as headers and inputTable as first column data
+                var trConform = document.getElementById("conformTableReference").getElementsByTagName("th");
+                var matrix_output = '<table class="stickyHeader table table-bordered table-responsive table-sm centeredTable myMatrix" id="conformMatrix" style="height: fit-content">';
+                for (var row = 0; row <= trConform.length; row++) {
+                    if (row == 0) {
+                        matrix_output += '<thead><tr>';
+                    }
+                    if (row == 1 ) {
+                        matrix_output += '</thead><tbody><tr>';
+                    }
+                    if (row > 1 ) {
+                        matrix_output += '<tr>';
+                    }
+                    for (var cell = 0; cell <= trConform.length; cell++) {
+                        if (row == 0 && cell == 0) {
+                            matrix_output += '<th id ="matrixData' + "_r" + row + "_c" + cell + '"></th>';
+                        }
+                        else if (row == 0 && cell > 0) {
+                            matrix_output += '<th id ="matrixData' + "_r" + row + "_c" + cell + '" style="vertical-align:middle">' + trConform[cell - 1].innerHTML + '</th>';
+                        }
+                        else if (row > 0 && cell == 0) {
+                            if (sheet_data[cell][row - 1] == undefined) {
+                                matrix_output += '<td id ="matrixData' + "_r" + row + "_c" + cell + '">' + "No Data" + '</td>';
+                            }
+                            else {
+                                matrix_output += '<td id ="matrixData' + "_r" + row + "_c" + cell + '">' + sheet_data[cell][row - 1] + '</td>';
+                            }
+                        }
+                        else if (row > 0 && cell > 0) {
+                            matrix_output += '<td id ="matrixData' + "_r" + row + "_c" + cell + '">' + '<input type="radio" style="width:25px;height:25px" name="row-' + row + '" data-col="' + cell + '">' + '</td>';
+                        }
+                    }
+                    matrix_output += '</tr>';
+                }
+                matrix_output += '</tbody></table>';
+                document.getElementById('conformMatrixDiv').innerHTML = matrix_output;
+                matrixCardContent.style.height = matrixCardContent.scrollHeight +"px"
+                matrixCardContent.style.maxHeight = matrixCardContent.scrollHeight +"px"
+
+                var col, el;
+                var headerSelected, inputHeaderSelected, rowSelected;
+                var inputHeader = document.getElementById("inputTable").getElementsByTagName("th");
+                var inputTable = document.getElementById("inputTable").getElementsByTagName("tr");
+                var savedConformData = new Array(inputTable.length);
+                    for (var i = 0; i < inputTable.length; i++) {
+                        savedConformData[i] = new Array(inputTable.length);
+                    }
+
+                $("input[type=radio]").click(function () {
+                    // Matrix 2-way exclusivity & fill mainTable
+                    el = $(this);
+                    col = el.data("col");
+                    $("input[data-col=" + col + "]").prop("checked", false);
+                    el.prop("checked", true);
+
+                    colSelected = (col - 1);
+                    rowSelected = (Object.values(el)[0].getAttribute("name")).slice(4);
+                    rowSelected = parseInt(rowSelected) - 1; // gets the actual row number 0 based
+                    fillConformTable(rowSelected, colSelected, inputTable, savedConformData);
+                });
+ 
+                function fillConformTable(rowSelected, colSelected, inputTable, savedConformData) { 
+                    var savedValue
+                    var conformTable_output = '<div class="table-responsive"><table class="table table-striped table-bordered headerCentered stickyHeader centeredTable conformTable cellDefault table-sm" id="conformTable">';
+                    var conformTableHeader = document.getElementById("conformTableReference").getElementsByTagName("th");
+                    // console.log("Row selected in Matrix (inputTable column): "+rowSelected+" = " + sheet_data[0][rowSelected]+ " at column (conformReference headers) "+colSelected + " = "+conformTableHeader[colSelected].innerHTML);
+                    var x = 1; // Row Selector
+
+                    for (var row = 0; row < inputTable.length; row++) {
+                        conformTable_output += '<tr>';
+                        for (var cell = 0; cell < conformTableHeader.length; cell++) {
+                            if (row == 0) {
+                                conformTable_output += '<th id ="conformTableDATA' + "_r" + row + "_c" + (cell+1) + '">' + conformTableHeader[cell].innerHTML + '</th>';
+                            }
+
+                            else if ((cell == colSelected) && (row > 0)) { // only fill the column of selected data
+                                conformTable_output += '<td id ="conformTableDATA' + "_r" + row + "_c" + (cell+1) + '">' + sheet_data[row][rowSelected] + '</td>';
+                                savedConformData[(row - 1)][(cell - 1)] = sheet_data[row][rowSelected];
+                            }
+
+                            else if ((cell !== colSelected) && (row > 0) && ((savedConformData[(row - 1)][(cell - 1)] == null) || savedConformData[(row - 1)][(cell - 1)] == undefined)) {
+                                savedConformData[(row - 1)][(cell - 1)] = "";
+                                conformTable_output += '<td id ="conformTableDATA' + "_r" + row + "_c" + (cell+1) + '">' + savedConformData[(row - 1)][(cell - 1)] + '</td>';
+                            }
+
+                            else if ((cell !== colSelected) && (row > 0) && (savedConformData[(row - 1)][(cell - 1)] !== null)) {
+                                conformTable_output += '<td id ="conformTableDATA' + "_r" + row + "_c" + (cell+1) + '">' + savedConformData[(row - 1)][(cell - 1)] + '</td>';
+                                savedValue = savedConformData[(row - 1)][(cell - 1)];
+                            }
+                        }                        
+                    }
+                    conformTable_output += '</table></div>';
+                    var conformTable = document.getElementById("conformTable");
+                    document.getElementById('conformTableFull').innerHTML = conformTable_output;
+                    conformTable.innerHTML = conformTable_output;
+                    conformTable.classList.add("previewTable");
+                    document.getElementById("conformInfoBlock").style.display = "block"; // shows block of info containing conformTitle & conformTable
+                    matrixCardContent.style.height = matrixCardContent.scrollHeight +"px"; // Adapts the height of the card to show the conformedTable
+                    matrixCardContent.style.maxHeight = matrixCardContent.scrollHeight +"px"
+                    
+                    var rowConform = conformTable.getElementsByTagName("tr");
+                    var cellConform = conformTable.getElementsByTagName("td");
+                    var numberOfCol = rowConform[x].getElementsByTagName("td").length; // Number of columns at Row x 
+                    // console.log("conformTable cell data by id: conformTableDATA_r3_c3 = "+ $("#conformTableDATA_r3_c3").text());
+                }
+            };
+        });
+    </script>
+
+    <script> // Connection with Reaper to setup the session
+        // g_wwr_timer_freq = 2000;
+        wwr_start();
+        // GLOBAL VAR DECLARATION
+
+        // Open Reaper resource path
+        var REApath = "40027";
+
+        // Reaper-side Lua Script
+        var VASCLua = "_RS3552b1bb37aa6200c6fa3970f50b2e4df30d548e"; //Thomas Imbert VASC Script/timbert_VA Spreadsheet Connect Tool.lua
+        var VASCTest = "_RSc59ff45598e81eda0a167f112838b82df6669c35"; //Windows Command ID
+        // var VASCTest = "_RSe150f598967c067680d240b26b3ce0bde40951f5" // Mac command ID
+
+        var table = document.getElementById("conformTable");
+        var tr = table.getElementsByTagName("tr");
+        var debug = false;
+        
+        var recSession, project;
+        var fileName = [];
+        var actorName = [];
+        var charName = [];
+        var text = [];
+        var direction = [];
+        var notes = [];
+
+        var timing = [];
+        var efforts = [];
+        var effortType = [];
+        var projection = [];
+        var language = [];
+        var accent = [];
+        var emotion = [];
+
+        var charGender = [];
+        var charAge = [];
+        var charRole = [];
+        var actorGender = [];
+
+        var usageRights = [];
+        var isUnion = [];
+        var answerFile = [];
+        var interlocutor = [];
+        var cat = [fileName,actorName,fileName,actorName,charName,text,direction,notes,timing,efforts,effortType,projection,language,accent,emotion,charGender,charAge,charRole,actorGender,usageRights,isUnion,answerFile,interlocutor];
+        var lastCat = cat[cat.length-1]
+        
+        
+        
+
+        // SUBMIT BUTTON & LUA TRIGGER
+        $("#PrepRecordingButton").click(function (e) {
+            
+            var vasc_project = document.getElementById('ASWGproject').value;
+            // var vasc_session = document.getElementById('ASWG:session').value;
+            var vasc_director = document.getElementById('ASWGdirector').value;
+            var vasc_recEngineer = document.getElementById('ASWGrecEngineer').value;
+            var vasc_company = document.getElementById('ASWGoriginatorStudio').value;
+            var vasc_studio = document.getElementById('ASWG:recStudio').value;
+            var vasc_microphone = document.getElementById('ASWG:micType').value;
+
+            for (var i = 1; i < tr.length; i++) { // fill value for each row
+                fileName[i] = $("#conformTableDATA_r"+ i +"_c"+"1").text(); 
+                actorName[i] = $("#conformTableDATA_r"+ i +"_c"+"2").text(); 
+                charName[i] = $("#conformTableDATA_r"+ i +"_c"+"3").text(); 
+                text[i] = $("#conformTableDATA_r"+ i +"_c"+"4").text(); 
+                direction[i] = $("#conformTableDATA_r"+ i +"_c"+"5").text(); 
+                notes[i] = $("#conformTableDATA_r"+ i +"_c"+"6").text(); 
+
+                timing[i] = $("#conformTableDATA_r"+ i +"_c"+"7").text(); 
+                efforts[i] = $("#conformTableDATA_r"+ i +"_c"+"8").text(); 
+                effortType[i] = $("#conformTableDATA_r"+ i +"_c"+"9").text(); 
+                projection[i] = $("#conformTableDATA_r"+ i +"_c"+"10").text(); 
+                language[i] = $("#conformTableDATA_r"+ i +"_c"+"11").text(); 
+                accent[i] = $("#conformTableDATA_r"+ i +"_c"+"12").text(); 
+                emotion[i] = $("#conformTableDATA_r"+ i +"_c"+"13").text(); 
+
+                charGender[i] = $("#conformTableDATA_r"+ i +"_c"+"14").text(); 
+                charAge[i] = $("#conformTableDATA_r"+ i +"_c"+"15").text(); 
+                charRole[i] = $("#conformTableDATA_r"+ i +"_c"+"16").text(); 
+                actorGender[i] = $("#conformTableDATA_r"+ i +"_c"+"17").text(); 
+
+                usageRights[i] = $("#conformTableDATA_r"+ i +"_c"+"18").text(); 
+                isUnion[i] = $("#conformTableDATA_r"+ i +"_c"+"19").text(); 
+
+                answerFile[i] = $("#conformTableDATA_r"+ i +"_c"+"20").text(); 
+                interlocutor[i] = $("#conformTableDATA_r"+ i +"_c"+"21").text(); 
+            }
+
+            // Trigger CSS Animation
+            $("#PrepRecordingButton").addClass('anim-trig');
+            $("#PrepRecordingButton").one('webkitAnimationEnd oanimationend msAnimationEnd animationend',
+                function (e) {
+                    // Code to execute after animation ends
+                    $("#PrepRecordingButton").removeClass('anim-trig');
+                });
+
+            // Tell ReaScript that this is being run from a web interface
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "runFromWeb" + "/" + "true");
+            if (debug) {
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "runFromWeb" + "/" + "true");
+            }
+            
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "inputTableExists" + "/" + "true");
+            if (debug) {
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "inputTableExists" + "/" + "true");
+            }
+
+            document.getElementById("myProgress").style.display = "inline-block";
+            progressBarUpdate();
+
+            // SET REAPER PROJEXTSTATE
+            const sleep = (time) => {
+            return new Promise((resolve) => setTimeout(resolve, time))
+            }
+
+            var progressAmount = 0;
+            const setProjExtState = async (array, extName = "") => {
+                for (var i = 1; i < array.length; i++) {
+                    var val = array[i];
+                    await sleep(20)
+                    wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + extName + i + "/" + val);
+                    progressAmount += 100/(cat.length*(array.length-1));
+                    // console.log("progressAmount HERE: " + progressAmount);
+                    storeProgress(progressAmount,false);
+                    if (debug) {
+                        console.log("SET/PROJEXTSTATE/VASC_WebInterface/" + extName + i + "/" + val);
+                    }
+                    if (array == lastCat && i == array.length-1){
+                        // Start VASC script to prepare recording
+                        wwr_req(encodeURIComponent(VASCTest));
+                        storeProgress(100,false);
+                        wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady", timeRecur);
+                        // console.log("VASC test script");
+                        // waitReaperReady(displayConformTable);
+                    }
+                }
+            } 
+
+            // Check if conformTable was filled with conformMatrix
+            if ((fileName.length == 0) || (fileName.length == null)) {
+                wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "false");
+                if (debug) {
+                    console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "false");
+                }
+                wwr_req(encodeURIComponent(VASCTest));
+                return
+            }
+
+            // Correct iteration value (-1 for header) and send through extstate
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "true" );
+            if (debug) {
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "true");
+            }
+
+            // Send all conformTable values through extState using setProjExstate()
+            var iteration = fileName.length-1;
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "Iteration" + "/" + iteration);
+            if (debug) {
+                console.log("SET/PROJEXTSTATE/VASC_WebInterface/" + "Iteration" + "/" + iteration);
+            }
+
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGproject" + "/" + vasc_project)
+            // wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWG:session" + "/" + vasc_session) not necessary, reaper project name
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGdirector" + "/" + vasc_director)
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGrecEngineer" + "/" + vasc_recEngineer)
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGoriginatorStudio" + "/" + vasc_company)
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGrecStudio" + "/" + vasc_studio)
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "MetaMic" + "/" + vasc_microphone)
+
+            setProjExtState(fileName, "fileName");
+            setProjExtState(actorName, "actorName");
+            setProjExtState(charName, "charName");
+            setProjExtState(text, "text");
+            setProjExtState(direction, "direction");
+            setProjExtState(notes, "notes");
+        
+            setProjExtState(timing, "timing");
+            setProjExtState(efforts, "efforts");
+            setProjExtState(effortType, "effortType");
+            setProjExtState(projection, "projection");
+            setProjExtState(language, "language");
+            setProjExtState(accent, "accent");
+            setProjExtState(emotion, "emotion");
+        
+            setProjExtState(charGender, "charGender");
+            setProjExtState(charAge, "charAge");
+            setProjExtState(charRole, "charRole");
+            setProjExtState(actorGender, "actorGender");
+        
+            setProjExtState(usageRights, "usageRights");
+            setProjExtState(isUnion, "isUnion");
+            
+            setProjExtState(answerFile, "answerFile");
+            setProjExtState(interlocutor, "interlocutor");
+        });
+    </script>
+
+    <script>
+        var progressStored = 0;
+        function storeProgress(progressAmount,returnValue){
+            if (progressAmount == -1) {
+                progressAmount = progressStored;
+            }
+            if (returnValue) {
+                return progressStored;
+            }
+            else {
+                progressStored = progressAmount;
+            }
+        }
+
+        function progressBarUpdate() {
+            var isProgress = false;
+            if (!isProgress) {
+                isProgress = true;
+                var elem = document.getElementById("myBar");
+                var width = 0;
+                var id = setInterval(frame, 20);
+                function frame() {
+                    if (width >= 100) {
+                        if (strReaperReady == "false") {
+                            var progressAmount = storeProgress(-1,true);
+                            width = progressAmount;
+                            elem.style.width = width + "%";
+                        }
+                        clearInterval(id);
+                        isProgress = false;
+                    }
+                    else {
+                        var progressAmount = storeProgress(-1,true);
+                        // console.log("progressAmount: "+ progressAmount);
+                        width = progressAmount;
+                        elem.style.width = width + "%";
+                    }
+                }
+            }
+        } 
+    </script>
+
+    <script> // Display conformTable, normal view
+        function displayConformTable() {
+            // document.getElementById('inputInfoBlock').style.display = "none";
+            // document.getElementById('matrixCardContent').style.display = "none";
+            document.getElementById('setupPage').style.display = "none";
+            document.getElementById('conformTable').innerHTML = "";
+            document.getElementById('conformTableFull').classList.remove("previewTable");
+            // document.getElementById('conformTableRow0').classList.add("stickyHeaderLive");
+            document.getElementById("livePageMain").style.display="block";
+            document.getElementById('syncToggle').click(); // start reaper region / row sync
+        }
+    </script>
+
+    <script> // Continuous request to Reaper to sync the session with the webpage 
+        var timeRecur = 200;
+        var vascWebSyncRegion = "_RSe4022be2f76707601203e905b1badc615b46397f"; // Script: timbert_VASC Store region position for websync.lua
+        var conformTable = document.getElementById('conformTableFull');
+        var conformTableRows = conformTable.getElementsByTagName('tr');
+        var section, key, regionSync = "";
+        var strReaperReady = "";
+        var focusedRow;
+        function wwr_onreply(results) {
+            var ar=results.split("\n");               // split results into an array, if result has multiple lines(e.g. when you call wwr_req("MARKER") )
+            for (var i=0; i < ar.length; ++i) {     // count through the individual array-fields of "ar"; every one of them containing one 
+                                                    // responded line, if results was a multiline-response.
+                var tok=ar[i].split("\t");          // split a responded line into its individual fields into the array "tok"
+                if (tok && tok.length > 0) {
+                    switch (tok[0]) {
+                        case "PROJEXTSTATE":           // if response was from wwr_req("TRANSPORT") then set the individual tok-entries to these global variables
+                            section=tok[1]; 
+                            key=tok[2];
+                            switch (key) {
+                                case "isReaperReady":
+                                    strReaperReady=tok[3];
+                                    if (strReaperReady == "true") {
+                                        displayConformTable();
+                                        wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
+                                    }
+                                    else {
+                                        strReaperReady = "false";
+                                        storeProgress(0,false);
+                                        progressBarUpdate();
+                                        wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
+                                    }
+                                break;
+
+                                case "SyncRegion":
+                                    regionSync=tok[3];
+                                break;
+                            }
+                        break;
+                    }
+                }
+            }
+            for (x = 0; x < conformTableRows.length; x++) {
+                var fileNameCompare = document.getElementById('conformTableDATA_r'+ x +'_c1');
+                if ( fileNameCompare.innerHTML == regionSync ) {
+                    var match = fileNameCompare;
+                    if (activeView == 'Table') {
+                        scrollEleTopThird(match);
+                    }
+                    match.parentElement.classList.add('focus');
+                    focusedRow = $( ".focus" ).index();
+                    // console.log("focused Row: " + focusedRow);
+                }
+                else {  
+                    fileNameCompare.parentElement.classList.remove('focus');
+                } 
+            }
+            // manipulate the received data from getprojextstate
+        }            
+
+        function startReaperSync() {
+            // console.log("startReaperSync()");
+            wwr_req_recur(encodeURIComponent(vascWebSyncRegion), timeRecur); // send req to a custom script storing in extstate the data of current region
+            wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/SyncRegion", timeRecur); // getprojextstate of that section/key and center and highlight the corresponding line in the conformTable
+        }
+
+        function stopReaperSync() {
+            wwr_req_recur_cancel(encodeURIComponent(vascWebSyncRegion)); // call when stopping the sync
+            wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/SyncRegion"); // call when stopping the sync
+        }
+
+        function scrollEleTopThird(element) {
+            var elementRect = element.getBoundingClientRect();
+            var absoluteElementTop = elementRect.top + window.pageYOffset;
+            var middle = absoluteElementTop - (window.innerHeight / 3);
+            window.scrollTo(0, middle);
+        }
+    </script>
+
+    <script> // Sync Toggle
+        $("#syncToggle").click(function () {
+            if (document.getElementById("syncToggle").checked) {
+                startReaperSync();
+            }
+            else {
+                stopReaperSync();
+                $( "tr" ).removeClass( "focus" );
+                // console.log("stopReaperSync()");
+            }
+        });
+    </script>
+</body>
+
+</html>

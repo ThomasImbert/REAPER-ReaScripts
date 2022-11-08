@@ -1,0 +1,10 @@
+@description VASC Web Interface
+@author Thomas Imbert
+@version 0.1
+@provides
+  timbert_VASC.html
+  VASC_lib/*.{js,png,css,svg,map,txt}
+  VASC_lib/*.{txt}
+@about Voice Acting Spreadsheet Connect
+@changelog
+   # Initial Release
