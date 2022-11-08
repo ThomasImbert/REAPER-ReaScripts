@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="2a8e176a472325beb05f7f83484bf5b6cf41633e">
+<index version="1" name="TImbert Scripts" commit="626c2119b2d0557e32da79d3b471df54bbb7de19">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -426,6 +426,25 @@
       <version name="1.0" author="Thomas Imbert" time="2022-11-03T00:37:32Z">
         <changelog><![CDATA[# Initial Release (2022-11-03)]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d197b07aa99a4420115a6983609b63767e94a827/Various/timbert_VASC%20Store%20region%20position%20for%20websync.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC.lua" type="script" desc="VASC (Voice Acting Spreadsheet Connect)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Voice Acting Spreadsheet Connect launches the VASC web interface allowing users to import spreadsheet to make their Reaper session smarter.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 The tool allows for Recording session preparation with a guide track that includes data from the spreadsheet, as well as metadata markers for embedding at export.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Multiple scripts are found in this repo to make Dialog recording more efficient and less prone to errors.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This tool wouldn't have been possible without following Aaron Cendan's work on UCS Renaming tool as a template. Thanks Aaron!\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="0.1" author="Thomas Imbert" time="2022-11-08T21:55:14Z">
+        <changelog><![CDATA[#Initial Pre-Alpha Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/626c2119b2d0557e32da79d3b471df54bbb7de19/Various/timbert_VASC.lua</source>
       </version>
     </reapack>
   </category>
