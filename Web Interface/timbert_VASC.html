@@ -1026,7 +1026,7 @@
 
         // Reaper-side Lua Script
         var VASCLua = "_RSef8af65dcd774702251dc7d719e6982c2567dfc9"; //Thomas Imbert VASC Script/timbert_VA Spreadsheet Connect Tool.lua
-        var VASCTest = "_RSc59ff45598e81eda0a167f112838b82df6669c35"; //Windows Command ID
+        // var VASCTest = "_RSc59ff45598e81eda0a167f112838b82df6669c35"; //Windows Command ID
         // var VASCTest = "_RSe150f598967c067680d240b26b3ce0bde40951f5" // Mac command ID
 
         var table = document.getElementById("conformTable");
@@ -1144,7 +1144,7 @@
                     }
                     if (array == lastCat && i == array.length-1){
                         // Start VASC script to prepare recording
-                        wwr_req(encodeURIComponent(VASCTest));
+                        wwr_req(encodeURIComponent(VASCLua));
                         storeProgress(100,false);
                         wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady", timeRecur);
                         // console.log("VASC test script");
@@ -1159,7 +1159,7 @@
                 if (debug) {
                     console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "false");
                 }
-                wwr_req(encodeURIComponent(VASCTest));
+                wwr_req(encodeURIComponent(VASCLua));
                 return
             }
 
