@@ -1,4 +1,4 @@
--- @description - Swap take with alt take under mouse cursor
+-- @description Swap item with alt take (item) under mouse cursor
 -- @author Thomas Imbert
 -- @version 1.0
 -- @about
