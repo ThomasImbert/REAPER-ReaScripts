@@ -51,8 +51,6 @@ local function main(colorNumber)
 		local _, _, num_regions = reaper.CountProjectMarkers( 0 )
 		reaper.SetProjectMarker4( 0, realIndex, true, regionPos, regionEnd, nameRegion, customColor, 0 ) -- set region color
 		timbert.colorStoredGuideSegment(colorNumber,validationTag)
-		
-		timbert.dbg("HERE ")
 	end
 	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
 	timbert.swsCommand("_SWS_RESTALLSELITEMS1") -- Restore selected item(s)
@@ -82,19 +80,12 @@ function checkValidation()
 		end
 	end
 	timbert.swsCommand("_SWS_RESTTIME1") -- SWS: Restore time selection, slot 1
-	reaper.ClearConsole()
-	timbert.dbg("countValidated countUncertain countRetake = " .. countValidated .. " " .. countUncertain .. " " .. countRetake .. "\n")
-	timbert.dbg("itemNumber - countValidated = " .. (itemNumber - countValidated) .. "\n")
-	timbert.dbg("itemNumber - countUncertain = " .. (itemNumber - countUncertain) .. "\n")
-	timbert.dbg("itemNumber -1 = " .. (itemNumber -1) .. "\n")
 
 	if (itemNumber - countValidated ~= (itemNumber -1) and countValidated > 1) then 
-		timbert.dbg("maxValidation = 3 ")
 		maxValidation = 3 
 		return maxValidation
 	end
 	if (itemNumber - countUncertain ~= itemNumber and countValidated < 2) then 
-		timbert.dbg("maxValidation = 2 ")
 		maxValidation = 2 
 		return maxValidation
 	end
