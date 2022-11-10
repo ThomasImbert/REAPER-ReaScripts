@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="a60a80a1fab59236e30e276759a08f715e8d51ab">
+<index version="1" name="TImbert Scripts" commit="7e4548e8c8311fdda4d9ad0081bc9f324511de77">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -39,6 +39,10 @@
       <version name="1.6" author="Thomas Imbert" time="2022-11-06T01:59:56Z">
         <changelog><![CDATA[# Updated Select Guide to search for "VASC_GUIDE"]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/2a8e176a472325beb05f7f83484bf5b6cf41633e/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.7" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
+        <changelog><![CDATA[# Updated Select Guide to search for "VASC_GUIDE"]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/7e4548e8c8311fdda4d9ad0081bc9f324511de77/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
@@ -106,6 +110,54 @@
       <version name="1.0" author="Thomas Imbert" time="2022-10-20T15:03:44Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/a60a80a1fab59236e30e276759a08f715e8d51ab/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC Mark and color item as Retake.lua" type="script" desc="VASC Mark and color item under mouse cursor as Retake">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Changes the color of the item under mouse cursor to the SWS custom color n\u176?2 and stores extData.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This quick validation system is meant to work with VASC, and will color the current region if VASC Guide track is present.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/7e4548e8c8311fdda4d9ad0081bc9f324511de77/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Retake.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC Mark and color item as Uncertain.lua" type="script" desc="VASC Mark and color item under mouse cursor as Uncertain">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Changes the color of the item under mouse cursor to the SWS custom color n\u176?3 and stores extData.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This quick validation system is meant to work with VASC, and will color the current region if VASC Guide track is present.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/7e4548e8c8311fdda4d9ad0081bc9f324511de77/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Uncertain.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_VASC Mark and color item as Validated.lua" type="script" desc="VASC Mark and color item under mouse cursor as Validated">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Changes the color of the item under mouse cursor to the SWS custom color n\u176?1 and stores extData.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This quick validation system is meant to work with VASC, and will color the current region if VASC Guide track is present.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
+        <changelog><![CDATA[#Initial Release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/7e4548e8c8311fdda4d9ad0081bc9f324511de77/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Validated.lua</source>
       </version>
     </reapack>
   </category>
