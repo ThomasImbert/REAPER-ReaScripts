@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.6
+-- @version 1.7
 -- @metapackage
 -- @provides
 --   [main] .
@@ -18,7 +18,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/Thomas Imbert/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.5 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
+if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.7 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]]
 
@@ -372,7 +372,7 @@ function timbert.getGuideTrackInfo()
 	reaper.PreventUIRefresh(1)
 	local isGuideTrackInfo = true
 	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection
-	-- timbert.swsCommand("_SWS_SAVESELITEMS1") -- Save selected track's selected item(s)
+	timbert.swsCommand("_SWS_SAVESELITEMS1") -- Save selected track's selected item(s)
 	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
 	timbert.selectTrack("Guide") -- Select Guide track exclusively
 	timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- _XENAKIOS_SELITEMSUNDEDCURSELTX
@@ -401,4 +401,12 @@ function timbert.selectStoredGuideTrackItem()
 	timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore Guide Track item selection
 	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
 	reaper.PreventUIRefresh(-1)
+end
+
+function timbert.colorStoredGuideSegment(color,validationTag)
+	timbert.selectTrack("Guide")
+	timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore current track's selected item(s)
+	timbert.swsCommand("_SWS_TAKECUSTCOL"..color) -- SWS: Set selected take(s) to custom color
+	local item = reaper.GetSelectedMediaItem( 0, 0 )
+	reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, true )
 end
