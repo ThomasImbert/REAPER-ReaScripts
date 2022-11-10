@@ -55,12 +55,13 @@ local function checkValidation()
 	timbert.swsCommand("_SWS_SAVETIME1") -- SWS: Save time selection, slot 1
 	reaper.GetSet_LoopTimeRange2( 0, true, false, regionPos, regionEnd, false )
 	reaper.Main_OnCommand(40717, 0) -- Item: Select all items in current time selection
+	local item
 	local itemNumber = reaper.CountSelectedMediaItems( 0 )
 	local maxValidation = 0 -- 0 = no Validation data, 1 = Retake, 2 = Uncertain, 3 = Validated
 	local isValid , validValue = {}, {}
 	for i = 1, itemNumber do
-		local item[i] = reaper.GetSelectedMediaItem( 0, i-1 )
-		local isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item[i], "P_EXT:VASC_Validation", validationTag, false )
+		item = reaper.GetSelectedMediaItem( 0, i-1 )
+		isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, false )
 		if (validValue[i] == "Validated" and maxValidation < 3 ) do 
 			maxValidation = 3
 		end
