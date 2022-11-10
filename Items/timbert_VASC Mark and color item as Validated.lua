@@ -50,6 +50,30 @@ local function main(colorNumber)
 	timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")  -- SWS/BR: Restore edit cursor position, slot 01
 end
 
+local function checkValidation()
+	timbert.swsCommand("_SWS_SAVETIME1") -- SWS: Save time selection, slot 1
+	reaper.GetSet_LoopTimeRange2( 0, true, false, regionPos, regionEnd, false )
+	reaper.Main_OnCommand(40717, 0) -- Item: Select all items in current time selection
+	local itemNumber = reaper.CountSelectedMediaItems( 0 )
+	local maxValidation = 0 -- 0 = no Validation data, 1 = Retake, 2 = Uncertain, 3 = Validated
+	local isValid , validValue = {}, {}
+	for i = 1, itemNumber do
+		local item[i] = reaper.GetSelectedMediaItem( 0, i-1 )
+		local isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item[i], "P_EXT:VASC_Validation", validationTag, false )
+		if (validValue[i] == "Validated" and maxValidation < 3 ) do 
+			maxValidation = 3
+		end
+		if (validValue[i] == "Uncertain" and maxValidation < 2 ) do 
+			maxValidation = 2
+		end
+		if (validValue[i] == "Retake" and maxValidation < 1 ) do 
+			maxValidation = 1
+		end
+	end
+	timbert.swsCommand("_SWS_RESTTIME1") -- SWS: Restore time selection, slot 1
+	return maxValidation
+end
+
 reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock()
