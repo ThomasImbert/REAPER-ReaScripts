@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="eb02a9a0595cf05d5d87c4e7930a965b9309f54a">
+<index version="1" name="TImbert Scripts" commit="6acc460e7f75fcbea4763b8a0641398de754b2bb">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -125,7 +125,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/9f0726aa2dfd3e78d4739181a086fc386ae87663/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Retake.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6acc460e7f75fcbea4763b8a0641398de754b2bb/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Retake.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Mark and color item as Uncertain.lua" type="script" desc="VASC Mark and color item under mouse cursor as Uncertain">
@@ -141,7 +141,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/9f0726aa2dfd3e78d4739181a086fc386ae87663/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Uncertain.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6acc460e7f75fcbea4763b8a0641398de754b2bb/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Uncertain.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Mark and color item as Validated.lua" type="script" desc="VASC Mark and color item under mouse cursor as Validated">
