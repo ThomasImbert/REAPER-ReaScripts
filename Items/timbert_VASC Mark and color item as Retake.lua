@@ -34,7 +34,7 @@ local function main(colorNumber)
 	item = reaper.GetSelectedMediaItem( 0, 0 )
 	reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, true )
 	timbert.swsCommand("_SWS_TAKECUSTCOL"..colorNumber) -- SWS: Set selected take(s) to custom color
-	if checkValidation() > 1 then return end -- Do not color region and guide segment to Retake value if there is greater validation under that region already
+	if (checkValidation() > 1) then return end -- Do not color region and guide segment to Retake value if there is greater validation under that region already
 	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")  -- SWS/BR: Save edit cursor position, slot 01
 	reaper.Main_OnCommand(40514, 0) -- View: Move edit cursor to mouse cursor (no snapping)
 	cursPos = reaper.GetCursorPosition()
@@ -62,13 +62,13 @@ local function checkValidation()
 	for i = 1, itemNumber do
 		item = reaper.GetSelectedMediaItem( 0, i-1 )
 		isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, false )
-		if (validValue[i] == "Validated" and maxValidation < 3 ) do 
+		if (validValue[i] == "Validated" and maxValidation < 3 ) then
 			maxValidation = 3
 		end
-		if (validValue[i] == "Uncertain" and maxValidation < 2 ) do 
+		if (validValue[i] == "Uncertain" and maxValidation < 2 ) then 
 			maxValidation = 2
 		end
-		if (validValue[i] == "Retake" and maxValidation < 1 ) do 
+		if (validValue[i] == "Retake" and maxValidation < 1 ) then 
 			maxValidation = 1
 		end
 	end
