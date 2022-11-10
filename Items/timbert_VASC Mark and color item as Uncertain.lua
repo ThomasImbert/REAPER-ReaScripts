@@ -54,6 +54,7 @@ local function main(colorNumber)
 	end
 	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
 	timbert.swsCommand("_SWS_RESTALLSELITEMS1") -- Restore selected item(s)
+	timbert.pasteNotes()
 	timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")  -- SWS/BR: Restore edit cursor position, slot 01
 end
 
