@@ -404,9 +404,13 @@ function timbert.selectStoredGuideTrackItem()
 end
 
 function timbert.colorStoredGuideSegment(color,validationTag)
+	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection
 	timbert.selectTrack("Guide")
+	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
+	timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore Guide Track item selection
 	timbert.swsCommand("_SWS_RESTSELITEMS1") -- Restore current track's selected item(s)
 	timbert.swsCommand("_SWS_TAKECUSTCOL"..color) -- SWS: Set selected take(s) to custom color
 	local item = reaper.GetSelectedMediaItem( 0, 0 )
 	reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, true )
+	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
 end
