@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.7
+-- @version 1.8
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Updated Select Guide to search for "VASC_GUIDE"
+--   # Updated Select Guide to include "Reference"
 
 --[[
 
@@ -115,6 +115,17 @@ local function trackSelectionSettings(trackName) -- call this function to setup 
 	settings = {
 	  selparents = false,
 	  search = "ALT_",
+	  selchildren = true,
+	  matchonlytop = false,
+	  selsiblings = false,
+	  add_selection = true,
+	  matchmultiple = true,
+	}
+	end
+	if trackName == "Reference" then
+	settings = {
+	  selparents = true,
+	  search = "VASC_Reference",
 	  selchildren = true,
 	  matchonlytop = false,
 	  selsiblings = false,
