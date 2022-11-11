@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="fdfd2d1c2434a4fad29a1d00568f1172df4e7abe">
+<index version="1" name="TImbert Scripts" commit="9f1b3bdbc9ff04599eb634a2ad7851b8cddeaff7">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -177,7 +177,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8a6d4de85444e8780d1cac4d843b78fe73cadb6c/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/9f1b3bdbc9ff04599eb634a2ad7851b8cddeaff7/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
       </version>
     </reapack>
   </category>
