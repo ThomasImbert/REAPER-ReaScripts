@@ -36,15 +36,15 @@ local function main()
 		_, validationEXT = reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", "value", false )
 		if validationEXT ~= validationTag and validationEXT ~= "Validated" then 
 			reaper.SetMediaItemSelected( item, false )
-		else -- Item is marked Validated, make sure its start time is at Meta Marker
-			if not reposition then return end
-			local itemPos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
-			local itemSnap = reaper.GetMediaItemInfo_Value(item, "D_SNAPOFFSET")
-			local itemStartTime = itemPos + itemSnap
-			local nearestMarkerIdx, nearestRegionIdx = reaper.GetLastMarkerAndCurRegion( 0, itemStartTime )
-			local _, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers( nearestRegionIdx )
-			if itemStartTime > pos then 
-				reaper.SetMediaItemPosition( item, pos, true )
+		else if reposition then -- Item is marked Validated, make sure its start time is at Meta Marker / start of region
+				local itemPos = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+				local itemSnap = reaper.GetMediaItemInfo_Value(item, "D_SNAPOFFSET")
+				local itemStartTime = itemPos + itemSnap
+				local nearestMarkerIdx, nearestRegionIdx = reaper.GetLastMarkerAndCurRegion( 0, itemStartTime )
+				local _, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers( nearestRegionIdx )
+				if itemStartTime > pos then 
+					reaper.SetMediaItemPosition( item, pos, true )
+				end
 			end
 		end
 	end
