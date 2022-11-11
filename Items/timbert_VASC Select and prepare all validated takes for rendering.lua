@@ -19,11 +19,10 @@ if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if no
 
 -- settings
 local validationTag = "Validated"
-local reposition = false
-
+local reposition = false -- Make sure to only have a unique media item per Guide Segment / region and per track. Glue composite takes before using this script
+						 -- Also make sure that not such item is mistakingly placed BEFORE the associated region (even by a little)
 local function main() 
 	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection
-	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1") 
 	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
 	timbert.selectTrack('Guide')
 	timbert.selectTrack('Alt') 
@@ -51,7 +50,6 @@ local function main()
 		end
 	end
 	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
-	timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1") 
 end
 
 reaper.PreventUIRefresh(1)
