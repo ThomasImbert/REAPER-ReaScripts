@@ -172,6 +172,9 @@ end
 function main()     
 	-- Transport: Play/Stop
 	reaper.Main_OnCommand(40044, 0)  
+	if reaper.GetPlayStateEx( 0 ) == 2 then 
+		reaper.SetProjExtState( 0, "VASC_Record", "ExtendGuide", 0 ) 
+	end
 	-- Save current track selection
 	reaper.Main_OnCommand(sws_saveCurrentTrackSelection, 0)
 	-- Save selected item(s)
