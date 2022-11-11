@@ -127,10 +127,10 @@ local function trackSelectionSettings(trackName) -- call this function to setup 
 	  selparents = true,
 	  search = "VASC_Reference",
 	  selchildren = true,
-	  matchonlytop = false,
+	  matchonlytop = true,
 	  selsiblings = false,
 	  add_selection = true,
-	  matchmultiple = true,
+	  matchmultiple = false,
 	}
 	end
 	return settings
