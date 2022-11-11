@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="327fc75017c81314889cd62102cc4a368c85d83c">
+<index version="1" name="TImbert Scripts" commit="5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -440,6 +440,10 @@
         <changelog><![CDATA[# Initial release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/1846e31620fe036d3aec0c5d042afca7b0db481e/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
       </version>
+      <version name="1.1" author="Thomas Imbert" time="2022-11-11T02:07:16Z">
+        <changelog><![CDATA[# Added Auto Extend Guide Stop]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
+      </version>
     </reapack>
     <reapack name="timbert_VASC Record Punch with notes.lua" type="script" desc="VASC Record Punch PT like with notes">
       <metadata>
@@ -471,6 +475,10 @@
       <version name="1.4" author="Thomas Imbert" time="2022-10-18T00:21:50Z">
         <changelog><![CDATA[# Cleaned up nested conditions and updated Lua Utilities Requirements]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c01a1e0d6932372c18418c56a0c000814897675d/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+      </version>
+      <version name="1.5" author="Thomas Imbert" time="2022-11-11T02:07:16Z">
+        <changelog><![CDATA[# Added Auto Extend Guide Start]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record with context of previous line.lua" type="script" desc="VASC Record with context of previous line">
