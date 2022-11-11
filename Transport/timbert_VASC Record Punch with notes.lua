@@ -1,10 +1,10 @@
 -- @description VASC Record Punch PT like with notes
 -- @author Thomas Imbert
--- @version 1.4
+-- @version 1.5
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about A record punch similar to ProTool's, intended to work with VASC. Copies notes from the Guide track item onto the recorded take.
 -- @changelog 
---   # Cleaned up nested conditions and updated Lua Utilities Requirements
+--   # Added Auto Extend Guide Start
 
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")

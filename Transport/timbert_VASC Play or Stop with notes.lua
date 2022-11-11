@@ -1,10 +1,10 @@
 -- @description VASC Play/Stop with notes
 -- @author Thomas Imbert
--- @version 1.0
+-- @version 1.1
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Play/Stop command that pastes stored VASC Guide info in selected item.
 -- @changelog 
---   # Initial release
+--   # Added Auto Extend Guide Stop
 
 -- #local declarations#
 
