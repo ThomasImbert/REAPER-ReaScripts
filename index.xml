@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199">
+<index version="1" name="TImbert Scripts" commit="f0540dfea59eff2edc932d0f2d3f23470a76f959">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -425,7 +425,7 @@
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/a4e9029f1aa0b1ef45df3267308badb66348e967/Transport/timbert_VASC%20go%20to%20previous%20Guide%20segment.lua</source>
       </version>
     </reapack>
-    <reapack name="timbert_VASC Play or Stop with notes.lua" type="script" desc="VASC Play/Stop with notes">
+    <reapack name="timbert_VASC Play or Stop with notes.lua" type="script" desc="VASC Play/Stop/Pause with notes">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
@@ -443,6 +443,10 @@
       <version name="1.1" author="Thomas Imbert" time="2022-11-11T02:07:16Z">
         <changelog><![CDATA[# Added Auto Extend Guide Stop]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
+      </version>
+      <version name="1.2" author="Thomas Imbert" time="2022-11-12T20:11:41Z">
+        <changelog><![CDATA[# Clean code by loading lua Utilites and moved ExtendGuide to another script. Added User settings for the play / stop / pause mode]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f0540dfea59eff2edc932d0f2d3f23470a76f959/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record Punch with notes.lua" type="script" desc="VASC Record Punch PT like with notes">
@@ -479,6 +483,10 @@
       <version name="1.5" author="Thomas Imbert" time="2022-11-11T02:07:16Z">
         <changelog><![CDATA[# Added Auto Extend Guide Start]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5cfa0c7c479c8e1e26bcd2822c4a27f888ad1199/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+      </version>
+      <version name="1.6" author="Thomas Imbert" time="2022-11-12T20:11:41Z">
+        <changelog><![CDATA[# Moved Extend Guide logic outside of script]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f0540dfea59eff2edc932d0f2d3f23470a76f959/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record with context of previous line.lua" type="script" desc="VASC Record with context of previous line">
