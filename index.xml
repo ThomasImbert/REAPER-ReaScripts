@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="bd26ccabafd1b32c25b8de8e9a575d69d16500b3">
+<index version="1" name="TImbert Scripts" commit="c30d77850c65a699a435ec26a59b45f3e0659218">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -64,6 +64,10 @@
       <version name="1.1" author="Thomas Imbert" time="2022-10-18T22:24:13Z">
         <changelog><![CDATA[#Included non portable Code]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6166dc22429c462f6d4fd1067c16583d357528ba/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+      </version>
+      <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
+        <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c30d77850c65a699a435ec26a59b45f3e0659218/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all but first take to Alt tracks.lua" type="script" desc="Move all but first take to Alt tracks">
