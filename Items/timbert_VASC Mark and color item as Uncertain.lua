@@ -35,6 +35,9 @@ local function main(colorNumber)
 	reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, true )
 	timbert.swsCommand("_SWS_TAKECUSTCOL"..colorNumber) -- SWS: Set selected take(s) to custom color
 	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")  -- SWS/BR: Save edit cursor position, slot 01
+	if (timbert.getGuideTrackInfo()) then 
+		timbert.pasteNotes()
+	end
 	reaper.Main_OnCommand(40514, 0) -- View: Move edit cursor to mouse cursor (no snapping)
 	cursPos = reaper.GetCursorPosition()
 	local customColor = reaper.GetDisplayedMediaItemColor( item ) -- Get media item color

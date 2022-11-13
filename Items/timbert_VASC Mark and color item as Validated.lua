@@ -37,6 +37,9 @@ local function main(colorNumber)
 	reaper.Main_OnCommand(40514, 0) -- View: Move edit cursor to mouse cursor (no snapping)
 	cursPos = reaper.GetCursorPosition()
 	timbert.swsCommand("_SWS_TAKECUSTCOL"..colorNumber) -- SWS: Set selected take(s) to custom color
+	if (timbert.getGuideTrackInfo()) then 
+		timbert.pasteNotes()
+	end
 	local customColor = reaper.GetDisplayedMediaItemColor( item ) -- Get media item color
 	_, regionidx = reaper.GetLastMarkerAndCurRegion( 0, cursPos ) -- get region at timeStart (current region)
 	_, _, regionPos, regionEnd, nameRegion, realIndex = reaper.EnumProjectMarkers( regionidx ) -- get region name
