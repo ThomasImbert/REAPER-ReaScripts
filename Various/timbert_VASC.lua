@@ -203,7 +203,7 @@ function PrepareRecording()
     local itemNotes = "Character: "..vasc_charName[j].." \n"
                 .."Direction: "..vasc_direction[j].." \n".."Text: "..vasc_text[j] -- "File: "..vasc_fileName[j].." \n"..
     reaper.GetSetMediaItemInfo_String( itemId, "P_NOTES", itemNotes, true )
-    reaper.AddProjectMarker2(0, true, timeSelectStart, (timeSelectEnd+1), vasc_fileName[j], -1, 0)
+    reaper.AddProjectMarker2(0, true, timeSelectStart, (timeSelectEnd), vasc_fileName[j], -1, 0)
     iXMLMarkers(cursorPos,j)  -- create values for the mega_marker and META marker for the associated index
     iXMLMarkersEngage(j) -- insert the pair of marker at index
     reaper.SetEditCurPos( (timeSelectEnd + 1), true, true )
@@ -339,7 +339,7 @@ function openVASCWebInterface()
   local vasc_path = ""
   
   for _, line in pairs(web_int_settings) do
-    if line:find("SYMtimbert_VA Spreadsheet Connect Tool.html") then
+    if line:find("timbert_VASC.html") then
       local port = getPort(line)
       vasc_path = localhost .. port
     end
@@ -348,7 +348,7 @@ function openVASCWebInterface()
   if vasc_path ~= "" then
     openURL(vasc_path)
   else
-    local response = reaper.MB("VASC Tool not found in Reaper Web Interface settings!\n\nWould you like to open the installation tutorial video?","Open VASC Tool",4)
+    local response = reaper.MB("VASC not found in Reaper Web Interface settings!\n\nWould you like to open the installation tutorial video?","Open VASC Tool",4)
     if response == 6 then end
   end
 end
