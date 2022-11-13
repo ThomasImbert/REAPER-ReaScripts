@@ -1,6 +1,6 @@
 -- @description Move all but first takes to Alt tracks and assemble in one file
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.2
 -- @about
 --      To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".
 --
@@ -8,7 +8,7 @@
 --
 --		Note that this version of the script glues the takes together in the process to allow for a ProTools like punch record, found in my cycle actions "Record Punch PT Like" and "VASC Record Punch PT Like"
 -- @changelog
---   #Included non portable Code
+--   #Fixed META marker and validation EXT data getting erased
 
 
 -- Get this script's name and directory
@@ -76,25 +76,27 @@ local function makeItemsSeamless()
   local item, bool, notes, itemNotes, data, item_chunk, itemData
   local notes = ""
   local itemsInfo = {}
+  local isValid, validValue = {}, {}
   if num_sel_items > 0 then
     for i=1, num_sel_items do
       item = reaper.GetSelectedMediaItem( 0, i-1 )
-      local item_start = reaper.GetMediaItemInfo_Value( item, "D_POSITION" )
+	  isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", "", false )
+	  timbert.dbg(validValue[i])
 	  itemsInfo[i] = {
 		color =   reaper.GetDisplayedMediaItemColor( item ),
-		-- bool, notes = reaper.GetSetMediaItemInfo_String( item, "P_NOTES", notes, false ),
-		-- notesInfo = notes
+		-- validation = validValue[i],
+		-- timbert.dbg(validation),
+		startPosition = reaper.GetMediaItemInfo_Value( item, "D_POSITION" ),
 		}
-      local take = reaper.GetActiveTake( item )
-      reaper.AddProjectMarker( 0, 0, item_start, item_start, "#" .. tostring(i), i )
     end
 	reaper.Main_OnCommand(42432, 0) -- Item: Glue items
-	reaper.Main_OnCommand(40931, 0) -- Item: Split items at project markers
-	reaper.Main_OnCommand(40297, 0) -- Track - Unselect (clear selection of) all tracks
-	reaper.Main_OnCommand(40420, 0) -- Markers: Remove all markers from time selection
 	for i=1, num_sel_items do
 		item = reaper.GetSelectedMediaItem( 0, i-1 )
 		reaper.SetMediaItemInfo_Value( item, "I_CUSTOMCOLOR", itemsInfo[i].color )  
+		reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validValue[i], true )
+		if i < num_sel_items then
+			reaper.SplitMediaItem(  item, itemsInfo[i+1].startPosition )
+		end
 	end
   end
 end
