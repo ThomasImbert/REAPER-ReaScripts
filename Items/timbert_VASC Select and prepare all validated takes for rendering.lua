@@ -19,7 +19,7 @@ if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if no
 
 -- settings
 local validationTag = "Validated"
-local reposition = false -- Make sure to only have a unique media item per Guide Segment / region and per track. Glue composite takes before using this script
+local reposition = true -- Make sure to only have a unique media item per Guide Segment / region and per track. Glue composite takes before using this script
 						 -- Also make sure that not such item is mistakingly placed BEFORE the associated region (even by a little)
 local function main() 
 	timbert.swsCommand("_SWS_SAVESEL") -- Save current track selection

@@ -81,7 +81,6 @@ local function makeItemsSeamless()
     for i=1, num_sel_items do
       item = reaper.GetSelectedMediaItem( 0, i-1 )
 	  isValid[i], validValue[i] = reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", "", false )
-	  timbert.dbg(validValue[i])
 	  itemsInfo[i] = {
 		color =   reaper.GetDisplayedMediaItemColor( item ),
 		-- validation = validValue[i],
