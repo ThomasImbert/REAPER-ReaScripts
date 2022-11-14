@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="6f34216f322ae8db2a820a399ca9db715fa875a7">
+<index version="1" name="TImbert Scripts" commit="e466f2bed5deafc0322890b8a7fe9602243ab478">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -46,7 +46,7 @@
       </version>
       <version name="1.8" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[# Updated Select Guide to include "Reference"]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/fdfd2d1c2434a4fad29a1d00568f1172df4e7abe/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
@@ -67,7 +67,7 @@
       </version>
       <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
         <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c30d77850c65a699a435ec26a59b45f3e0659218/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all but first take to Alt tracks.lua" type="script" desc="Move all but first take to Alt tracks">
@@ -83,7 +83,7 @@
       </metadata>
       <version name="1.1" author="Thomas Imbert" time="2022-10-18T16:47:55Z">
         <changelog><![CDATA[#Included non portable Code]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f15514d9f8aa5166f80f35ff288358a319824618/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
@@ -117,7 +117,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-10-20T15:03:44Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/a60a80a1fab59236e30e276759a08f715e8d51ab/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Mark and color item as Retake.lua" type="script" desc="VASC Mark and color item under mouse cursor as Retake">
@@ -133,7 +133,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/bd26ccabafd1b32c25b8de8e9a575d69d16500b3/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Retake.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Retake.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Mark and color item as Uncertain.lua" type="script" desc="VASC Mark and color item under mouse cursor as Uncertain">
@@ -149,7 +149,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/bd26ccabafd1b32c25b8de8e9a575d69d16500b3/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Uncertain.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Uncertain.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Mark and color item as Validated.lua" type="script" desc="VASC Mark and color item under mouse cursor as Validated">
@@ -165,7 +165,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/bd26ccabafd1b32c25b8de8e9a575d69d16500b3/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Validated.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Mark%20and%20color%20item%20as%20Validated.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Select and prepare all validated takes for rendering.lua" type="script" desc="VASC Select and prepare all validated takes for rendering">
@@ -181,7 +181,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/327fc75017c81314889cd62102cc4a368c85d83c/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Select and prepare Alt takes for rendering.lua" type="script" desc="VASC Select and prepare Alt takes for rendering">
@@ -197,7 +197,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-11T00:43:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/327fc75017c81314889cd62102cc4a368c85d83c/Items/timbert_VASC%20Select%20and%20prepare%20Alt%20takes%20for%20rendering.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Select%20and%20prepare%20Alt%20takes%20for%20rendering.lua</source>
       </version>
     </reapack>
   </category>
@@ -410,7 +410,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-10-19T09:47:55Z">
         <changelog><![CDATA[# Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/98b2720a463155795022664bcea45726e581db3b/Transport/timbert_VASC%20go%20to%20next%20Guide%20segment.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Transport/timbert_VASC%20go%20to%20next%20Guide%20segment.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC go to previous Guide segment.lua" type="script" desc="VASC Go to previous Guide segment">
@@ -426,7 +426,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-10-19T10:20:25Z">
         <changelog><![CDATA[# Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/a4e9029f1aa0b1ef45df3267308badb66348e967/Transport/timbert_VASC%20go%20to%20previous%20Guide%20segment.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Transport/timbert_VASC%20go%20to%20previous%20Guide%20segment.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Play or Stop with notes.lua" type="script" desc="VASC Play/Stop/Pause with notes">
@@ -450,7 +450,7 @@
       </version>
       <version name="1.2" author="Thomas Imbert" time="2022-11-12T20:11:41Z">
         <changelog><![CDATA[# Clean code by loading lua Utilites and moved ExtendGuide to another script. Added User settings for the play / stop / pause mode]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f0540dfea59eff2edc932d0f2d3f23470a76f959/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Transport/timbert_VASC%20Play%20or%20Stop%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record Punch with notes.lua" type="script" desc="VASC Record Punch PT like with notes">
@@ -490,7 +490,7 @@
       </version>
       <version name="1.6" author="Thomas Imbert" time="2022-11-12T20:11:41Z">
         <changelog><![CDATA[# Moved Extend Guide logic outside of script]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f0540dfea59eff2edc932d0f2d3f23470a76f959/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Transport/timbert_VASC%20Record%20Punch%20with%20notes.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Record with context of previous line.lua" type="script" desc="VASC Record with context of previous line">
@@ -514,7 +514,7 @@
       </version>
       <version name="1.2" author="Thomas Imbert" time="2022-10-18T01:43:15Z">
         <changelog><![CDATA[# Fixed Alt takes previewing and removed remaining clutter]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/85a51075c2ca59ded1164fb524557be1d40d8dca/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
       </version>
     </reapack>
   </category>
@@ -532,7 +532,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-13T00:59:49Z">
         <changelog><![CDATA[# Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/5e519722804490c8db715905bc1decc5371d2f6d/Various/timbert_VASC%20Extend%20Guide.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Various/timbert_VASC%20Extend%20Guide.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Store region position for websync.lua" type="script" desc="VASC Store region position for sync">
