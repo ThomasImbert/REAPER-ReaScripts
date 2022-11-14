@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="7632c9748c0d79a7f5361749395dbadcf8e52489">
+<index version="1" name="TImbert Scripts" commit="d9b4d6da11a9ecad2ea905f516f906ca7bbea240">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -67,7 +67,7 @@
       </version>
       <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
         <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d9b4d6da11a9ecad2ea905f516f906ca7bbea240/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Swap take with alt take under mouse cursor.lua" type="script" desc="Swap item with alt take (item) under mouse cursor">
@@ -147,7 +147,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d9b4d6da11a9ecad2ea905f516f906ca7bbea240/Items/timbert_VASC%20Select%20and%20prepare%20all%20validated%20takes%20for%20rendering.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC Select and prepare Alt takes for rendering.lua" type="script" desc="VASC Select and prepare Alt takes for rendering">
@@ -163,7 +163,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-11-11T00:43:20Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_VASC%20Select%20and%20prepare%20Alt%20takes%20for%20rendering.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d9b4d6da11a9ecad2ea905f516f906ca7bbea240/Items/timbert_VASC%20Select%20and%20prepare%20Alt%20takes%20for%20rendering.lua</source>
       </version>
     </reapack>
   </category>
