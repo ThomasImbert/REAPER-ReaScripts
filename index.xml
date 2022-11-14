@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="e466f2bed5deafc0322890b8a7fe9602243ab478">
+<index version="1" name="TImbert Scripts" commit="430539a5d992c9a726b9d154da2c477ce5336e8d">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -68,40 +68,6 @@
       <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
         <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_Move all but first take to Alt tracks.lua" type="script" desc="Move all but first take to Alt tracks">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 \f1 Select all the items of the same dialog take before using this script. The takes will be automatically organized vertically and moved to the Alt takes folder.\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.1" author="Thomas Imbert" time="2022-10-18T16:47:55Z">
-        <changelog><![CDATA[#Included non portable Code]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e466f2bed5deafc0322890b8a7fe9602243ab478/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks.lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file.lua" type="script" desc="Move all takes but one (under mouse cursor) to Alt tracks and assemble in one file">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 To be used with an Alt folder track like the template provided in my "timbert_VASC_AltFolder_default.RTrackTemplate".\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Select all the items of the same dialog take before using this script AND place the mouse cursor on your favorite take. The takes will be automatically organized vertically and move to the Alt takes folder, with the favorite take on the top track colored in SWS custom color 01.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Note that this version of the script glues the takes together in the process to allow for a ProTools like punch record, found in my cycle actions "Record Punch PT Like" and "VASC Record Punch PT Like"\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 This script was generated using Lokasenna's "Generate script from custom action" and uses many actions found in various repositories, details found here "https://github.com/ThomasImbert/REAPER-ReaScripts/blob/master/README.md"\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-09-29T15:46:54Z">
-        <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8e550490c0576b247f73ec4c01d478bd21f24bdf/Items/timbert_Move%20all%20takes%20but%20one%20(under%20mouse%20cursor)%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Swap take with alt take under mouse cursor.lua" type="script" desc="Swap item with alt take (item) under mouse cursor">
@@ -252,40 +218,6 @@
     </reapack>
   </category>
   <category name="Media Explorer">
-    <reapack name="timbert_Add custom user columns for ASWG Dialog iXML Metadata.lua" type="script" desc="ASWG Dialog iXML Metadata Columns">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG specific to dialog in the Media explorer.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
-        <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_Add%20custom%20user%20columns%20for%20ASWG%20Dialog%20iXML%20Metadata.lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_Add custom user columns for ASWG General iXML Metadata.lua" type="script" desc="ASWG General iXML Metadata Columns">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG General, Format and Recording Categories in the Media explorer.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
-        <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_Add%20custom%20user%20columns%20for%20ASWG%20General%20iXML%20Metadata.lua</source>
-      </version>
-    </reapack>
     <reapack name="timbert_Add custom VASC user columns iXML Metadata (delete existing user columns).lua" type="script" desc="VASC iXML Metadata Columns (delete existing user columns)">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -301,23 +233,6 @@
       <version name="1.0" author="Thomas Imbert" time="2022-11-05T23:45:04Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
         <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/2cef231fae722d7aaa38d912a73624dfe75382e9/Media%20Explorer/timbert_Add%20custom%20VASC%20user%20columns%20iXML%20Metadata%20(delete%20existing%20user%20columns).lua</source>
-      </version>
-    </reapack>
-    <reapack name="timbert_VASC Add custom user columns for ASWG iXML Metadata.lua" type="script" desc="ASWG iXML Metadata Columns for VASC">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Create metadata columns for ASWG relevant to VASC tool in the Media explorer.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Derived from acendan Soundminer iXML script.\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Find the ASWG iXML specs here: https://github.com/Sony-ASWG/iXML-Extension/blob/main/ASWG-G006%20-%20iXML%20Extension%20Specification%20v1.0.pdf\par}
-}
-]]></description>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2022-02-23T14:29:28Z">
-        <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="mediaexplorer">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/86794cf3dbe286c6063020a8877c3855a68a05a5/Media%20Explorer/timbert_VASC%20Add%20custom%20user%20columns%20for%20ASWG%20iXML%20Metadata.lua</source>
       </version>
     </reapack>
   </category>
