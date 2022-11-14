@@ -159,7 +159,7 @@ function PrepareRecording()
   end
 
   -- Create time selection following user input for Take and Region length
-  local userLengthSet, userLength = reaper.GetUserInputs( "Length between takes?", 1, "Value in seconds", "60" )
+  local userLengthSet, userLength = reaper.GetUserInputs( "Length between takes?", 1, "Value in seconds", "30" )
   if not userLengthSet then 
     reaper.SetProjExtState(0,"VASC_WebInterface", "isReaperReady","false")
     return end 
@@ -180,16 +180,17 @@ function PrepareRecording()
       end
   end
 
+  reaper.InsertTrackAtIndex( 0, true )
+  reaper.GetSetMediaTrackInfo_String(reaper.GetTrack( 0, 0 ), "P_NAME", "VASC_GUIDE", true )
+
   -- Create Tracks for each charNameacters
   for i,_ in ipairs(trackNames) do
     if tostring(trackNames[i]) ~= "" then
-    reaper.InsertTrackAtIndex( i-1, true )
-    reaper.GetSetMediaTrackInfo_String(reaper.GetTrack( 0, i-1 ), "P_NAME", tostring(trackNames[i]), true )
+    reaper.InsertTrackAtIndex( i, true )
+    reaper.GetSetMediaTrackInfo_String(reaper.GetTrack( 0, i ), "P_NAME", tostring(trackNames[i]), true )
     end
   end
 
-  reaper.InsertTrackAtIndex( 0, true )
-  reaper.GetSetMediaTrackInfo_String(reaper.GetTrack( 0, 0 ), "P_NAME", "VASC_GUIDE", true )
   reaper.SetEditCurPos( 0, true, false )
   reaper.SetOnlyTrackSelected( reaper.GetTrack( 0, 0 ) )
   local itemStartPos = 0
