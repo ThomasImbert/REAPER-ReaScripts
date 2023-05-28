@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="db16388ccc9d70fa12460662d3b2c7b4abccfa80">
+<index version="1" name="TImbert Scripts" commit="c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -485,6 +485,10 @@
         <changelog><![CDATA[#Initial Pre-Alpha Release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/f5abc5217f1ad641cafdbc4cdca7510566fc5662/Various/timbert_VASC.lua</source>
       </version>
+      <version name="0.2" author="Thomas Imbert" time="2023-05-28T10:37:01Z">
+        <changelog><![CDATA[#Fixed Question mark breaking projExtState by doing string substitution]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Various/timbert_VASC.lua</source>
+      </version>
     </reapack>
   </category>
   <category name="Web Interface">
@@ -537,6 +541,16 @@
         <source file="VASC_lib/bootstrap.min.js.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3fa8f26df98ef00bad9a0fe18d496c3af53a7714/Web%20Interface/VASC_lib/bootstrap.min.js.map</source>
         <source file="VASC_lib/jquery-3.5.1.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3fa8f26df98ef00bad9a0fe18d496c3af53a7714/Web%20Interface/VASC_lib/jquery-3.5.1.min.js</source>
         <source file="VASC_lib/xlsx.full.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3fa8f26df98ef00bad9a0fe18d496c3af53a7714/Web%20Interface/VASC_lib/xlsx.full.min.js</source>
+      </version>
+      <version name="0.18" author="Thomas Imbert" time="2023-05-28T10:37:01Z">
+        <changelog><![CDATA[# Replaced "?" with "QSTNMARK" in text transcript ProjExtState]]></changelog>
+        <source file="timbert_VASC.html">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/timbert_VASC.html</source>
+        <source file="VASC_lib/bootstrap.min.css">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/bootstrap.min.css</source>
+        <source file="VASC_lib/bootstrap.min.css.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/bootstrap.min.css.map</source>
+        <source file="VASC_lib/bootstrap.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/bootstrap.min.js</source>
+        <source file="VASC_lib/bootstrap.min.js.map">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/bootstrap.min.js.map</source>
+        <source file="VASC_lib/jquery-3.5.1.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/jquery-3.5.1.min.js</source>
+        <source file="VASC_lib/xlsx.full.min.js">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c0e4a07e78acb4ccbb2a4dc5dad65e0599476d49/Web%20Interface/VASC_lib/xlsx.full.min.js</source>
       </version>
     </reapack>
   </category>
