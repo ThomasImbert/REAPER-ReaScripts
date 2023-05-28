@@ -1,6 +1,6 @@
 -- @description VASC (Voice Acting Spreadsheet Connect)
 -- @author Thomas Imbert
--- @version 0.1
+-- @version 0.2
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about
 --      Voice Acting Spreadsheet Connect launches the VASC web interface allowing users to import spreadsheet to make their Reaper session smarter.
@@ -20,7 +20,7 @@
 -- @provides
 --   [main] . > timbert_VASC.lua
 -- @changelog
---   #Initial Pre-Alpha Release
+--   #Fixed Question mark breaking projExtState by doing string substitution
 
 
 -- GLOBAL VARS FROM WEB INTERFACE 
@@ -131,6 +131,7 @@ function PrepareRecording()
     ret_actorName[i],     vasc_actorName[i]     = reaper.GetProjExtState( 0, "VASC_WebInterface", "actorName"..tostring(i))
     ret_charName[i],      vasc_charName[i]      = reaper.GetProjExtState( 0, "VASC_WebInterface", "charName"..tostring(i))
     ret_text[i],          vasc_text[i]          = reaper.GetProjExtState( 0, "VASC_WebInterface", "text"..tostring(i))
+    vasc_text[i] = vasc_text[i]:gsub("QSTNMARK", "?")
     ret_direction[i],     vasc_direction[i]     = reaper.GetProjExtState( 0, "VASC_WebInterface", "direction"..tostring(i))
     ret_notes[i],         vasc_notes[i]         = reaper.GetProjExtState( 0, "VASC_WebInterface", "notes"..tostring(i))
     ret_timing[i],        vasc_timing[i]        = reaper.GetProjExtState( 0, "VASC_WebInterface", "timing"..tostring(i))
