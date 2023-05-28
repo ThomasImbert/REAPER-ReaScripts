@@ -1,6 +1,6 @@
 -- @description VASC (Voice Acting Spreadsheet Connect)
 -- @author Thomas Imbert
--- @version 0.2
+-- @version 0.21
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about
 --      Voice Acting Spreadsheet Connect launches the VASC web interface allowing users to import spreadsheet to make their Reaper session smarter.
@@ -20,7 +20,7 @@
 -- @provides
 --   [main] . > timbert_VASC.lua
 -- @changelog
---   #Fixed Question mark breaking projExtState by doing string substitution
+--   #Fixed Text corruption in ProjExtState by encoding / decoding text in base64
 
 
 -- GLOBAL VARS FROM WEB INTERFACE 
@@ -131,7 +131,7 @@ function PrepareRecording()
     ret_actorName[i],     vasc_actorName[i]     = reaper.GetProjExtState( 0, "VASC_WebInterface", "actorName"..tostring(i))
     ret_charName[i],      vasc_charName[i]      = reaper.GetProjExtState( 0, "VASC_WebInterface", "charName"..tostring(i))
     ret_text[i],          vasc_text[i]          = reaper.GetProjExtState( 0, "VASC_WebInterface", "text"..tostring(i))
-    vasc_text[i] = vasc_text[i]:gsub("QSTNMARK", "?")
+    vasc_text[i] = from_base64(vasc_text[i])
     ret_direction[i],     vasc_direction[i]     = reaper.GetProjExtState( 0, "VASC_WebInterface", "direction"..tostring(i))
     ret_notes[i],         vasc_notes[i]         = reaper.GetProjExtState( 0, "VASC_WebInterface", "notes"..tostring(i))
     ret_timing[i],        vasc_timing[i]        = reaper.GetProjExtState( 0, "VASC_WebInterface", "timing"..tostring(i))
@@ -254,33 +254,33 @@ end
 function iXMLMarkers(position,index)
   local i = index
   local mega_marker = {}
-    mega_marker[i] = "META"..tostring(i)
-    -- ASWG
-    -- mega_marker[i] = mega_marker .. ";" .. "ASWGfxChainName=" .. aswg_fxChainName[i]
-    -- mega_marker[i] = mega_marker[i] .. ";" .. "ASWGfxUsed=" .. aswg_fxUsed[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGnotes=" .. vasc_notes[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGtext=" .. vasc_text[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGefforts=" .. vasc_efforts[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGeffortType=" .. vasc_effortType[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGprojection=" .. vasc_projection[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGlanguage=" .. vasc_language[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGtimingRestriction=" .. vasc_timing[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterName=" .. vasc_charName[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterGender=" .. vasc_charGender[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterAge=" .. vasc_charAge[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterRole=" .. vasc_charRole[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGactorName=" .. vasc_actorName[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGactorGender=" .. vasc_actorGender[i]
-    mega_marker[i] = mega_marker[i].. ";" .. "ASWGdirection=" .. vasc_direction[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "ASWGusageRights=" .. vasc_usageRights[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "ASWGisUnion=" .. vasc_isUnion[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "ASWGaccent=" .. vasc_accent[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "ASWGemotion=" .. vasc_emotion[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "AnswerFile=" .. vasc_answerFile[i]
-    mega_marker[i] = mega_marker[i] .. ";" .. "Interlocutor=" .. vasc_interlocutor[i]
-    
-    iXMLMarkerTbl[#iXMLMarkerTbl+1] = {position, mega_marker[i], i}
-    iXMLMarkerTbl[#iXMLMarkerTbl+1] = {position + 0.001, "META", i}
+  mega_marker[i] = "META"..tostring(i)
+  -- ASWG
+  -- mega_marker[i] = mega_marker .. ";" .. "ASWGfxChainName=" .. aswg_fxChainName[i]
+  -- mega_marker[i] = mega_marker[i] .. ";" .. "ASWGfxUsed=" .. aswg_fxUsed[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGnotes=" .. vasc_notes[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGtext=" .. vasc_text[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGefforts=" .. vasc_efforts[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGeffortType=" .. vasc_effortType[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGprojection=" .. vasc_projection[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGlanguage=" .. vasc_language[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGtimingRestriction=" .. vasc_timing[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterName=" .. vasc_charName[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterGender=" .. vasc_charGender[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterAge=" .. vasc_charAge[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGcharacterRole=" .. vasc_charRole[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGactorName=" .. vasc_actorName[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGactorGender=" .. vasc_actorGender[i]
+  mega_marker[i] = mega_marker[i].. ";" .. "ASWGdirection=" .. vasc_direction[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "ASWGusageRights=" .. vasc_usageRights[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "ASWGisUnion=" .. vasc_isUnion[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "ASWGaccent=" .. vasc_accent[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "ASWGemotion=" .. vasc_emotion[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "AnswerFile=" .. vasc_answerFile[i]
+  mega_marker[i] = mega_marker[i] .. ";" .. "Interlocutor=" .. vasc_interlocutor[i]
+  
+  iXMLMarkerTbl[#iXMLMarkerTbl+1] = {position, mega_marker[i], i}
+  iXMLMarkerTbl[#iXMLMarkerTbl+1] = {position + 0.001, "META", i}
 end
 
 -- Imports iXML Markers after processing
@@ -297,6 +297,23 @@ function iXMLMarkersEngage(index)
   local valueMeta = iXMLMarkerTbl[markerMetaIndex][2]
   local ixdMeta = iXMLMarkerTbl[markerMetaIndex][3]
   reaper.AddProjectMarker( 0, 0, positionMeta, positionMeta, valueMeta, ixdMeta )
+end
+
+-- this function converts base64 to string
+function from_base64(data)
+  local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  data = string.gsub(data, '[^'..b..'=]', '')
+  return (data:gsub('.', function(x)
+      if (x == '=') then return '' end
+      local r,f='',(b:find(x)-1)
+      for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
+      return r;
+  end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+      if (#x ~= 8) then return '' end
+      local c=0
+      for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
+      return string.char(c)
+  end))
 end
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~

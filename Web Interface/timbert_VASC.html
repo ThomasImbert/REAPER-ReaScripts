@@ -1079,8 +1079,8 @@
                 fileName[i] = $("#conformTableDATA_r"+ i +"_c"+"1").text(); 
                 actorName[i] = $("#conformTableDATA_r"+ i +"_c"+"2").text(); 
                 charName[i] = $("#conformTableDATA_r"+ i +"_c"+"3").text(); 
-                text[i] = $("#conformTableDATA_r"+ i +"_c"+"4").text(); 
-                text[i].replace("?","QSTNMARK");
+                text[i] = $("#conformTableDATA_r"+ i +"_c"+"4").html(); 
+                text[i] = btoa(text[i]);
                 direction[i] = $("#conformTableDATA_r"+ i +"_c"+"5").text(); 
                 notes[i] = $("#conformTableDATA_r"+ i +"_c"+"6").text(); 
 
@@ -1270,7 +1270,7 @@
 
     <script> // Continuous request to Reaper to sync the session with the webpage 
         var timeRecur = 200;
-        var vascWebSyncRegion = "_RSba1f8800d0a0c387db2d7a1428ef0d108c57e90e"; // Script: timbert_VASC Store region position for websync.lua
+        var vascWebSyncRegion = "_RSdbc16ddcf67580daf1d7f92bfb5f2390e3eb6b71"; // Script: timbert_VASC Store region position for websync.lua
         var conformTable = document.getElementById('conformTableFull');
         var conformTableRows = conformTable.getElementsByTagName('tr');
         var section, key, regionSync = "";
