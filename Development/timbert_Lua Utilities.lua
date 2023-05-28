@@ -25,7 +25,7 @@ if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if no
 timbert = {}
 
 function timbert.version()
-  local file = io.open((reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'):gsub('\\','/'),"r")
+  local file = io.open((reaper.GetResourcePath()..'/scripts/Thomas Imbert Scripts/Development/timbert_Lua Utilities.lua'):gsub('\\','/'),"r")
   local vers_header = "-- @version "
   io.input(file)
   local t = 0
