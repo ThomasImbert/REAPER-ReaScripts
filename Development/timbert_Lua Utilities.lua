@@ -18,7 +18,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/Thomas Imbert Scripts/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.7 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
+if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.9 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]]
 
@@ -339,8 +339,8 @@ function timbert.moveEditCursor_LeftByTimeSelLength(proj, invert) -- PPP_EditCur
 	ts_beg, ts_end = reaper.GetSet_LoopTimeRange2(proj, 0, 0, ts_beg, ts_end, 0)
 	ts_len = ts_end - ts_beg
 	
-	if invert == nil or false then reaper.SetEditCurPos2(proj, ec_pos - ts_len, 0, 0) return
-	if invert == true then reaper.SetEditCurPos2(proj, ec_pos + ts_len, 0, 0) return
+	if (invert == nil or invert == false) then reaper.SetEditCurPos2(proj, ec_pos - ts_len, 0, 0) return end
+	if (invert == true) then reaper.SetEditCurPos2(proj, ec_pos + ts_len, 0, 0) return end
 end
 
 function timbert.smartRecord() -- amagalma_Smart automatic record mode converted into .lua
