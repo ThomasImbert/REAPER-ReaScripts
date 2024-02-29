@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="8eae14c6b46d69b207fbe1ac28483e44b810e16c">
+<index version="1" name="TImbert Scripts" commit="fbb44ccc3e926feffe732d4cf738d127376073f9">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -50,7 +50,7 @@
       </version>
       <version name="1.9" author="Thomas Imbert" time="2024-02-29T15:52:27Z">
         <changelog><![CDATA[# Updated timbert.moveEditCursor_LeftByTimeSelLength by adding "invert" bool parameter to allow moving the cursor right instead when set to true]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8eae14c6b46d69b207fbe1ac28483e44b810e16c/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/fbb44ccc3e926feffe732d4cf738d127376073f9/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
