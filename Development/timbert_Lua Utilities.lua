@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.8
+-- @version 1.9
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Updated Select Guide to include "Reference"
+--   # Updated timbert.moveEditCursor_LeftByTimeSelLength by adding "invert" bool parameter to allow moving the cursor right instead when set to true
 
 --[[
 
@@ -333,13 +333,14 @@ function timbert.moveTimeSelectionToCursor()
   reaper.GetSet_LoopTimeRange(true, false, cursor, cursor+length, false)
 end
 
-function timbert.moveEditCursor_LeftByTimeSelLength(proj) -- PPP_EditCur_MoveLeftByTimeSelLen converted into lua
+function timbert.moveEditCursor_LeftByTimeSelLength(proj, invert) -- PPP_EditCur_MoveLeftByTimeSelLen converted into lua
 	local ts_beg, ts_end, ts_len
 	local ec_pos = reaper.GetCursorPositionEx(proj)
 	ts_beg, ts_end = reaper.GetSet_LoopTimeRange2(proj, 0, 0, ts_beg, ts_end, 0)
 	ts_len = ts_end - ts_beg
 	
-	reaper.SetEditCurPos2(proj, ec_pos - ts_len, 0, 0)
+	if invert == nil or false then reaper.SetEditCurPos2(proj, ec_pos - ts_len, 0, 0) return
+	if invert == true then reaper.SetEditCurPos2(proj, ec_pos + ts_len, 0, 0) return
 end
 
 function timbert.smartRecord() -- amagalma_Smart automatic record mode converted into .lua
