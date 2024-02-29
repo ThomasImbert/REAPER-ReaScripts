@@ -599,6 +599,17 @@
     </table>
 
     <script>
+        wwr_start();
+        function displayCurrentVascSession() {
+            // console.log("startReaperSync()");
+            // need to setup onreply to include result from this extstate
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface_CONTROL/SessionPrepared"); // getprojextstate of that section/key and center and highlight the corresponding line in the conformTable
+        }
+
+    </script>
+
+
+    <script>
         window.onload = function() {
         document.getElementById('infoCardHeader').click();
         };
@@ -1113,14 +1124,14 @@
                 });
 
             // Tell ReaScript that this is being run from a web interface
-            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "runFromWeb" + "/" + "true");
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "runFromWeb" + "/" + "true");
             if (debug) {
-                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "runFromWeb" + "/" + "true");
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "runFromWeb" + "/" + "true");
             }
             
-            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "inputTableExists" + "/" + "true");
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "inputTableExists" + "/" + "true");
             if (debug) {
-                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "inputTableExists" + "/" + "true");
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "inputTableExists" + "/" + "true");
             }
 
             document.getElementById("myProgress").style.display = "inline-block";
@@ -1147,7 +1158,7 @@
                         // Start VASC script to prepare recording
                         wwr_req(encodeURIComponent(VASCLua));
                         storeProgress(100,false);
-                        wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady", timeRecur);
+                        wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface_CONTROL/isReaperReady", timeRecur);
                         // console.log("VASC test script");
                         // waitReaperReady(displayConformTable);
                     }
@@ -1156,25 +1167,25 @@
 
             // Check if conformTable was filled with conformMatrix
             if ((fileName.length == 0) || (fileName.length == null)) {
-                wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "false");
+                wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "conformTableRows" + "/" + "false");
                 if (debug) {
-                    console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "false");
+                    console.log("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "conformTableRows" + "/" + "false");
                 }
                 wwr_req(encodeURIComponent(VASCLua));
                 return
             }
 
             // Correct iteration value (-1 for header) and send through extstate
-            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "true" );
+            wwr_req("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "conformTableRows" + "/" + "true" );
             if (debug) {
-                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface/" + "conformTableRows" + "/" + "true");
+                console.log("SET/EXTSTATEPERSIST/VASC_WebInterface_CONTROL/" + "conformTableRows" + "/" + "true");
             }
 
             // Send all conformTable values through extState using setProjExstate()
             var iteration = fileName.length-1;
-            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "Iteration" + "/" + iteration);
+            wwr_req("SET/PROJEXTSTATE/VASC_WebInterface_CONTROL/" + "Iteration" + "/" + iteration);
             if (debug) {
-                console.log("SET/PROJEXTSTATE/VASC_WebInterface/" + "Iteration" + "/" + iteration);
+                console.log("SET/PROJEXTSTATE/VASC_WebInterface_CONTROL/" + "Iteration" + "/" + iteration);
             }
 
             wwr_req("SET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGproject" + "/" + vasc_project)
@@ -1215,6 +1226,7 @@
 
     <script>
         var progressStored = 0;
+
         function storeProgress(progressAmount,returnValue){
             if (progressAmount == -1) {
                 progressAmount = progressStored;
@@ -1273,9 +1285,10 @@
         var vascWebSyncRegion = "_RSdbc16ddcf67580daf1d7f92bfb5f2390e3eb6b71"; // Script: timbert_VASC Store region position for websync.lua
         var conformTable = document.getElementById('conformTableFull');
         var conformTableRows = conformTable.getElementsByTagName('tr');
-        var section, key, regionSync = "";
+        var section, key, value, regionSync, sessionPrepared, receivedDataArrayLength = "";
         var strReaperReady = "";
         var focusedRow;
+        
         function wwr_onreply(results) {
             var ar=results.split("\n");               // split results into an array, if result has multiple lines(e.g. when you call wwr_req("MARKER") )
             for (var i=0; i < ar.length; ++i) {     // count through the individual array-fields of "ar"; every one of them containing one 
@@ -1285,24 +1298,46 @@
                     switch (tok[0]) {
                         case "PROJEXTSTATE":           // if response was from wwr_req("TRANSPORT") then set the individual tok-entries to these global variables
                             section=tok[1]; 
-                            key=tok[2];
-                            switch (key) {
-                                case "isReaperReady":
-                                    strReaperReady=tok[3];
-                                    if (strReaperReady == "true") {
-                                        displayConformTable();
-                                        wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
-                                    }
-                                    else {
-                                        strReaperReady = "false";
-                                        storeProgress(0,false);
-                                        progressBarUpdate();
-                                        wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
+                            switch (section) {
+                                case "VASC_WebInterface_CONTROL":
+                                    key=tok[2];
+                                    switch (key) {
+                                        case "isReaperReady":
+                                            strReaperReady=tok[3];
+                                            if (strReaperReady == "true") {
+                                                displayConformTable();
+                                                wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
+                                            }
+                                            else {
+                                                strReaperReady = "false";
+                                                storeProgress(0,false);
+                                                progressBarUpdate();
+                                                wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady");
+                                            }
+                                        break;
+                                        
+                                        case "SyncRegion":
+                                            regionSync = tok[3];
+                                        break;
+                                        
+                                        case "SessionPrepared":
+                                            sessionPrepared = tok[3];
+                                            if (sessionPrepared == "true") {
+                                                reloadSessionData();
+                                            }
+                                        break;
+
+                                        case "Iteration":
+                                            receivedDataArrayLength = tok[3];
+                                        break;
                                     }
                                 break;
 
-                                case "SyncRegion":
-                                    regionSync=tok[3];
+                                case "VASC_WebInterface":
+                                    key=tok[2];
+                                    switch (key) {
+                                        // iterate over each key value from reaper data
+                                    }
                                 break;
                             }
                         break;
@@ -1330,12 +1365,12 @@
         function startReaperSync() {
             // console.log("startReaperSync()");
             wwr_req_recur(encodeURIComponent(vascWebSyncRegion), timeRecur); // send req to a custom script storing in extstate the data of current region
-            wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/SyncRegion", timeRecur); // getprojextstate of that section/key and center and highlight the corresponding line in the conformTable
+            wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface_CONTROL/SyncRegion", timeRecur); // getprojextstate of that section/key and center and highlight the corresponding line in the conformTable
         }
 
         function stopReaperSync() {
             wwr_req_recur_cancel(encodeURIComponent(vascWebSyncRegion)); // call when stopping the sync
-            wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface/SyncRegion"); // call when stopping the sync
+            wwr_req_recur_cancel("GET/PROJEXTSTATE/VASC_WebInterface_CONTROL/SyncRegion"); // call when stopping the sync
         }
 
         function scrollEleTopThird(element) {
@@ -1343,6 +1378,81 @@
             var absoluteElementTop = elementRect.top + window.pageYOffset;
             var middle = absoluteElementTop - (window.innerHeight / 3);
             window.scrollTo(0, middle);
+        }
+
+        function reloadSessionData() {
+            // req recur reaper data
+            wwr_req_recur(encodeURIComponent(vascWebSyncRegion), timeRecur);
+
+
+            // GET REAPER PROJEXTSTATE
+            const sleep = (time) => {
+                return new Promise((resolve) => setTimeout(resolve, time))
+            }
+
+            var progressAmount = 0;
+            receivedDataArrayLength = parseInt(receivedDataArrayLength);
+            const getProjExtState = async (array, extName = "") => {
+                for (var i = 1; i < receivedDataArrayLength; i++) {
+                    var val = array[i];
+                    await sleep(20)
+                    wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + extName + i);
+                    progressAmount += 100/(cat.length*(receivedDataArrayLength-1));
+                    // console.log("progressAmount HERE: " + progressAmount);
+                    storeProgress(progressAmount,false);
+                    if (debug) {
+                        console.log("GET/PROJEXTSTATE/VASC_WebInterface/" + extName + i);
+                    }
+                    if (array == lastCat && i == receivedDataArrayLength-1){
+                        // Start VASC script to prepare recording
+                        // wwr_req(encodeURIComponent(VASCLua));
+                        storeProgress(100,false);
+                        // wwr_req_recur("GET/PROJEXTSTATE/VASC_WebInterface/isReaperReady", timeRecur);
+                        // console.log("VASC test script");
+                        // waitReaperReady(displayConformTable);
+                    }
+                }
+            } 
+
+            
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface_CONTROL/" + "Iteration")
+
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGproject")
+            // wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWG:session") try and get reaper project name directly
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGdirector")
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGrecEngineer")
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGoriginatorStudio")
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "ASWGrecStudio")
+            wwr_req("GET/PROJEXTSTATE/VASC_WebInterface/" + "MetaMic")
+
+            getProjExtState(fileName, "fileName");
+            getProjExtState(actorName, "actorName");
+            getProjExtState(charName, "charName");
+            getProjExtState(text, "text");
+            getProjExtState(direction, "direction");
+            getProjExtState(notes, "notes");
+        
+            getProjExtState(timing, "timing");
+            getProjExtState(efforts, "efforts");
+            getProjExtState(effortType, "effortType");
+            getProjExtState(projection, "projection");
+            getProjExtState(language, "language");
+            getProjExtState(accent, "accent");
+            getProjExtState(emotion, "emotion");
+        
+            getProjExtState(charGender, "charGender");
+            getProjExtState(charAge, "charAge");
+            getProjExtState(charRole, "charRole");
+            getProjExtState(actorGender, "actorGender");
+        
+            getProjExtState(usageRights, "usageRights");
+            getProjExtState(isUnion, "isUnion");
+
+            getProjExtState(answerFile, "answerFile");
+            getProjExtState(interlocutor, "interlocutor");
+            // Loop through it to fill data table
+            // replace conform table with data
+            // view data in focus view / table view
         }
     </script>
 

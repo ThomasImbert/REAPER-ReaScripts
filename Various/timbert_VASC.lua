@@ -112,7 +112,7 @@ function PrepareRecording()
 
   if debug == true then reaper.ShowConsoleMsg("PrepareRecording".." \n") end
 
-	ret_iter,             vasc_iter               = reaper.GetProjExtState( 0, "VASC_WebInterface", "Iteration" )
+	ret_iter,             vasc_iter               = reaper.GetProjExtState( 0, "VASC_WebInterface_CONTROL", "Iteration" )
   
   ret_aswg_project,     aswg_project            = reaper.GetProjExtState( 0, "VASC_WebInterface", "ASWGproject")
   -- ret_aswg_session,     aswg_session            = reaper.GetProjExtState( 0, "VASC_WebInterface", "ASWG:session")
@@ -162,12 +162,12 @@ function PrepareRecording()
   -- Create time selection following user input for Take and Region length
   local userLengthSet, userLength = reaper.GetUserInputs( "Length between takes?", 1, "Value in seconds", "30" )
   if not userLengthSet then 
-    reaper.SetProjExtState(0,"VASC_WebInterface", "isReaperReady","false")
+    reaper.SetProjExtState(0,"VASC_WebInterface_CONTROL", "isReaperReady","false")
     return end 
 
-  reaper.SetProjExtState(0,"VASC_WebInterface", "isReaperReady","true")
+  reaper.SetProjExtState(0,"VASC_WebInterface_CONTROL", "isReaperReady","true")
   if debug == true then
-      reaper.ShowConsoleMsg("VASC_WebInterface / isReaperReady / true ")
+      reaper.ShowConsoleMsg("VASC_WebInterface_CONTROL / isReaperReady / true ")
   end
 
   -- Create Smaller array containing a single instance of each charNameacter name for track creation 
@@ -216,6 +216,7 @@ function PrepareRecording()
   reaper.Main_OnCommandEx( 40020, 0, 0 )
   reaper.Main_OnCommandEx( 40289, 0, 0 )
 
+  reaper.SetProjExtState( 0, "VASC_WebInterface_CONTROL", "SessionPrepared", "true" )
   
   reaper.Undo_EndBlock("VASC", -1)
 end
@@ -404,54 +405,60 @@ function main() -- Run tests to ensure the web interface is properly used before
     return
   end
 
-  if not reaper.HasExtState("VASC_WebInterface", "runFromWeb") then
-    -- NO EXTSTATE FOUND, OPEN INTERFACE
-    if debug == true then reaper.ShowConsoleMsg("Break01 : has ExtState? " ..reaper.HasExtState("VASC_WebInterface", "runFromWeb") .. " \n") end
+  if reaper.HasExtState("VASC_WebInterface_CONTROL", "SessionPrepared") then
+    -- CHECK IF SESSION ALREADY HAS VASC DATA TO DISPLAY IT IN WEB INTERFACE
     openVASCWebInterface()
     return
   end
 
-  if reaper.GetExtState("VASC_WebInterface", "runFromWeb") == "false" then
+  if not reaper.HasExtState("VASC_WebInterface_CONTROL", "runFromWeb") then
     -- NO EXTSTATE FOUND, OPEN INTERFACE
-    if debug == true then reaper.ShowConsoleMsg("Break01 : runFromWeb ? " ..reaper.GetExtState("VASC_WebInterface", "runFromWeb") .. " \n") end
+    if debug == true then reaper.ShowConsoleMsg("Break01 : has ExtState? " ..reaper.HasExtState("VASC_WebInterface_CONTROL", "runFromWeb") .. " \n") end
+    openVASCWebInterface()
+    return
+  end
+
+  if reaper.GetExtState("VASC_WebInterface_CONTROL", "runFromWeb") == "false" then
+    -- NO EXTSTATE FOUND, OPEN INTERFACE
+    if debug == true then reaper.ShowConsoleMsg("Break01 : runFromWeb ? " ..reaper.GetExtState("VASC_WebInterface_CONTROL", "runFromWeb") .. " \n") end
     openVASCWebInterface()
     return
   end
 
   -- RUN FROM WEB INTERFACE, EXECUTE SCRIPT
-  if debug == true then reaper.ShowConsoleMsg("Break01 : runFromWeb ? " .. reaper.GetExtState("VASC_WebInterface", "runFromWeb") .. " \n") end
-  reaper.SetExtState("VASC_WebInterface", "runFromWeb", "false", true)
+  if debug == true then reaper.ShowConsoleMsg("Break01 : runFromWeb ? " .. reaper.GetExtState("VASC_WebInterface_CONTROL", "runFromWeb") .. " \n") end
+  reaper.SetExtState("VASC_WebInterface_CONTROL", "runFromWeb", "false", true)
 
 
-  if not reaper.HasExtState("VASC_WebInterface", "inputTableExists") then
+  if not reaper.HasExtState("VASC_WebInterface_CONTROL", "inputTableExists") then
     -- NO EXTSTATE FOUND
     if debug == true then reaper.ShowConsoleMsg("Break02 : no ExtState inputTableExists " .. " \n") end
     return
   end
 
-  if reaper.GetExtState("VASC_WebInterface", "inputTableExists") == "false" then
+  if reaper.GetExtState("VASC_WebInterface_CONTROL", "inputTableExists") == "false" then
     -- INPUT TABLE IS NOT IMPORTED, DO
-    if debug == true then reaper.ShowConsoleMsg("Break02 : inputTableExists? "..reaper.GetExtState("VASC_WebInterface", "inputTableExists") .. " \n") end
+    if debug == true then reaper.ShowConsoleMsg("Break02 : inputTableExists? "..reaper.GetExtState("VASC_WebInterface_CONTROL", "inputTableExists") .. " \n") end
     return
   end
 
-  if debug == true then  reaper.ShowConsoleMsg("Break02 : inputTableExists? "..reaper.GetExtState("VASC_WebInterface", "inputTableExists") .. " \n") end
+  if debug == true then  reaper.ShowConsoleMsg("Break02 : inputTableExists? "..reaper.GetExtState("VASC_WebInterface_CONTROL", "inputTableExists") .. " \n") end
 
-  if not reaper.HasExtState("VASC_WebInterface", "conformTableRows") then
+  if not reaper.HasExtState("VASC_WebInterface_CONTROL", "conformTableRows") then
     -- NO EXTSTATE FOUND
     if debug == true then reaper.ShowConsoleMsg("Break03 : no ExtState conformTableRows " .. " \n") end
     return
   end
 
-  if reaper.GetExtState("VASC_WebInterface", "conformTableRows") == "false" then
+  if reaper.GetExtState("VASC_WebInterface_CONTROL", "conformTableRows") == "false" then
     -- INPUT TABLE IS NOT IMPORTED, DO
-    if debug == true then reaper.ShowConsoleMsg("Break03 : conformTableRows? "..reaper.GetExtState("VASC_WebInterface", "conformTableRows") .. " \n") end
+    if debug == true then reaper.ShowConsoleMsg("Break03 : conformTableRows? "..reaper.GetExtState("VASC_WebInterface_CONTROL", "conformTableRows") .. " \n") end
     return
   end
 
-  if debug == true then reaper.ShowConsoleMsg("Break03 : conformTableRows? "..reaper.GetExtState("VASC_WebInterface", "conformTableRows") .. " \n") end
+  if debug == true then reaper.ShowConsoleMsg("Break03 : conformTableRows? "..reaper.GetExtState("VASC_WebInterface_CONTROL", "conformTableRows") .. " \n") end
   PrepareRecording()
-  reaper.SetExtState( "UCS_WebInterface", "conformTableRows", "false", true )
+  reaper.SetExtState( "VASC_WebInterface_CONTROL", "conformTableRows", "false", true )
 end
 
 if debug == true then 
