@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="f6ee1c86dc0124363e09e132d012c036191b595f">
+<index version="1" name="TImbert Scripts" commit="8eae14c6b46d69b207fbe1ac28483e44b810e16c">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -47,6 +47,10 @@
       <version name="1.8" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[# Updated Select Guide to include "Reference"]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/db16388ccc9d70fa12460662d3b2c7b4abccfa80/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.9" author="Thomas Imbert" time="2024-02-29T15:52:27Z">
+        <changelog><![CDATA[# Updated timbert.moveEditCursor_LeftByTimeSelLength by adding "invert" bool parameter to allow moving the cursor right instead when set to true]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8eae14c6b46d69b207fbe1ac28483e44b810e16c/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
@@ -312,6 +316,22 @@
     </reapack>
   </category>
   <category name="Transport">
+    <reapack name="timbert_LaneVx Record with context of previous line last take.lua" type="script" desc="LaneVx Record with context of previous line's last take">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Record and immediately preview the previous media item on the same track or in the project.\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-02-29T15:52:27Z">
+        <changelog><![CDATA[# initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8eae14c6b46d69b207fbe1ac28483e44b810e16c/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
+      </version>
+    </reapack>
     <reapack name="timbert_VASC go to next Guide segment.lua" type="script" desc="VASC Go to next Guide segment">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
