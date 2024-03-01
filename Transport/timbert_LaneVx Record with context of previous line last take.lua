@@ -1,10 +1,10 @@
 -- @description LaneVx Record with context of previous line's last take
 -- @author Thomas Imbert
--- @version 1.2
+-- @version 1.3
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Record and immediately preview the previous media item on the same track or in the project.
 -- @changelog 
---   # Allow retriggering action while recording, set reaper to create new instance and remember, and sets record mode back to normal once transports stops
+--   # Fixed lane 0 being soloed during recording, making it play despite not monitoring track media
 
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
@@ -58,7 +58,7 @@ function main()
 		then timbert.msg("Please select a track first", script_name)
 	return end
 
-	reaper.SetMediaTrackInfo_Value(  reaper.GetSelectedTrack( 0, 0 ), "C_LANEPLAYS:0", 1 )
+	reaper.SetMediaTrackInfo_Value(  reaper.GetSelectedTrack( 0, 0 ), "C_LANEPLAYS:", 1 )
 	reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item 
 	
 	if reaper.CountSelectedMediaItems( 0 ) == 0
@@ -81,6 +81,7 @@ function main()
 	timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
 	timbert.moveEditCursor_LeftByTimeSelLength(0) 
 	timbert.swsCommand("_SWS_RESTTIME1")
+	reaper.SetMediaTrackInfo_Value(  reaper.GetSelectedTrack( 0, 0 ), "C_ALLLANESPLAY", 0 )
 	reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
 	timbert.smartRecord()
 	timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
