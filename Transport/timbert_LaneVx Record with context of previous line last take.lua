@@ -1,10 +1,10 @@
 -- @description LaneVx Record with context of previous line's last take
 -- @author Thomas Imbert
--- @version 1.2pre1
+-- @version 1.2
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Record and immediately preview the previous media item on the same track or in the project.
 -- @changelog 
---   # Allow retriggering action while recording, set reaper to create new instance and remember, somewhat experimental
+--   # Allow retriggering action while recording, set reaper to create new instance and remember, and sets record mode back to normal once transports stops
 
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
@@ -18,6 +18,7 @@ local function ExpandOnStop()
 	if  reaper.GetPlayState() == 4 then return reaper.defer(ExpandOnStop) end  -- returns if still recording
 	if  reaper.CountSelectedMediaItems( 0 ) ~= 1 then return reaper.defer(ExpandOnStop) end  -- return if no item is selected
 	reaper.Main_OnCommand(40612, 0) -- Item: Set item end to source media end
+	reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
 	return 
 end 	
 
@@ -91,7 +92,7 @@ reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
-reaper.set_action_options(1&2)
+reaper.set_action_options(1|2)
 main() -- call main function 
 
 reaper.UpdateArrange()
