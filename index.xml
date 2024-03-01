@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="6b028836aab29504f54a9f5d32272ee5abbc3200">
+<index version="1" name="TImbert Scripts" commit="39bbf5b34a660bb4a8f53946f7e233745b57d818">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -330,6 +330,10 @@
       <version name="1.0" author="Thomas Imbert" time="2024-02-29T15:52:27Z">
         <changelog><![CDATA[# initial release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
+      </version>
+      <version name="1.1" author="Thomas Imbert" time="2024-03-01T10:55:55Z">
+        <changelog><![CDATA[# Correctly previews the last lane of previous Items "block"]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/39bbf5b34a660bb4a8f53946f7e233745b57d818/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC go to next Guide segment.lua" type="script" desc="VASC Go to next Guide segment">
