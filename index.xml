@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="8fbcce946e18fd9a4a206ade0bb1805c7b8a510b">
+<index version="1" name="TImbert Scripts" commit="e43c23bda430cea2fb633d881b1e9e4760f50c30">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -316,6 +316,22 @@
     </reapack>
   </category>
   <category name="Transport">
+    <reapack name="timbert_LaneVx Move edit cursor forward away from last items.lua" type="script" desc="LaneVx Move edit cursor forward away from last items">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Moves the edit cursor forward away from last block of items / take\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0pre1" author="Thomas Imbert" time="2024-03-01T17:00:15Z">
+        <changelog><![CDATA[# intial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e43c23bda430cea2fb633d881b1e9e4760f50c30/Transport/timbert_LaneVx%20Move%20edit%20cursor%20forward%20away%20from%20last%20items.lua</source>
+      </version>
+    </reapack>
     <reapack name="timbert_LaneVx Record with context of previous line last take.lua" type="script" desc="LaneVx Record with context of previous line's last take">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -338,6 +354,26 @@
       <version name="1.2pre1" author="Thomas Imbert" time="2024-03-01T12:45:18Z">
         <changelog><![CDATA[# Allow retriggering action while recording, set reaper to create new instance and remember, somewhat experimental]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8fbcce946e18fd9a4a206ade0bb1805c7b8a510b/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
+      </version>
+      <version name="1.2" author="Thomas Imbert" time="2024-03-01T17:00:15Z">
+        <changelog><![CDATA[# Allow retriggering action while recording, set reaper to create new instance and remember, and sets record mode back to normal once transports stops]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e43c23bda430cea2fb633d881b1e9e4760f50c30/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Stop and record at edit cursor.lua" type="script" desc="Stop and record at edit cursor">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Records at edit cursor wether reaper is already recording or not.\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-03-01T17:00:15Z">
+        <changelog><![CDATA[# intial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e43c23bda430cea2fb633d881b1e9e4760f50c30/Transport/timbert_Stop%20and%20record%20at%20edit%20cursor.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_VASC go to next Guide segment.lua" type="script" desc="VASC Go to next Guide segment">
