@@ -1,10 +1,10 @@
 -- @description LaneVx Record with context of previous line's last take
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.2pre1
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Record and immediately preview the previous media item on the same track or in the project.
 -- @changelog 
---   # Correctly previews the last lane of previous Items "block"
+--   # Allow retriggering action while recording, set reaper to create new instance and remember, somewhat experimental
 
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
@@ -14,7 +14,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.9 then timbert.msg('This script requires a newer version of TImbert Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"TImbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'"); return end
 
-local function ExpandOnStop()
+local function ExpandOnStop()	
 	if  reaper.GetPlayState() == 4 then return reaper.defer(ExpandOnStop) end  -- returns if still recording
 	if  reaper.CountSelectedMediaItems( 0 ) ~= 1 then return reaper.defer(ExpandOnStop) end  -- return if no item is selected
 	reaper.Main_OnCommand(40612, 0) -- Item: Set item end to source media end
@@ -51,6 +51,8 @@ end
 
 
 function main()
+	reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+	ExpandOnStop()
 	if reaper.CountSelectedTracks( 0 ) == 0 
 		then timbert.msg("Please select a track first", script_name)
 	return end
@@ -65,7 +67,6 @@ function main()
 	timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX")  -- Xenakios/SWS: Select items under edit cursor on selected tracks
 	reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items 
 	timbert.swsCommand("_SWS_SAVETIME1")
-	
 	SelectLastLaneInCurrentItemSelection()
 	reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items 
 	timbert.swsCommand("_SWS_SAVETIME2")
@@ -90,6 +91,7 @@ reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
+reaper.set_action_options(1&2)
 main() -- call main function 
 
 reaper.UpdateArrange()
