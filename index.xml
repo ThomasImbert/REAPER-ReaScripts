@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="e801dbfed4977fd47c1027a2e067fb9b2d43fa48">
+<index version="1" name="TImbert Scripts" commit="bfa193169fc65bb5d2442b53743af36b3be2d7a7">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -384,22 +384,6 @@
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e801dbfed4977fd47c1027a2e067fb9b2d43fa48/Transport/timbert_Lanes%20Preview%20item%20under%20edit%20cursor%20in%20previous%20lane%20of%20selected%20track.lua</source>
       </version>
     </reapack>
-    <reapack name="timbert_LaneVx Move edit cursor forward away from last items.lua" type="script" desc="LaneVx Move edit cursor forward away from last items">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Moves the edit cursor forward away from last block of items / take\par}
-}
-]]></description>
-        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
-      </metadata>
-      <version name="1.0pre1" author="Thomas Imbert" time="2024-03-01T17:00:15Z">
-        <changelog><![CDATA[# intial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e43c23bda430cea2fb633d881b1e9e4760f50c30/Transport/timbert_LaneVx%20Move%20edit%20cursor%20forward%20away%20from%20last%20items.lua</source>
-      </version>
-    </reapack>
     <reapack name="timbert_LaneVx Record with context of previous line last take.lua" type="script" desc="LaneVx Record with context of previous line's last take">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
@@ -434,6 +418,22 @@
       <version name="1.4" author="Thomas Imbert" time="2024-03-03T17:29:41Z">
         <changelog><![CDATA[# Removed call to clear the console]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e801dbfed4977fd47c1027a2e067fb9b2d43fa48/Transport/timbert_LaneVx%20Record%20with%20context%20of%20previous%20line%20last%20take.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move edit cursor forward away from last items on selected track.lua" type="script" desc="Move edit cursor forward away from last items on selected track">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 Move edit cursor forward away from last items on selected track by 5 seconds\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-03-03T18:18:44Z">
+        <changelog><![CDATA[# intial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/bfa193169fc65bb5d2442b53743af36b3be2d7a7/Transport/timbert_Move%20edit%20cursor%20forward%20away%20from%20last%20items%20on%20selected%20track.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Stop and record at edit cursor.lua" type="script" desc="Stop and record at edit cursor">
