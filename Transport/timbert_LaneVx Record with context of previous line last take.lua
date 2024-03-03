@@ -1,10 +1,10 @@
 -- @description LaneVx Record with context of previous line's last take
 -- @author Thomas Imbert
--- @version 1.3
+-- @version 1.4
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Record and immediately preview the previous media item on the same track or in the project.
 -- @changelog 
---   # Fixed lane 0 being soloed during recording, making it play despite not monitoring track media
+--   # Removed call to clear the console
 
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
@@ -35,7 +35,7 @@ function maximum (a)
 end
 
 local function SelectLastLaneInCurrentItemSelection()
-	reaper.ClearConsole()
+	--reaper.ClearConsole()
 	-- timbert.dbg("item Count: "..reaper.CountSelectedMediaItems( 0 ))
 	local itemArray = {}
 	for i=1, reaper.CountSelectedMediaItems( 0 ) do 
@@ -58,7 +58,7 @@ function main()
 		then timbert.msg("Please select a track first", script_name)
 	return end
 
-	reaper.SetMediaTrackInfo_Value(  reaper.GetSelectedTrack( 0, 0 ), "C_LANEPLAYS:", 1 )
+	reaper.SetMediaTrackInfo_Value(  reaper.GetSelectedTrack( 0, 0 ), "C_LANEPLAYS:0", 1 )
 	reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item 
 	
 	if reaper.CountSelectedMediaItems( 0 ) == 0

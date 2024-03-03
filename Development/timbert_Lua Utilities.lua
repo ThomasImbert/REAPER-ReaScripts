@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.9
+-- @version 1.91
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Updated timbert.moveEditCursor_LeftByTimeSelLength by adding "invert" bool parameter to allow moving the cursor right instead when set to true
+--   # Added GetTableLength, MakeItemArrayByLaneIndex and GetActiveTrackLane
 
 --[[
 
@@ -425,4 +425,67 @@ function timbert.colorStoredGuideSegment(color,validationTag)
 	local item = reaper.GetSelectedMediaItem( 0, 0 )
 	reaper.GetSetMediaItemInfo_String( item, "P_EXT:VASC_Validation", validationTag, true )
 	timbert.swsCommand("_SWS_RESTORESEL") -- Restore track selection
+end
+
+function timbert.MakeItemArrayByLaneIndex()
+	-- all selected items must be on the same track
+	local itemArray, laneIndexes = {}, {}
+	local item, itemLane, lastLane
+	if reaper.CountSelectedMediaItems( 0 ) == 0 then return end 
+	--timbert.dbg("Item Count: "..reaper.CountSelectedMediaItems( 0 ))
+	for i=1, reaper.CountSelectedMediaItems( 0 ) do 
+		item = reaper.GetSelectedMediaItem( 0, i-1 )
+		itemLane = reaper.GetMediaItemInfo_Value( item, "I_FIXEDLANE" )
+		itemArray[itemLane] = item
+		laneIndexes[i] = itemLane
+		
+		if i == 1 then lastLane = itemLane
+		else
+			if itemLane > lastLane then lastLane = itemLane end
+		end
+	end
+	table.sort(laneIndexes)
+	return itemArray, lastLane, laneIndexes
+end
+
+function timbert.GetTableLength(table)
+	local length = 0
+	for n in pairs(table) do 
+		length = length + 1 
+	end
+	return length
+end
+
+function timbert.GetActiveTrackLane(track, parameter)
+	local parameter = parameter or "LAST" -- default: returns Last active lane
+	local activeTrackLane
+	local trackLaneAmount = reaper.GetMediaTrackInfo_Value( track, "I_NUMFIXEDLANES")
+
+	if trackLaneAmount == 0 then return nil end
+
+	for i=0, trackLaneAmount-1 do 
+		if reaper.GetMediaTrackInfo_Value( track, "C_LANEPLAYS:"..tostring(i) ) == 1 
+			then activeTrackLane = i
+		end
+		if (parameter == "FIRST") then break
+		end
+	end
+	return activeTrackLane
+end
+
+function timbert.GetKeyOfValueInTable(table, value)
+	local key
+	for k, v in pairs(table) do
+		if v == value then key = k break end
+	end
+	return key
+end
+
+function timbert.FindIndex(table,value) -- for simple arrays
+	local index
+	for i = 1, #table do
+		if table[i] == value then index = i break 
+		end
+	end
+	return index
 end
