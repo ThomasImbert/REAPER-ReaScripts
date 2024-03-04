@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="bfa193169fc65bb5d2442b53743af36b3be2d7a7">
+<index version="1" name="TImbert Scripts" commit="8df5a07280bfd7988373de58427668f11d3eaaef">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -55,6 +55,10 @@
       <version name="1.91" author="Thomas Imbert" time="2024-03-03T17:29:41Z">
         <changelog><![CDATA[# Added GetTableLength, MakeItemArrayByLaneIndex and GetActiveTrackLane]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e801dbfed4977fd47c1027a2e067fb9b2d43fa48/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.92" author="Thomas Imbert" time="2024-03-04T21:25:33Z">
+        <changelog><![CDATA[# Added GetSelectedItemsInLaneInfo and PreviewMultipleItems]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8df5a07280bfd7988373de58427668f11d3eaaef/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
@@ -334,6 +338,10 @@
       <version name="1.0" author="Thomas Imbert" time="2024-03-03T17:29:41Z">
         <changelog><![CDATA[# Initial release]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e801dbfed4977fd47c1027a2e067fb9b2d43fa48/Transport/timbert_Lanes%20Preview%20item%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
+      </version>
+      <version name="1.1" author="Thomas Imbert" time="2024-03-04T21:25:33Z">
+        <changelog><![CDATA[# Added preview mode for comp lanes ]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8df5a07280bfd7988373de58427668f11d3eaaef/Transport/timbert_Lanes%20Preview%20item%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Lanes Preview item under edit cursor in last lane of selected track.lua" type="script" desc="Preview item under edit cursor in last lane of selected track">
