@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.92
+-- @version 1.921
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added GetSelectedItemsInLaneInfo and PreviewMultipleItems
+--   # Added MakeItemArraySortByLane and reworked tables scripts added in 1.92
 --[[
 
 -- Get this script's name and directory
@@ -270,17 +270,17 @@ end
 
 local function get_tracks_to_sel(settings)
     --[[
-	   settings = {
-		  search = str,
+     settings = {
+      search = str,
 
-		  matchmultiple = bool,
-		  matchonlytop = bool,
-		  selchildren = bool,
-		  selparents = bool,
+      matchmultiple = bool,
+      matchonlytop = bool,
+      selchildren = bool,
+      selparents = bool,
 
-		  mcp = bool,
-		  tcp = bool
-	   }
+      mcp = bool,
+      tcp = bool
+     }
     ]] --
     local matches = {}
 
@@ -487,6 +487,38 @@ function timbert.GetTableLength(table)
     return length
 end
 
+function timbert.MakeItemArraySortByLane()
+    reaper.ClearConsole()
+    if reaper.CountSelectedMediaItems(0) == 0 then
+        timbert.msg("Please select items first", "TImbert Lua Utilities")
+        return
+    end
+    local lastLane, item, laneIndex
+    local items = {}
+
+    for i = 1, reaper.CountSelectedMediaItems(0) do
+        item = reaper.GetSelectedMediaItem(0, i - 1)
+        laneIndex = reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE")
+        table.insert(items, {
+            item = item,
+            laneIndex = laneIndex
+        })
+
+        if i == 1 then
+            lastLane = laneIndex
+        else
+            if laneIndex > lastLane then
+                lastLane = laneIndex
+            end
+        end
+    end
+
+    table.sort(items, function(a, b)
+        return a.laneIndex < b.laneIndex
+    end)
+    return items, lastLane
+end
+
 function timbert.GetActiveTrackLane(track, parameter)
     local parameter = parameter or "LAST" -- default: returns Last active lane
     local activeTrackLane
@@ -551,32 +583,34 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     end
 
     local item, itemLength, itemPosition
-    local items = {
-        item = {},
-        itemLength = {},
-        itemPosition = {}
-    }
+    local items = {}
     for i = 1, reaper.CountSelectedMediaItems(0) do
         item = reaper.GetSelectedMediaItem(0, i - 1)
         if reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE") == laneIndex then
-            table.insert(items.item, item)
             itemLength = reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
-            table.insert(items.itemLength, itemLength)
             itemPosition = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
-            table.insert(items.itemPosition, itemPosition)
+            table.insert(items, {
+                item = item,
+                itemLength = itemLength,
+                itemPosition = itemPosition
+            })
         end
     end
+    table.sort(items, function(a, b)
+        return a.itemPosition < b.itemPosition
+    end)
     return items
 end
 
 function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted, getLength)
     local itemLength = nil
+    -- local cursorPos = reaper.GetCursorPosition()
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    for i = 1, timbert.GetTableLength(items) do
-        reaper.SetMediaItemSelected(items[i], true)
+    for i = 1, #items do
+        reaper.SetMediaItemSelected(items[i].item, true)
     end
     reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
-    reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
+    reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
     if getLength then
         itemLength = reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, 0), "D_LENGTH")
     end
@@ -587,9 +621,20 @@ function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted,
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
     end
-
+    -- local newCursorPos = reaper.GetCursorPosition()
+    -- local cursorDelta = newCursorPos - cursorPos
+    -- timbert.dbg("cursorDelta = "..cursorDelta)
+    -- if cursorDelta < 0 then
+    --     reaper.MoveEditCursor(cursorDelta, false)
+    -- else
+    --     reaper.MoveEditCursor(cursorDelta, false)    
+    -- end
+    -- if cursorDelta == 0 then
+    --     timbert.dbg("cursorDelta = 0")
+    -- end
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
     if itemLength ~= nil then
         return itemLength
     end
 end
+
