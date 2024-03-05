@@ -34,21 +34,32 @@ function main()
             script_name)
         return
     end
-
+    local safeLane = nil
+    local isCompLane = false
     local items, lastLane = timbert.MakeItemArraySortByLane()
-    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane
+    
+    -- Identify if Lane is a Comping lane (containing multiple items generally)
+    local _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(items[1].laneIndex), "laneName",
+    false)
+    if string.find(laneName, "C") == 1 then 
+        isCompLane = true
+        safeLane = items[1].laneIndex
+    end
+
+    local laneIndex = timbert.GetActiveTrackLane(track) or safeLane or lastLane
 
     -- If laneIndex is greater than last lane containing item, set laneIndex to that lane
     if laneIndex > lastLane then
-        laneIndex = lastLane
+        if isCompLane then
+            laneIndex = items[1].laneIndex
+        else
+            laneIndex = lastLane
+        end
     end
+    
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
 
-    -- Identify if Lane is a Comping lane (containing multiple items generally)
-    local _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(laneIndex), "laneName",
-        false)
-    local matchStartIndex, _ = string.find(laneName, "C")
-    if matchStartIndex ~= nil and matchStartIndex == 1 then
+    if isCompLane then
         timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
         timbert.swsCommand("_SWS_SAVETIME1")
         reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
@@ -71,7 +82,7 @@ function main()
     end
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    reaper.SetMediaItemSelected(items[laneIndex+1].item, true)
+    reaper.SetMediaItemSelected(items[laneIndex].item, true)
 
     timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
 

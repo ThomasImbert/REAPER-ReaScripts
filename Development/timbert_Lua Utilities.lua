@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added MakeItemArraySortByLane and reworked tables scripts added in 1.92
+--   # Added MakeItemArraySortByLane, GetCompLanes and reworked tables scripts added in 1.92
 --[[
 
 -- Get this script's name and directory
@@ -17,7 +17,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.9 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
+if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.921 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]] timbert = {}
 
@@ -604,8 +604,8 @@ end
 
 function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted, getLength)
     local itemLength = nil
-    -- local cursorPos = reaper.GetCursorPosition()
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
     for i = 1, #items do
         reaper.SetMediaItemSelected(items[i].item, true)
     end
@@ -621,20 +621,32 @@ function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted,
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
     end
-    -- local newCursorPos = reaper.GetCursorPosition()
-    -- local cursorDelta = newCursorPos - cursorPos
-    -- timbert.dbg("cursorDelta = "..cursorDelta)
-    -- if cursorDelta < 0 then
-    --     reaper.MoveEditCursor(cursorDelta, false)
-    -- else
-    --     reaper.MoveEditCursor(cursorDelta, false)    
-    -- end
-    -- if cursorDelta == 0 then
-    --     timbert.dbg("cursorDelta = 0")
-    -- end
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
+    items = timbert.MakeItemArraySortByLane()
+    for i = 1, #items do
+        reaper.SetMediaItemInfo_Value(items[i].item, "I_FIXEDLANE", originLane)
+    end
+
     if itemLength ~= nil then
         return itemLength
     end
+end
+
+function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, items created with timbert.MakeItemArraySortByLane() 
+    local hasCompLane = false
+    local laneName, _
+    local compLanes = {}
+    -- Identify if a Lane is a Comping lane (containing multiple items generally) by name starting with "C"
+    for i = 1, #items do
+        _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(items[i].laneIndex),
+            "laneName", false)
+        if string.find(laneName, "C") == 1 then
+            table.insert(compLanes, items[i].laneIndex)
+        end
+    end
+    if #compLanes >= 1 then
+        hasCompLane = true
+    end
+    return hasCompLane, compLanes
 end
 
