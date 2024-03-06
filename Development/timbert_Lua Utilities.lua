@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes and reworked tables scripts added in 1.92
+--   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92
 --[[
 
 -- Get this script's name and directory
@@ -623,7 +623,7 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted, getLength)
     end
 
     reaper.Main_OnCommand(40042, 0) -- Transport: Go to start of project
-    reaper.MoveEditCursor( originPosition, false )
+    reaper.MoveEditCursor(originPosition, false)
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
     items = timbert.MakeItemArraySortByLane()
     for i = 1, #items do
@@ -656,7 +656,7 @@ end
 function timbert.ValidateLanesPreviewScriptsSetup(script_name)
     if reaper.CountSelectedTracks(0) == 0 then
         timbert.msg("Please select a track first", script_name)
-        return 
+        return
     end
 
     if reaper.CountSelectedTracks(0) > 1 then
@@ -679,9 +679,40 @@ function timbert.ValidateLanesPreviewScriptsSetup(script_name)
     timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
     reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
     reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
-    if reaper.CountSelectedMediaItems(0) == 0 or reaper.CountSelectedMediaItems(0) < 1 then
+    if reaper.CountSelectedMediaItems(0) < 1 then
         timbert.msg("Please place your cursor on items first", script_name)
         return
     end
     return track
+end
+
+function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
+    if #items < 2 then
+        return items
+    end
+    local indexesToRemove = {}
+    for i = 2, #items do
+        if items[i].laneIndex == items[i - 1].laneIndex and reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") >
+            reaper.GetMediaItemInfo_Value(items[i - 1].item, "D_POSITION") then
+            table.insert(indexesToRemove, i)
+        end
+    end
+    for i = #indexesToRemove, 1, -1 do
+        table.remove(items, indexesToRemove[i])
+    end
+    return items
+end
+
+function timbert.PreviewLaneContent(track, laneIndex)
+    local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
+    if #items > 1 then
+        local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
+        timbert.PreviewMultipleItems(items, track, false)
+        reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
+    else
+        reaper.SetMediaItemSelected(items[1].item, true)
+        timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+    end
 end

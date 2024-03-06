@@ -1,10 +1,10 @@
 -- @description Preview item under edit cursor in currently soloed lane of selected track
 -- @author Thomas Imbert
--- @version 1.2
+-- @version 1.1
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
 -- @about Preview item under edit cursor in currently soloed lane of selected track
 -- @changelog 
---   # Reworked array functions
+--   # Reworked architecture and moved common functions to timbert_Lua Utilities
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -79,39 +79,9 @@ function main()
     local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
+    timbert.PreviewLaneContent(track, laneIndex)
 
-    -- Find item in selected laneIndex
-    local itemIndex
-    for i = 1, #items do
-        if items[i].laneIndex == laneIndex then
-            itemIndex = i
-            break
-        end
-    end
-
-    for _, lane in pairs(compLanes) do
-        if lane == laneIndex then
-            local compItems = timbert.GetSelectedItemsInLaneInfo(laneIndex)
-            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-            -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
-            if #compItems > 1 then
-                local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-                timbert.PreviewMultipleItems(compItems, track)
-                reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
-            else
-                reaper.SetMediaItemSelected(compItems[1].item, true)
-                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-
-            end
-            timbert.swsCommand("_SWS_RESTTIME1")
-            timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
-            return
-        end
-    end
-
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    reaper.SetMediaItemSelected(items[itemIndex].item, true)
-    timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+    -- Recall edit cursor and time selection set during timbert.ValidateLanesPreviewScriptsSetup
     timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
@@ -124,6 +94,6 @@ main()
 
 reaper.UpdateArrange()
 
-reaper.Undo_EndBlock("Preview item under edit cursor in currently soloed lane of selected track", -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. Leave it at the bottom of your main function.
 
 reaper.PreventUIRefresh(-1)
