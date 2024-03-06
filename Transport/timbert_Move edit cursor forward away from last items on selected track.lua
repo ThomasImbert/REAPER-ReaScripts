@@ -36,7 +36,7 @@ function main()
 	while reaper.CountSelectedMediaItems( 0 ) > 0 do  
 			item = reaper.GetSelectedMediaItem( 0, 0 )
 			pos, len = GetItemPosition(item)
-			reaper.SetEditCurPos(pos+len+5,true,false);
+			reaper.SetEditCurPos(pos+len+2,true,false);
 			reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items	
 			timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX")-- Xenakios/SWS: Select items under edit cursor on selected tracks
 	end
