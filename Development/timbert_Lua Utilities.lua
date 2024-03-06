@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added MakeItemArraySortByLane, GetCompLanes and reworked tables scripts added in 1.92
+--   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes and reworked tables scripts added in 1.92
 --[[
 
 -- Get this script's name and directory
@@ -488,9 +488,7 @@ function timbert.GetTableLength(table)
 end
 
 function timbert.MakeItemArraySortByLane()
-    reaper.ClearConsole()
     if reaper.CountSelectedMediaItems(0) == 0 then
-        timbert.msg("Please select items first", "TImbert Lua Utilities")
         return
     end
     local lastLane, item, laneIndex
@@ -602,9 +600,11 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     return items
 end
 
-function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted, getLength)
+function timbert.PreviewMultipleItems(items, track, isSourceDeleted, getLength)
     local itemLength = nil
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    local originPosition = items[1].itemPosition
+    -- timbert.msg("Position : "..originPosition)
     local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
     for i = 1, #items do
         reaper.SetMediaItemSelected(items[i].item, true)
@@ -621,6 +621,9 @@ function timbert.PreviewMultipleItems(items, itemsStart, track, isSourceDeleted,
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
     end
+
+    reaper.Main_OnCommand(40042, 0) -- Transport: Go to start of project
+    reaper.MoveEditCursor( originPosition, false )
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
     items = timbert.MakeItemArraySortByLane()
     for i = 1, #items do
@@ -650,3 +653,35 @@ function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, it
     return hasCompLane, compLanes
 end
 
+function timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    if reaper.CountSelectedTracks(0) == 0 then
+        timbert.msg("Please select a track first", script_name)
+        return 
+    end
+
+    if reaper.CountSelectedTracks(0) > 1 then
+        timbert.msg("Please only select one track", script_name)
+        return
+    end
+
+    local track = reaper.GetSelectedTrack(0, 0)
+    -- Return if fixed Lanes isn't enable on selected track
+    if reaper.GetMediaTrackInfo_Value(track, "I_FREEMODE") ~= 2 then
+        timbert.msg(
+            "Fixed item lanes isn't enable on selected track, right click on it or go to Track Menu to enable it",
+            script_name)
+        return
+    end
+
+    timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
+    timbert.swsCommand("_SWS_SAVETIME1")
+
+    timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
+    reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
+    reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
+    if reaper.CountSelectedMediaItems(0) == 0 or reaper.CountSelectedMediaItems(0) < 1 then
+        timbert.msg("Please place your cursor on items first", script_name)
+        return
+    end
+    return track
+end

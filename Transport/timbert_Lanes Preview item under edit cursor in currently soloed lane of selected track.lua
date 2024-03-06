@@ -25,83 +25,100 @@ else
     return
 end
 
-function main()
-    -- Return if fixed Lanes isn't enable on selected track
-    local track = reaper.GetSelectedTrack(0, 0)
-    if reaper.GetMediaTrackInfo_Value(track, "I_FREEMODE") ~= 2 then
-        timbert.msg(
-            "Fixed item lanes isn't enable on selected track, right click on it or go to Track Menu to enable it",
-            script_name)
-        return
-    end
-    local safeLane = nil
-    local isCompLane = false
-    local items, lastLane = timbert.MakeItemArraySortByLane()
-    
-    -- Identify if Lane is a Comping lane (containing multiple items generally)
-    local _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(items[1].laneIndex), "laneName",
-    false)
-    if string.find(laneName, "C") == 1 then 
-        isCompLane = true
-        safeLane = items[1].laneIndex
-    end
-
-    local laneIndex = timbert.GetActiveTrackLane(track) or safeLane or lastLane
-
-    -- If laneIndex is greater than last lane containing item, set laneIndex to that lane
+local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
+    -- Test if currently selected lane is included in items lane range
     if laneIndex > lastLane then
-        if isCompLane then
-            laneIndex = items[1].laneIndex
+        if hasCompLane == true then
+            laneIndex = compLanes[1] -- go to first complane
         else
-            laneIndex = lastLane
+            laneIndex = items[#items].laneIndex
+        end
+        return laneIndex
+    end
+
+    if laneIndex < items[1].laneIndex then
+        laneIndex = items[1].laneIndex
+        return laneIndex
+    end
+
+    -- Test if lane has content
+    local foundLane, foundLaneIndex
+    for i = 1, #items do
+        if items[i].laneIndex == laneIndex then
+            foundLane = items[i].laneIndex
+            foundLaneIndex = i
         end
     end
-    
+    if foundLaneIndex ~= nil then
+        laneIndex = items[foundLaneIndex].laneIndex
+        return laneIndex
+    end
+
+    -- If Lane doesn't have content, go to next lane with content in item lanes range
+    local closestNextLane, closestNextLaneIndex
+    for i = 1, #items do
+        if items[i].laneIndex - laneIndex > 0 then
+            closestNextLane = items[i].laneIndex
+            closestNextLaneIndex = i
+            break
+        end
+    end
+    laneIndex = items[closestNextLaneIndex].laneIndex
+    return laneIndex
+end
+
+function main()
+    local track = timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    if track == nil then
+        return
+    end
+
+    local items, lastLane = timbert.MakeItemArraySortByLane()
+    local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
+
+    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
+    laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
 
-    if isCompLane then
-        timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
-        timbert.swsCommand("_SWS_SAVETIME1")
-        reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-        reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
-        local compItems = timbert.GetSelectedItemsInLaneInfo(laneIndex)
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-
-        -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
-        if #compItems > 1 then
-            timbert.PreviewMultipleItems(compItems, compItems[1].itemPosition, track,
-                false, true)
-        else
-            reaper.SetMediaItemSelected(compItems[1].item, true)
-            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+    -- Find item in selected laneIndex
+    local itemIndex
+    for i = 1, #items do
+        if items[i].laneIndex == laneIndex then
+            itemIndex = i
+            break
         end
-        timbert.swsCommand("_SWS_RESTTIME1")
-        timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
-        return
+    end
+
+    for _, lane in pairs(compLanes) do
+        if lane == laneIndex then
+            local compItems = timbert.GetSelectedItemsInLaneInfo(laneIndex)
+            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+            -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
+            if #compItems > 1 then
+                local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
+                timbert.PreviewMultipleItems(compItems, track)
+                reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
+            else
+                reaper.SetMediaItemSelected(compItems[1].item, true)
+                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+
+            end
+            timbert.swsCommand("_SWS_RESTTIME1")
+            timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
+            return
+        end
     end
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    reaper.SetMediaItemSelected(items[laneIndex].item, true)
-
+    reaper.SetMediaItemSelected(items[itemIndex].item, true)
     timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-
+    timbert.swsCommand("_SWS_RESTTIME1")
+    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 
 reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
-
-if reaper.CountSelectedTracks(0) == 0 then
-    timbert.msg("Please select a track first", script_name)
-    return
-end
-
-timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
-if reaper.CountSelectedMediaItems(0) == 0 then
-    timbert.msg("Please place your cursor on items first", script_name)
-    return
-end
 
 main()
 
