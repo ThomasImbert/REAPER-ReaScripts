@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92
+--   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode
 --[[
 
 -- Get this script's name and directory
@@ -517,8 +517,8 @@ function timbert.MakeItemArraySortByLane()
     return items, lastLane
 end
 
-function timbert.GetActiveTrackLane(track, parameter)
-    local parameter = parameter or "LAST" -- default: returns Last active lane
+function timbert.GetActiveTrackLane(track, isFirst)
+    local isFirst = isFirst or false
     local activeTrackLane
     local trackLaneAmount = reaper.GetMediaTrackInfo_Value(track, "I_NUMFIXEDLANES")
 
@@ -527,10 +527,11 @@ function timbert.GetActiveTrackLane(track, parameter)
     end
 
     for i = 0, trackLaneAmount - 1 do
-        if reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(i)) == 1 then
+        if isFirst == false and reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(i)) ~= 0 then
             activeTrackLane = i
         end
-        if (parameter == "FIRST") then
+        if isFirst == true and reaper.GetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(i)) ~= 0 then
+            activeTrackLane = i
             break
         end
     end
