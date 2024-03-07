@@ -1,10 +1,13 @@
--- @description Preview item under edit cursor in last lane of selected track
+-- @description Lanes Preview content under edit cursor in first lane of selected track
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Preview item under edit cursor in last lane with content of selected track
+-- @about 
+--      # Part of the timbert Lanes suite of scripts
+--
+--      Preview content under edit cursor in first lane with content of selected track
 -- @changelog 
---   # Updated architecture to be similar to other Lanes Preview scripts 
+--   # Initial release
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -35,10 +38,10 @@ function main()
     items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
-    local laneIndex = lastLane
+    local laneIndex = items[1].laneIndex
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1) -- solos last lane
     timbert.PreviewLaneContent(track, laneIndex)
-
+    
     -- Recall edit cursor and time selection set during timbert.ValidateLanesPreviewScriptsSetup
     timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")

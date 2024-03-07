@@ -43,6 +43,11 @@ function timbert.dbg(dbg)
     reaper.ShowConsoleMsg(tostring(dbg) .. "\n")
 end
 
+function timbert.dbgVar(var, varName)
+    local varName = tostring(varName)
+    reaper.ShowConsoleMsg(varName .. " = " .. tostring(var) .. "\n")
+end
+
 -- Deliver messages using message box
 function timbert.msg(msg, title)
     local title = title or "timbert Info"
@@ -654,7 +659,7 @@ function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, it
     return hasCompLane, compLanes
 end
 
-function timbert.ValidateLanesPreviewScriptsSetup(script_name)
+function timbert.ValidateLanesPreviewScriptsSetup(script_name, itemsSelection)
     if reaper.CountSelectedTracks(0) == 0 then
         timbert.msg("Please select a track first", script_name)
         return
@@ -674,6 +679,10 @@ function timbert.ValidateLanesPreviewScriptsSetup(script_name)
         return
     end
 
+    if itemsSelection ~= nil or itemsSelection == false then
+        return track
+    end
+
     timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
     timbert.swsCommand("_SWS_SAVETIME1")
 
@@ -691,17 +700,27 @@ function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     if #items < 2 then
         return items
     end
+
+    local itemsCopy = items 
+    for i = 1, #items do
+        reaper.SetMediaItemSelected(items[1].item, true)
+    end
+    timbert.swsCommand("_SWS_SAVETIME1")
+    reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
+    local timeSelectStart, _ = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    timbert.swsCommand("_SWS_RESTTIME1")
+
     local indexesToRemove = {}
-    for i = 2, #items do
-        if items[i].laneIndex == items[i - 1].laneIndex and reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") >
-            reaper.GetMediaItemInfo_Value(items[i - 1].item, "D_POSITION") then
+    for i = 1, #items do
+        if reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") > timeSelectStart+0.01 then
             table.insert(indexesToRemove, i)
         end
     end
     for i = #indexesToRemove, 1, -1 do
-        table.remove(items, indexesToRemove[i])
+        table.remove(itemsCopy, indexesToRemove[i])
     end
-    return items
+    return itemsCopy
 end
 
 function timbert.PreviewLaneContent(track, laneIndex)

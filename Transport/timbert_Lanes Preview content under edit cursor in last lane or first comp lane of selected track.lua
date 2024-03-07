@@ -1,10 +1,13 @@
--- @description Preview item under edit cursor in currently soloed lane of selected track
+-- @description Lanes Preview content under edit cursor in last lane or first comp lane of selected track
 -- @author Thomas Imbert
--- @version 1.1
+-- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Preview item under edit cursor in currently soloed lane of selected track
+-- @about 
+--      # Part of the timbert Lanes suite of scripts
+--
+--      Preview content under edit cursor in last lane or first comp lane of selected track
 -- @changelog 
---   # Reworked architecture and moved common functions to timbert_Lua Utilities
+--   # Initial release
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -25,46 +28,21 @@ else
     return
 end
 
+-- Load lua 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track' script
+timbert_PreviewSoloedLane = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Transport/timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua'
+if not reaper.file_exists(timbert_PreviewSoloedLane) then
+    reaper.ShowConsoleMsg(
+        "This script requires 'Preview content under edit cursor in currently soloed lane of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track'");
+    return
+end
+
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    -- Test if currently selected lane is included in items lane range
-    if laneIndex > lastLane then
         if hasCompLane == true then
             laneIndex = compLanes[1] -- go to first complane
         else
             laneIndex = items[#items].laneIndex
         end
         return laneIndex
-    end
-
-    if laneIndex < items[1].laneIndex then
-        laneIndex = items[1].laneIndex
-        return laneIndex
-    end
-
-    -- Test if lane has content
-    local foundLane, foundLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex == laneIndex then
-            foundLane = items[i].laneIndex
-            foundLaneIndex = i
-        end
-    end
-    if foundLaneIndex ~= nil then
-        laneIndex = items[foundLaneIndex].laneIndex
-        return laneIndex
-    end
-
-    -- If Lane doesn't have content, go to next lane with content in item lanes range
-    local closestNextLane, closestNextLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex - laneIndex > 0 then
-            closestNextLane = items[i].laneIndex
-            closestNextLaneIndex = i
-            break
-        end
-    end
-    laneIndex = items[closestNextLaneIndex].laneIndex
-    return laneIndex
 end
 
 function main()
@@ -74,23 +52,22 @@ function main()
     end
 
     local items, lastLane = timbert.MakeItemArraySortByLane()
+    items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
-    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
+    local laneIndex = lastLane
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex)
+    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1) -- solos last lane
+    -- timbert.PreviewLaneContent(track, laneIndex)
+    dofile(timbert_PreviewSoloedLane);
 
-    -- Recall edit cursor and time selection set during timbert.ValidateLanesPreviewScriptsSetup
-    timbert.swsCommand("_SWS_RESTTIME1")
-    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 
 reaper.PreventUIRefresh(1)
 
 reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
 
-main()
+main() -- call main function 
 
 reaper.UpdateArrange()
 
