@@ -97,12 +97,12 @@ end
 
 reaper.PreventUIRefresh(1)
 
-reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+reaper.Undo_BeginBlock() -- Begining of the undo block.
 
 main()
 
 reaper.UpdateArrange()
 
-reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
 
 reaper.PreventUIRefresh(-1)
