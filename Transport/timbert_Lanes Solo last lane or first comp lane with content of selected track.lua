@@ -1,11 +1,8 @@
--- @description Lanes Solo last lane or first comp lane with content of selected track
+-- @description Solo last lane or first comp lane with content of selected track
 -- @author Thomas Imbert
 -- @version 1.0
 -- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about 
---      # Part of the timbert Lanes suite of scripts
---
---      Preview item under edit cursor in last lane or first comp lane of selected track
+-- @about Preview item under edit cursor in last lane or first comp lane of selected track
 -- @changelog 
 --   # Initial release
 -- Get this script's name and directory
@@ -38,13 +35,18 @@ local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLan
 end
 
 function main()
-    local track = timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    -- Validate track selection
+    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
+        timbert.msg(error, script_name)
+        return
+    end
+
+    if not timbert.ValidateItemUnderEditCursor(true) then
         return
     end
 
     local items, lastLane = timbert.MakeItemArraySortByLane()
-
     items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
@@ -54,16 +56,19 @@ function main()
     
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
     reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+
+    -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
+    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 
 reaper.PreventUIRefresh(1)
 
-reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+reaper.Undo_BeginBlock() -- Begining of the undo block.
 
-main() -- call main function 
+main()
 
 reaper.UpdateArrange()
 
-reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
 
 reaper.PreventUIRefresh(-1)

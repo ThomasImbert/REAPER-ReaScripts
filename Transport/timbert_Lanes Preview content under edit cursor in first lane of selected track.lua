@@ -29,8 +29,14 @@ else
 end
 
 function main()
-    local track = timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    -- Validate track selection
+    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
+        timbert.msg(error, script_name)
+        return
+    end
+
+    if not timbert.ValidateItemUnderEditCursor(true) then
         return
     end
 
@@ -39,22 +45,22 @@ function main()
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
     local laneIndex = items[1].laneIndex
-    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1) -- solos last lane
+    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
     timbert.PreviewLaneContent(track, laneIndex)
     
-    -- Recall edit cursor and time selection set during timbert.ValidateLanesPreviewScriptsSetup
+    -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
     timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 
 reaper.PreventUIRefresh(1)
 
-reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+reaper.Undo_BeginBlock() -- Begining of the undo block. 
 
-main() -- call main function 
+main()
 
 reaper.UpdateArrange()
 
-reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. 
 
 reaper.PreventUIRefresh(-1)

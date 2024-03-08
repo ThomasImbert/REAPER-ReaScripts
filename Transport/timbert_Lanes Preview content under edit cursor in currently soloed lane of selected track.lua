@@ -71,8 +71,14 @@ local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLan
 end
 
 function main()
-    local track = timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    -- Validate track selection
+    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
+        timbert.msg(error, script_name)
+        return
+    end
+
+    if not timbert.ValidateItemUnderEditCursor(true) then
         return
     end
 
@@ -84,7 +90,7 @@ function main()
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
     timbert.PreviewLaneContent(track, laneIndex)
 
-    -- Recall edit cursor and time selection set during timbert.ValidateLanesPreviewScriptsSetup
+    -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
     timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end

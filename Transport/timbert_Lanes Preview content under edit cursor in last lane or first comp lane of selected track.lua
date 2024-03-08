@@ -29,7 +29,8 @@ else
 end
 
 -- Load lua 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track' script
-timbert_PreviewSoloedLane = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Transport/timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua'
+timbert_PreviewSoloedLane = reaper.GetResourcePath() ..
+                                '/scripts/TImbert Scripts/Transport/timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua'
 if not reaper.file_exists(timbert_PreviewSoloedLane) then
     reaper.ShowConsoleMsg(
         "This script requires 'Preview content under edit cursor in currently soloed lane of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track'");
@@ -37,17 +38,23 @@ if not reaper.file_exists(timbert_PreviewSoloedLane) then
 end
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-        if hasCompLane == true then
-            laneIndex = compLanes[1] -- go to first complane
-        else
-            laneIndex = items[#items].laneIndex
-        end
-        return laneIndex
+    if hasCompLane == true then
+        laneIndex = compLanes[1] -- go to first complane
+    else
+        laneIndex = items[#items].laneIndex
+    end
+    return laneIndex
 end
 
 function main()
-    local track = timbert.ValidateLanesPreviewScriptsSetup(script_name)
+    -- Validate track selection
+    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
+        timbert.msg(error, script_name)
+        return
+    end
+
+    if not timbert.ValidateItemUnderEditCursor(true, 2) then
         return
     end
 
@@ -57,20 +64,22 @@ function main()
 
     local laneIndex = lastLane
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1) -- solos last lane
-    -- timbert.PreviewLaneContent(track, laneIndex)
-    dofile(timbert_PreviewSoloedLane);
+    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
+    dofile(timbert_PreviewSoloedLane)
 
+    -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
+    timbert.swsCommand("_SWS_RESTTIME2")
+    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_2")
 end
 
 reaper.PreventUIRefresh(1)
 
-reaper.Undo_BeginBlock() -- Begining of the undo block. Leave it at the top of your main function.
+reaper.Undo_BeginBlock() -- Begining of the undo block.
 
-main() -- call main function 
+main()
 
 reaper.UpdateArrange()
 
-reaper.Undo_EndBlock(script_name, -1) -- End of the undo block. Leave it at the bottom of your main function.
+reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
 
 reaper.PreventUIRefresh(-1)
