@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.921
+-- @version 1.922
 -- @metapackage
 -- @provides
 --   [main] .

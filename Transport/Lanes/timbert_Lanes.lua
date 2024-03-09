@@ -22,7 +22,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_
 timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists(timbert_LuaUtils) then
     dofile(timbert_LuaUtils);
-    if not timbert or timbert.version() < 1.921 then
+    if not timbert or timbert.version() < 1.922 then
         timbert.msg(
             'This script requires a newer version of TImbert Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',
             "TImbert Lua Utilities");
@@ -35,5 +35,5 @@ else
 end
 
 timbert.msg(
-    "Thomas Imbert's Lanes suite of scripts\n\nExpands on the lanes functionality added in reaper 7\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!",
+    "Thomas Imbert's Lanes suite of scripts\n\nExpands on the track fixed item lanes functionalities added in reaper 7\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!",
     "Thomas Imbert's Lanes Suite")
