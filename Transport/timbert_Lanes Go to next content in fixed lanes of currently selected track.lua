@@ -66,9 +66,9 @@ function main()
     end
 
     if not timbert.ValidateItemUnderEditCursor(true) then
-        reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item
-        timbert.SetTimeSelectionToAllItemsInVerticalStack()
-        dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+        -- reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item
+        -- timbert.SetTimeSelectionToAllItemsInVerticalStack()
+        -- dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
         return
     end
     timbert.SetTimeSelectionToAllItemsInVerticalStack()

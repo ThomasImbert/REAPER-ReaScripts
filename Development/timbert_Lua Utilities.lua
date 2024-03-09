@@ -21,6 +21,7 @@ if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if no
 
 ]] timbert = {}
 
+local reaper = reaper
 local thisScript_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 
 function timbert.version()
@@ -608,8 +609,7 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     return items
 end
 
-function timbert.PreviewMultipleItems(items, track, isSourceDeleted, getLength)
-    local itemLength = nil
+function timbert.PreviewMultipleItems(items, track, isSourceDeleted)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     local originPosition = items[1].itemPosition
     -- timbert.msg("Position : "..originPosition)
@@ -619,9 +619,6 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted, getLength)
     end
     reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
     reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
-    if getLength then
-        itemLength = reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, 0), "D_LENGTH")
-    end
     timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
 
     if isSourceDeleted then
@@ -636,10 +633,6 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted, getLength)
     items = timbert.MakeItemArraySortByLane()
     for i = 1, #items do
         reaper.SetMediaItemInfo_Value(items[i].item, "I_FIXEDLANE", originLane)
-    end
-
-    if itemLength ~= nil then
-        return itemLength
     end
 end
 
@@ -680,20 +673,6 @@ function timbert.ValidateLanesPreviewScriptsSetup()
         error = "Fixed item lanes isn't enabled on selected track, right click on it or go to Track Menu to enable it"
         return nil, error
     end
-
-    -- if itemsSelection ~= nil or itemsSelection == false then
-    --     return track
-    -- end
-    -- timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_1")
-    -- timbert.swsCommand("_SWS_SAVETIME1")
-
-    -- timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
-    -- reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
-    -- reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
-    -- if reaper.CountSelectedMediaItems(0) < 1 then
-    --     timbert.msg("Please place your cursor on items first", script_name)
-    --     return
-    -- end
 
     return track
 end
@@ -745,10 +724,22 @@ function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     return items, itemsCopy
 end
 
-function timbert.PreviewLaneContent(track, laneIndex)
-    timbert.SetTimeSelectionToAllItemsInVerticalStack(script_name)
+function timbert.PreviewLaneContent(track, laneIndex, retLength)
+    timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
+    local previewLength
+    if retLength ~= nil or retLength == true then
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        for i = 1, #items do
+            reaper.SetMediaItemSelected(items[i].item, true)
+        end
+        reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
+        local startTime, endTime = reaper.GetSet_LoopTimeRange( false, false, startTime, endTime, false )
+        previewLength = endTime - startTime
+    end
+
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+
     -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
     if #items > 1 then
         local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
@@ -758,10 +749,10 @@ function timbert.PreviewLaneContent(track, laneIndex)
         reaper.SetMediaItemSelected(items[1].item, true)
         timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
     end
+    return previewLength
 end
 
-function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems, script_name)
-    local script_name = script_name or thisScript_name
+function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
     local selectItems = selectItems
     timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
     if reaper.CountSelectedMediaItems(0) < 1 then
