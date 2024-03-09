@@ -1,15 +1,7 @@
--- @description Lanes Record with context of previous line's last take
--- @author Thomas Imbert
--- @version 1.4
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about 
---      # Part of the timbert Lanes suite of scripts
---
---      Record and immediately preview the previous media item on the same track or in the project.
---
---      This script requires 'Go to previous item stack in fixed lanes of currently selected track' & 'Preview content under edit cursor in last lane or first comp lane of selected track'
--- @changelog 
---   # Removed call to clear the console
+-- @noindex
+-- Record and immediately preview the previous content on the same track, in last lane or first comp lane
+-- ExpandOnStop auto expands recorded item end beyond the timeselection auto punch
+-- This script requires 'Go to previous content' and 'Go to next content in fixed lanes of currently selected track' provided by the Lanes suite of scripts
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -32,19 +24,19 @@ end
 
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToPrevious = reaper.GetResourcePath() ..
-                           '/scripts/TImbert Scripts/Transport/timbert_Lanes Go to previous content stack in fixed lanes of currently selected track.lua'
+                           '/scripts/TImbert Scripts/Transport/Lanes/timbert_Lanes Go to previous content in fixed lanes of currently selected track.lua'
 if not reaper.file_exists(timbert_GoToPrevious) then
     reaper.ShowConsoleMsg(
-        "This script requires 'Go to previous content stack in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes Go to previous content stack in fixed lanes of currently selected track'");
+        "This script requires 'Go to previous content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes'");
     return
 end
 
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToNext = reaper.GetResourcePath() ..
-                       '/scripts/TImbert Scripts/Transport/timbert_Lanes Go to next content in fixed lanes of currently selected track.lua'
+                       '/scripts/TImbert Scripts/Transport/Lanes/timbert_Lanes Go to next content in fixed lanes of currently selected track.lua'
 if not reaper.file_exists(timbert_GoToNext) then
     reaper.ShowConsoleMsg(
-        "This script requires 'Go to next content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes Go to next content in fixed lanes of currently selected track'");
+        "This script requires 'Go to next content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes'");
     return
 end
 
@@ -77,9 +69,7 @@ function main()
     end
 
     timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
-
     dofile(timbert_GoToPrevious)
-
     if not timbert.ValidateItemUnderEditCursor(true, 2) then
         timbert.smartRecord()
         return
@@ -91,9 +81,9 @@ function main()
     timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
     startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false) -- length of the full stack
     stackLength = endTime - startTime
+
     local cursorPos = reaper.GetCursorPosition()
     dofile(timbert_GoToNext) -- load and dofile
-
     if reaper.GetCursorPosition() == cursorPos then -- no more content stack later in the session
         timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
         reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(), reaper.GetCursorPosition() + stackLength,

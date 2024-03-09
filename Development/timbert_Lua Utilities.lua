@@ -655,7 +655,6 @@ function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, it
 end
 
 function timbert.ValidateLanesPreviewScriptsSetup()
-    -- local script_name = script_name or thisScript_name
     local error
     if reaper.CountSelectedTracks(0) == 0 then
         error = "Please select a track first"

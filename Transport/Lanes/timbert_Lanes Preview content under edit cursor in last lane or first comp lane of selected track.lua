@@ -1,13 +1,4 @@
--- @description Lanes Preview content under edit cursor in last lane or first comp lane of selected track
--- @author Thomas Imbert
--- @version 1.0
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about 
---      # Part of the timbert Lanes suite of scripts
---
---      Preview content under edit cursor in last lane or first comp lane of selected track
--- @changelog 
---   # Initial release
+-- @noindex
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -30,10 +21,10 @@ end
 
 -- Load lua 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track' script
 timbert_PreviewSoloedLane = reaper.GetResourcePath() ..
-                                '/scripts/TImbert Scripts/Transport/timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua'
+                                '/scripts/TImbert Scripts/Transport/Lanes/timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua'
 if not reaper.file_exists(timbert_PreviewSoloedLane) then
     reaper.ShowConsoleMsg(
-        "This script requires 'Preview content under edit cursor in currently soloed lane of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track'");
+        "This script requires 'Preview content under edit cursor in currently soloed lane of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes'");
     return
 end
 

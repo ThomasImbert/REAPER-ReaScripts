@@ -1,10 +1,4 @@
--- @description Solo last lane or first comp lane with content of selected track
--- @author Thomas Imbert
--- @version 1.0
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Preview item under edit cursor in last lane or first comp lane of selected track
--- @changelog 
---   # Initial release
+-- @noindex
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -26,11 +20,44 @@ else
 end
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    if hasCompLane == true then
-        laneIndex = compLanes[1] -- go to first complane
-    else
-        laneIndex = items[#items].laneIndex
+    -- Test if currently selected lane is included in items lane range
+    if laneIndex > lastLane then
+        if hasCompLane == true then
+            laneIndex = compLanes[1] -- go to first complane
+        else
+            laneIndex = items[#items].laneIndex
+        end
+        return laneIndex
     end
+
+    if laneIndex < items[1].laneIndex then
+        laneIndex = items[1].laneIndex
+        return laneIndex
+    end
+
+    -- Test if lane has content
+    local foundLane, foundLaneIndex
+    for i = 1, #items do
+        if items[i].laneIndex == laneIndex then
+            foundLane = items[i].laneIndex
+            foundLaneIndex = i
+        end
+    end
+    if foundLaneIndex ~= nil then
+        laneIndex = items[foundLaneIndex].laneIndex
+        return laneIndex
+    end
+
+    -- If Lane doesn't have content, go to next lane with content in item lanes range
+    local closestNextLane, closestNextLaneIndex
+    for i = 1, #items do
+        if items[i].laneIndex - laneIndex > 0 then
+            closestNextLane = items[i].laneIndex
+            closestNextLaneIndex = i
+            break
+        end
+    end
+    laneIndex = items[closestNextLaneIndex].laneIndex
     return laneIndex
 end
 
@@ -47,17 +74,15 @@ function main()
     end
 
     local items, lastLane = timbert.MakeItemArraySortByLane()
-    items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
-    local laneIndex = lastLane
+    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
-    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
+    timbert.PreviewLaneContent(track, laneIndex)
 
     -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
+    timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 

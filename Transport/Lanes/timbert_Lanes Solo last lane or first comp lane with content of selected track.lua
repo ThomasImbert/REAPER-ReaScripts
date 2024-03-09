@@ -1,13 +1,4 @@
--- @description Lanes Preview content under edit cursor in previous lane of selected track
--- @author Thomas Imbert
--- @version 1.0
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about 
---      # Part of the timbert Lanes suite of scripts
---
---      Preview content under edit cursor in previous lane of selected track
--- @changelog 
---   # Initial release
+-- @noindex
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -28,30 +19,12 @@ else
     return
 end
 
-local function CycleLaneIndexBack(laneIndex, lastLane, items, hasCompLane, compLanes) -- Guard against laneIndex outside possible laneIndex with content
-    if laneIndex > lastLane then
-        if hasCompLane == true then
-            laneIndex = compLanes[1] -- go to first complane
-        else
-            laneIndex = items[#items].laneIndex
-        end
-        return laneIndex
-    end
-
-    if laneIndex <= items[1].laneIndex then
+local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
+    if hasCompLane == true then
+        laneIndex = compLanes[1] -- go to first complane
+    else
         laneIndex = items[#items].laneIndex
-        return laneIndex
     end
-
-    local closestPreviousLane, closestPreviousLaneIndex
-    for i = #items, 1, -1 do
-        if items[i].laneIndex - laneIndex < 0 then
-            closestPreviousLane = items[i].laneIndex
-            closestPreviousLaneIndex = i
-            break
-        end
-    end
-    laneIndex = items[closestPreviousLaneIndex].laneIndex
     return laneIndex
 end
 
@@ -71,19 +44,20 @@ function main()
     items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
 
-    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
-    laneIndex = CycleLaneIndexBack(laneIndex, lastLane, items, hasCompLane, compLanes, items[1].laneIndex)
+    local laneIndex = lastLane
+    laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex)
+
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
+    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
 
     -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
-    timbert.swsCommand("_SWS_RESTTIME1")
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
 end
 
 reaper.PreventUIRefresh(1)
 
-reaper.Undo_BeginBlock() -- Begining of the undo block. 
+reaper.Undo_BeginBlock() -- Begining of the undo block.
 
 main()
 

@@ -1,15 +1,5 @@
--- @description Lanes Go to next content in fixed lanes of currently selected track
--- @author Thomas Imbert
--- @version 1.0
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about 
---      # Part of the timbert Lanes suite of scripts
---
---      Go to next content in fixed lanes of currently selected track
---
---      This script requires 'Solo last lane or first comp lane with content of selected track' 
--- @changelog 
---   # Initial release
+-- @noindex
+-- This script requires 'Solo last lane or first comp lane with content of selected track' provided by the Lanes suite of scripts
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -32,10 +22,10 @@ end
 
 -- Load 'Solo last lane or first comp lane with content of selected track' script
 timbert_SoloLanePriority = reaper.GetResourcePath() ..
-                               '/scripts/TImbert Scripts/Transport/timbert_Lanes Solo last lane or first comp lane with content of selected track.lua'
+                               '/scripts/TImbert Scripts/Transport/Lanes/timbert_Lanes Solo last lane or first comp lane with content of selected track.lua'
 if not reaper.file_exists(timbert_SoloLanePriority) then
     reaper.ShowConsoleMsg(
-        "This script requires 'Solo last lane or first comp lane with content of selected track'! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'Lanes Solo last lane or first comp lane with content of selected track'");
+        "This script requires 'Solo last lane or first comp lane with content of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes'");
     return
 end
 
@@ -66,6 +56,7 @@ function main()
     end
 
     if not timbert.ValidateItemUnderEditCursor(true) then
+        reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
         -- reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item
         -- timbert.SetTimeSelectionToAllItemsInVerticalStack()
         -- dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
