@@ -6,7 +6,6 @@
 --      
 --      Website: https://thomasimbert.wixsite.com/audio
 -- 
---      Forum Thread: ...
 -- @about 
 --      # Thomas Imbert's Lanes suite of scripts
 --
