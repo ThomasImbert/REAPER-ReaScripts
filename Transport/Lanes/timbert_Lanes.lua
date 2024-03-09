@@ -1,11 +1,11 @@
 -- @description timbert_Lanes
 -- @author Thomas Imbert
 -- @version 1.0pre1
+-- @changelog 
+--   # Initial release
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
---      
 --      Website: https://thomasimbert.wixsite.com/audio
--- 
 -- @about 
 --      # Thomas Imbert's Lanes suite of scripts
 --
@@ -14,8 +14,6 @@
 --      Allows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!
 -- @provides
 --      [main] *.lua
--- @changelog 
---   # Initial release
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
@@ -38,4 +36,4 @@ end
 
 timbert.msg(
     "Thomas Imbert's Lanes suite of scripts\n\nExpands on the lanes functionality added in reaper 7\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!",
-    script_name)
+    "Thomas Imbert's Lanes Suite")
