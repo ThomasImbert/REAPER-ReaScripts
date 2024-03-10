@@ -19,7 +19,8 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.921 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
-]] timbert = {}
+]] 
+timbert = {}
 
 local reaper = reaper
 local thisScript_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")

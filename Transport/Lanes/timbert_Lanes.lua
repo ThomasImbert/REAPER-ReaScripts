@@ -13,27 +13,24 @@
 --
 --      Allows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!
 -- @provides
---      [main] *.lua
--- Get this script's name and directory
-local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
-local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
-
+--      [main] *.Lua
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists(timbert_LuaUtils) then
-    dofile(timbert_LuaUtils);
-    if not timbert or timbert.version() < 1.922 then
-        timbert.msg(
-            'This script requires a newer version of TImbert Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',
-            "TImbert Lua Utilities");
-        return
-    end
-else
-    reaper.ShowConsoleMsg(
-        "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'");
-    return
-end
+lanes = {}
 
-timbert.msg(
-    "Thomas Imbert's Lanes suite of scripts\n\nExpands on the track fixed item lanes functionalities added in reaper 7\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!",
-    "Thomas Imbert's Lanes Suite")
+function lanes.ValidateLuaUtils()
+    local error
+    timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+    if not reaper.file_exists(timbert_LuaUtils) then
+        error =
+            "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'"
+    end
+    dofile(timbert_LuaUtils)
+    if timbert.version() < 1.922 then
+        error =
+            "This script requires a newer version of TImbert Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages"
+    end
+    return error
+end
+-- timbert.msg(
+--     "Thomas Imbert's Lanes suite of scripts\n\nExpands on the track fixed item lanes functionalities added in reaper 7\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!",
+--     "Thomas Imbert's Lanes Suite")

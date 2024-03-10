@@ -2,21 +2,28 @@
 -- This script requires 'Solo last lane or first comp lane with content of selected track' provided by the Lanes suite of scripts
 -- Get this script's name and directory
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
-local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists(timbert_LuaUtils) then
-    dofile(timbert_LuaUtils);
-    if not timbert or timbert.version() < 1.921 then
-        timbert.msg(
-            'This script requires a newer version of TImbert Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',
-            "TImbert Lua Utilities");
-        return
-    end
+    dofile(timbert_LuaUtils)
 else
     reaper.ShowConsoleMsg(
         "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'");
+    return
+end
+
+-- Load metapackage "timbert_Lanes" and use it to check timbert_Lua Utilities version
+timbert_Lanes = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Transport/Lanes/timbert_Lanes.lua'
+if not reaper.file_exists(timbert_Lanes) then
+    reaper.ShowConsoleMsg(
+        "This script requires 'timbert_Lanes'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'timbert_Lanes'")
+    return
+end
+dofile(timbert_Lanes)
+local validateUtilities = lanes.ValidateLuaUtils()
+if validateUtilities ~= nil then
+    timbert.msg(validateUtilities, script_name)
     return
 end
 
