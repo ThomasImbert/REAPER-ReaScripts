@@ -39,7 +39,29 @@ if not reaper.file_exists(timbert_GoToNext) then
     return
 end
 
-local metronomePos
+local metronomePos, itemsPre, itemsPost, newItem
+
+local function FindRecordedItem(itemsPre, itemsPost)
+    local recordedItem, take, takeName
+    local foundMatch = false
+    -- input items list before recording
+    -- table of names
+    for i = 1, #itemsPost do
+        take = reaper.GetActiveTake(itemsPost[i])
+        _, takeName = reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[i]), "P_NAME", takeName,
+            false)
+        for i = 1, #itemsPre do
+            if takeName ==
+                reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[i]), "P_NAME", takeName, false) then
+                foundMatch = true
+            end
+        end
+        if not foundMatch then
+            recordedItem =  reaper.GetMediaItemTake_Item( take )
+        end
+    end
+    return recordedItem
+end
 
 local function ExpandOnStop()
     -- if reaper.GetPlayState() == 5 and reaper.GetPlayPosition() > metronomePos -  (60 /  reaper.Master_GetTempo() *3) then 
@@ -54,9 +76,11 @@ local function ExpandOnStop()
     if reaper.CountSelectedMediaItems(0) ~= 1 then
         return reaper.defer(ExpandOnStop)
     end -- return if no item is selected
+    -- newItem= FindRecordedItem(itemsPre, itemsPost)
     reaper.Main_OnCommand(40612, 0) -- Item: Set item end to source media end
     reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
-    reaper.DeleteTempoTimeSigMarker( 0, 1 )
+    reaper.DeleteTempoTimeSigMarker(0, 1)
+    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
     return
 end
 
@@ -84,12 +108,10 @@ function main()
         return
     end
 
-    local laneIndex, previewLength, startTime, endTime, stackLength
+    local laneIndex, previewLength
     laneIndex = timbert.GetActiveTrackLane(track)
     previewLength = timbert.PreviewLaneContent(track, laneIndex, true)
     timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
-    startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false) -- length of the full stack
-    stackLength = endTime - startTime
 
     local cursorPos = reaper.GetCursorPosition()
     -- Trigger go to next but avoid coming back to last content if cursor at end of session
@@ -98,10 +120,10 @@ function main()
     reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
     if reaper.GetCursorPosition() == cursorPos then -- no more content stack later in the session
         timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
-        reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(), reaper.GetCursorPosition() + stackLength,
+        reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(),  reaper.GetProjectLength( 0 )+400,
             true)
     else
-        timbert.SetTimeSelectionToAllItemsInVerticalStack(false)
+        reaper.GetSet_LoopTimeRange(true, false, reaper.GetCursorPosition(), reaper.GetProjectLength( 0 )+400, false)
         timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
     end
 
