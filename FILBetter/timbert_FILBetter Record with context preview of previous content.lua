@@ -46,18 +46,23 @@ local function FindRecordedItem(itemsPre, itemsPost)
     local foundMatch = false
     -- input items list before recording
     -- table of names
+    timbert.dbgVar(#itemsPre, "#itemsPre")
+    timbert.dbgVar(#itemsPost, "#itemsPost")
     for i = 1, #itemsPost do
-        take = reaper.GetActiveTake(itemsPost[i])
-        _, takeName = reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[i]), "P_NAME", takeName,
-            false)
-        for i = 1, #itemsPre do
+        take = reaper.GetActiveTake(itemsPost[i].item)
+        _, takeName = reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[i].item), "P_NAME",
+            "takeName", false)
+        foundMatch = false
+        for j = 1, #itemsPre do
             if takeName ==
-                reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[i]), "P_NAME", takeName, false) then
+                reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(itemsPost[j].item), "P_NAME", "takeName",
+                    false) then
                 foundMatch = true
             end
         end
-        if not foundMatch then
-            recordedItem =  reaper.GetMediaItemTake_Item( take )
+        if foundMatch == false then
+            recordedItem = reaper.GetMediaItemTake_Item(take)
+            -- since we glue on preview multiple items, takename change..... HAVE TO FIX
         end
     end
     return recordedItem
@@ -70,17 +75,27 @@ local function ExpandOnStop()
     -- if reaper.GetPlayPosition() > metronomePos and reaper.GetPlayState() == 5 then
     --     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
     -- end
-    if reaper.GetPlayState() == 4 then
+    if reaper.GetPlayState() ~= 0 then
         return reaper.defer(ExpandOnStop)
     end -- returns if still recording
-    if reaper.CountSelectedMediaItems(0) ~= 1 then
-        return reaper.defer(ExpandOnStop)
-    end -- return if no item is selected
-    -- newItem= FindRecordedItem(itemsPre, itemsPost)
-    reaper.Main_OnCommand(40612, 0) -- Item: Set item end to source media end
+    -- if reaper.CountSelectedMediaItems(0) ~= 1 then
+    --     return reaper.defer(ExpandOnStop)
+    -- end -- return if no item is selected
+    if not itemsPre then
+        return
+    end
     reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
-    reaper.DeleteTempoTimeSigMarker(0, 1)
+    -- reaper.DeleteTempoTimeSigMarker(0, 1)
+    timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_4")
+    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
+    timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
+    itemsPost = timbert.MakeItemArraySortByLane()
+    newItem = FindRecordedItem(itemsPre, itemsPost)
+    reaper.SetMediaItemSelected(newItem, true)
+    reaper.SetMediaItemInfo_Value(newItem, "B_MUTE", 1)
+    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_4")
     reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     return
 end
 
@@ -120,21 +135,19 @@ function main()
     reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
     if reaper.GetCursorPosition() == cursorPos then -- no more content stack later in the session
         timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
-        reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(),  reaper.GetProjectLength( 0 )+400,
-            true)
     else
-        reaper.GetSet_LoopTimeRange(true, false, reaper.GetCursorPosition(), reaper.GetProjectLength( 0 )+400, false)
         timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
     end
-
+    timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
+    itemsPre = timbert.MakeItemArraySortByLane()
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(), reaper.GetProjectLength(0) + 400, true)
     reaper.MoveEditCursor((-previewLength), false)
     -- reaper.SetTempoTimeSigMarker(0, -1, metronomePos -  (60 /  reaper.Master_GetTempo() *3), -1, -1, reaper.Master_GetTempo(), 4, 4, false)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_ALLLANESPLAY", 0) -- unsolo all Lanes
     timbert.smartRecord()
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
     ExpandOnStop()
-
-    -- reaper.SetMediaItemSelected(reaper.GetTrackMediaItem(track, 36), true)
 end
 
 reaper.PreventUIRefresh(1)
