@@ -756,8 +756,6 @@ function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
     if reaper.CountSelectedMediaItems(0) < 1 then
         return
     end
-
-    reaper.PreventUIRefresh(1)
     reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
     local itemCountCycle, itemCountCycle2
     repeat
@@ -771,5 +769,4 @@ function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
         return
     end
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    reaper.PreventUIRefresh(-1)
 end
