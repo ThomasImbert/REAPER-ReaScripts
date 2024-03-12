@@ -106,9 +106,38 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     reaper.Main_OnCommand(41305, 0) -- Item edit: Trim left edge of item to edit cursor
     reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    reaper.Main_OnCommand(42938, 0) -- Track lanes: Move items up if possible to minimize lane usage
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
     reaper.PreventUIRefresh(-1)
     return
+end
+
+local function IsLastContentOnTrack(keepCursorPos)
+    local cursorPos = reaper.GetCursorPosition()
+    -- Trigger go to next but avoid coming back to last content if cursor at end of session
+    reaper.SetExtState("FILBetterOptions", "GoToNext", "true", false)
+    dofile(timbert_GoToNext)
+    reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
+    if reaper.GetCursorPosition() == cursorPos then
+        return true
+    end
+    if keepCursorPos == true then
+        reaper.MoveEditCursor(cursorPos - reaper.GetCursorPosition(), false)
+    end
+    return false
+end
+
+local function InsertSilence(maxPositionInit)
+    local playPos, maxPosition
+    maxPosition = maxPosition or maxPositionInit
+    playPos = reaper.GetPlayPosition()
+    if (maxPosition - playPos) > 1 then
+        reaper.defer(InsertSilence)
+        reaper.PreventUIRefresh(-1)
+        return
+    end
+    reaper.GetSet_LoopTimeRange2(0, true, false, regionEnd, (regionEnd + 2), false) -- create a 2s time selection starting from region End
+    reaper.Main_OnCommand(40200, 0) -- Time selection: Insert empty space at time selection (moving later items)
 end
 
 function main()
@@ -143,15 +172,10 @@ function main()
     previewLength = timbert.PreviewLaneContent(track, laneIndex, true)
     timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
 
-    local cursorPos = reaper.GetCursorPosition()
-    -- Trigger go to next but avoid coming back to last content if cursor at end of session
-    reaper.SetExtState("FILBetterOptions", "GoToNext", "true", false)
-    dofile(timbert_GoToNext)
-    reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
-    if reaper.GetCursorPosition() == cursorPos then -- no more content stack later in the session
+    if IsLastContentOnTrack(false) then
         timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
         itemsPre = {}
-    else
+    else 
         timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
         itemsPre = timbert.MakeItemArraySortByLane()
@@ -164,6 +188,7 @@ function main()
     -- reaper.SetTempoTimeSigMarker(0, -1, metronomePos -  (60 /  reaper.Master_GetTempo() *3), -1, -1, reaper.Master_GetTempo(), 4, 4, false)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_ALLLANESPLAY", 0) -- unsolo all Lanes
     timbert.smartRecord()
+    -- InsertSilence(maxPositionInit)
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
     TrimOnStop()
 end
