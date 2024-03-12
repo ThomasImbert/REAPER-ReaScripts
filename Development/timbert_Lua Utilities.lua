@@ -19,8 +19,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.921 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
-]] 
-timbert = {}
+]] timbert = {}
 
 local reaper = reaper
 local thisScript_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
@@ -734,7 +733,7 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength)
             reaper.SetMediaItemSelected(items[i].item, true)
         end
         reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
-        local startTime, endTime = reaper.GetSet_LoopTimeRange( false, false, startTime, endTime, false )
+        local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
         previewLength = endTime - startTime
     end
 
@@ -753,12 +752,12 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength)
 end
 
 function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
-    local selectItems = selectItems
     timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
     if reaper.CountSelectedMediaItems(0) < 1 then
         return
     end
 
+    reaper.PreventUIRefresh(1)
     reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
     local itemCountCycle, itemCountCycle2
     repeat
@@ -768,7 +767,9 @@ function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
         itemCountCycle2 = reaper.CountSelectedMediaItems(0)
     until itemCountCycle2 == itemCountCycle
     if selectItems ~= false then
+        reaper.PreventUIRefresh(-1)
         return
     end
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    reaper.PreventUIRefresh(-1)
 end
