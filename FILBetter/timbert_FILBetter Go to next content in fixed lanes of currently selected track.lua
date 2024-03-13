@@ -29,17 +29,6 @@ if not reaper.file_exists(timbert_SoloLanePriority) then
     return
 end
 
-local function IsCalledByScripts()
-    if not reaper.HasExtState("FILBetterOptions", "GoToNext") then
-        return false
-    end
-    if reaper.GetExtState("FILBetterOptions", "GoToNext") ~= "true" then
-        timbert.dbg(tostring(reaper.GetExtState("FILBetterOptions", "GoToNext")))
-        return false
-    end
-    return true
-end
-
 function main()
     -- Validate track selection
     local track, error = timbert.ValidateLanesPreviewScriptsSetup()
@@ -67,7 +56,8 @@ function main()
     end
 
     if not timbert.ValidateItemUnderEditCursor(true) then
-        if IsCalledByScripts() == true then
+        -- if called by another script
+        if select(2, reaper.get_action_context()) ~= debug.getinfo(1, 'S').source:sub(2) then
             reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
             return
         end

@@ -89,10 +89,7 @@ end
 local function IsLastContentOnTrack(keepSelectionState)
     local cursorPos = reaper.GetCursorPosition()
     local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
-    -- Trigger go to next but avoid coming back to last content if cursor at end of session
-    reaper.SetExtState("FILBetterOptions", "GoToNext", "true", false)
     dofile(timbert_GoToNext)
-    reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
     if reaper.GetCursorPosition() == cursorPos then
         return
     end
