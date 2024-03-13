@@ -1,6 +1,7 @@
 # Thomas Imbert's Reaper scripts
 
-A collection of scripts for Reaper, most notably the Voice Acting Spreadsheet Connect (VASC) tool. 
+A collection of scripts for Reaper.
+Home of the FILBetter scripts (Better track Fixed Item Lanes)
 
 ## Installation
 

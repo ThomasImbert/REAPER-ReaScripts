@@ -33,7 +33,8 @@ function main()
     -- Validate track selection
     local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
-        timbert.msg(error, script_name)
+        reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
+        -- timbert.msg(error, script_name)
         return
     end
 

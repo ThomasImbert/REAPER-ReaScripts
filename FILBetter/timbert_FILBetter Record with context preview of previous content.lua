@@ -182,8 +182,11 @@ function main()
     end
 
     timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
+    local cursorPos = reaper.GetCursorPosition()
+
     dofile(timbert_GoToPrevious)
-    if not timbert.ValidateItemUnderEditCursor(true, 2) then
+    if not timbert.ValidateItemUnderEditCursor(true, 2) or cursorPos == reaper.GetCursorPosition() then
+        reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
         timbert.smartRecord()
         itemsPre = {}
         return
