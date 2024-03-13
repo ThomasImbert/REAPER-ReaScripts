@@ -14,8 +14,11 @@
 --      by Thomas Imbert
 -- @provides
 --      [main] *.Lua
---      utils/json.lua
+--      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
+
+-- Thanks to rxi for the lua and JSON functions
+-- Thanks to gxray  and Daniel Lumertz. 
 -- Get a Path to save json (using script path)
 local info = debug.getinfo(1, 'S');
 local ScriptPath = info.source:match [[^@?(.*[\/])[^\/]-$]];
