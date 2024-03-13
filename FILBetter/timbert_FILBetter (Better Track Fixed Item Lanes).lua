@@ -13,7 +13,7 @@
 -- 
 --      by Thomas Imbert
 -- @provides
---      [main] *.Lua
+--      [main] *.lua
 --      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 
