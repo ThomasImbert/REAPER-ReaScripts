@@ -2,12 +2,6 @@
 -- Record and immediately preview the previous content on the same track, in last lane or first comp lane
 -- TrimOnStop auto expands recorded item end beyond the timeselection auto punch
 ----------------
--- USERSETTING--
-local recordingBellOn = false
--- In Metronome setting, allow run during recording
--- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
----------------
-
 -- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
@@ -28,6 +22,11 @@ if not timbert or timbert.version() < 1.922 then
     return
 end
 
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToPrevious = reaper.GetResourcePath() ..
                            '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua'
@@ -45,6 +44,12 @@ if not reaper.file_exists(timbert_GoToNext) then
         "This script requires 'Go to next content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'");
     return
 end
+
+-- USERSETTING Loaded from FILBetterCFG.json--
+local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
+-- In Metronome setting, allow run during recording
+-- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
+---------------
 
 local metronomePos, track
 local itemsPre, takesPre, itemsPost, takesPost = {}, {}, {}, {}
@@ -145,18 +150,15 @@ local function RecordLoop(retrigg)
         return reaper.defer(RecordLoop)
     end
 
-    -- Enable Metronome tick as recording bell for 1 beat
+    -- Enable Metronome tick as recording bell for 1 tick
     if recordingBellOn == true and metronomePos ~= nil then
         if reaper.GetPlayPosition() > metronomePos - 0.1 then
-            reaper.PreventUIRefresh(1)
             reaper.SetTempoTimeSigMarker(0, -1, metronomePos, -1, -1, reaper.Master_GetTempo(), 4, 4, false)
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROON"), 0) -- SWS: Metronome enable
         end
-        if reaper.GetPlayPosition() > metronomePos + 0.1 then
+        if reaper.GetPlayPosition() > metronomePos + 0.2 then
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
             reaper.DeleteTempoTimeSigMarker(0, 1)
-            reaper.UpdateArrange()
-            reaper.PreventUIRefresh(-1)
         end
     end
     return reaper.defer(RecordLoop)
