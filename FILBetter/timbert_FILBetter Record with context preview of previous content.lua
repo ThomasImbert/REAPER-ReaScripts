@@ -3,7 +3,9 @@
 -- TrimOnStop auto expands recorded item end beyond the timeselection auto punch
 ----------------
 -- USERSETTING--
-local recordingBellOn = true
+local recordingBellOn = false
+-- In Metronome setting, allow run during recording
+-- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
 ---------------
 
 -- Get this script's name
@@ -47,12 +49,6 @@ end
 local metronomePos, track
 local itemsPre, takesPre, itemsPost, takesPost = {}, {}, {}, {}
 
-local function Exit()
-    reaper.defer(function()
-    end)
-    -- reaper.Undo_EndBlock(script_name, 12) -- End of the undo block.
-end
-
 local function GetTakes(items)
     if #items < 1 then
         return
@@ -90,6 +86,24 @@ local function FindRecordedItem(takesPre, takesPost)
     return recordedItem
 end
 
+local function IsLastContentOnTrack(keepSelectionState)
+    local cursorPos = reaper.GetCursorPosition()
+    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
+    -- Trigger go to next but avoid coming back to last content if cursor at end of session
+    reaper.SetExtState("FILBetterOptions", "GoToNext", "true", false)
+    dofile(timbert_GoToNext)
+    reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
+    if reaper.GetCursorPosition() == cursorPos then
+        return
+    end
+    local nextContentPos = reaper.GetCursorPosition()
+    if keepSelectionState == true then
+        reaper.MoveEditCursor(cursorPos - nextContentPos, false)
+        reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
+    end
+    return nextContentPos
+end
+
 local function TrimOnStop(retrigg) -- get last recorded item and trim start to current content stack
     local item
     reaper.PreventUIRefresh(1)
@@ -120,74 +134,46 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     return
 end
 
-local function IsLastContentOnTrack(keepSelectionState)
-    local cursorPos = reaper.GetCursorPosition()
-    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
-    -- Trigger go to next but avoid coming back to last content if cursor at end of session
-    reaper.SetExtState("FILBetterOptions", "GoToNext", "true", false)
-    dofile(timbert_GoToNext)
-    reaper.DeleteExtState("FILBetterOptions", "GoToNext", false)
-    if reaper.GetCursorPosition() == cursorPos then
+local function RecordLoop(retrigg)
+    -- If stopped, trimOnStop and exit
+    if reaper.GetPlayState() == 0 then
+        reaper.Undo_BeginBlock() -- Begining of the undo block. 
+        TrimOnStop(retrigg)
+        reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
         return
     end
-    local nextContentPos = reaper.GetCursorPosition()
-    if keepSelectionState == true then
-        reaper.MoveEditCursor(cursorPos - nextContentPos, false)
-        reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    end
-    return nextContentPos
-end
 
-function RecordLoop(retrigg)
-    if reaper.GetPlayState() > 0 then -- if no stopped
+    -- if not recording
+    if reaper.GetPlayState() < 4 then
         return reaper.defer(RecordLoop)
     end
-    reaper.Undo_BeginBlock() -- Begining of the undo block. 
-    TrimOnStop(retrigg)
-    reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
-end
 
--- function InsertSilence(maxPositionInit)
---     if not maxPositionInit then
---         return
---     end
---     local emptyItem
---     local timeThreshold
---     local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
---     local playPos = reaper.GetPlayPosition()
---     if (maxPositionInit - playPos) > timeThreshold then
---         reaper.defer(function()
---             RecordLoop(maxPositionInit)
---         end)
---         return
---     end
---     reaper.PreventUIRefresh(1)
---     reaper.GetSet_LoopTimeRange(true, false, playPos, maxPositionInit, false) -- create a timeThreshold length time selection at play position
---     reaper.Main_OnCommand(40310, 0) -- Set ripple editing per-track
---     -- reaper.Main_OnCommand(40200, 0) -- Time selection: Insert empty space at time selection (moving later items)
---     reaper.Main_OnCommand(40142, 0) -- Insert empty item
---     emptyItem = reaper.GetSelectedMediaItem(0, 0)
---     reaper.Main_OnCommand(40309, 0) -- Set ripple editing off
---     reaper.DeleteTrackMediaItem(track, emptyItem)
---     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false) -- reset timeselection to initial state
---     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
---     reaper.PreventUIRefresh(-1)
---     maxPositionInit = maxPositionInit + timeThreshold
---     reaper.defer(function()
---         RecordLoop(maxPositionInit)
---     end)
--- end
+    -- Enable Metronome tick as recording bell for 1 beat
+    if recordingBellOn == true and metronomePos ~= nil then
+        if reaper.GetPlayPosition() > metronomePos - 0.1 then
+            reaper.PreventUIRefresh(1)
+            reaper.SetTempoTimeSigMarker(0, -1, metronomePos, -1, -1, reaper.Master_GetTempo(), 4, 4, false)
+            reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROON"), 0) -- SWS: Metronome enable
+        end
+        if reaper.GetPlayPosition() > metronomePos + 0.1 then
+            reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
+            reaper.DeleteTempoTimeSigMarker(0, 1)
+            reaper.UpdateArrange()
+            reaper.PreventUIRefresh(-1)
+        end
+    end
+    return reaper.defer(RecordLoop)
+end
 
 function main()
     reaper.Undo_BeginBlock() -- Begining of the undo block. 
-    metronomePos = reaper.GetCursorPosition()
     if reaper.GetPlayState() >= 4 then
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
-        RecordLoop(_, true)
+        RecordLoop(true)
     end
 
     -- Validate track selection
-    track, error = timbert.ValidateLanesPreviewScriptsSetup()
+    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
         timbert.msg(error, script_name)
         return
@@ -214,34 +200,25 @@ function main()
     local nextContentPos = IsLastContentOnTrack(false)
     if nextContentPos == nil then
         timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
+        metronomePos = reaper.GetCursorPosition()
         itemsPre = {}
     else
         timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
         itemsPre = timbert.MakeItemArraySortByLane()
         takesPre = GetTakes(itemsPre)
-        nextContentPos = IsLastContentOnTrack(true)
     end
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(), reaper.GetProjectLength(0) + 400, true)
+    metronomePos = reaper.GetCursorPosition()
     reaper.MoveEditCursor((-previewLength), false)
-    -- reaper.SetTempoTimeSigMarker(0, -1, metronomePos -  (60 /  reaper.Master_GetTempo() *3), -1, -1, reaper.Master_GetTempo(), 4, 4, false)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_ALLLANESPLAY", 0) -- unsolo all Lanes
     timbert.smartRecord()
-    -- InsertSilence(nextContentPos)
     timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
-    -- TrimOnStop()
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
-    RecordLoop(nextContentPos)
+    RecordLoop()
 end
-
--- if reaper.GetPlayState() == 5 and reaper.GetPlayPosition() > metronomePos -  (60 /  reaper.Master_GetTempo() *3) then 
---     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROON"), 0) -- SWS: Metronome enable
--- end 
--- if reaper.GetPlayPosition() > metronomePos and reaper.GetPlayState() == 5 then
---     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
--- end
 
 reaper.PreventUIRefresh(1)
 
@@ -251,6 +228,3 @@ main()
 reaper.UpdateArrange()
 
 reaper.PreventUIRefresh(-1)
-
-reaper.atexit(Exit)
-
