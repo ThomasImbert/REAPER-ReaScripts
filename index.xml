@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="8ff50c2d03fbcf441b535fbe200f237208745f76">
+<index version="1" name="TImbert Scripts" commit="af9feb16873d9a823a3d3038c58676a3244e5e0b">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -67,6 +67,44 @@
       <version name="1.922" author="Thomas Imbert" time="2024-03-09T20:23:37Z">
         <changelog><![CDATA[# Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8ff50c2d03fbcf441b535fbe200f237208745f76/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.923" author="Thomas Imbert" time="2024-03-13T16:56:46Z">
+        <changelog><![CDATA[# Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="FILBetter">
+    <reapack name="timbert_FILBetter (Better Track Fixed Item Lanes).lua" type="script" desc="FILBetter (Better Track Fixed Item Lanes)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Allows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 by Thomas Imbert\par}
+}
+]]></description>
+        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository:</link>
+        <link rel="website" href="https://thomasimbert.wixsite.com/audio">Website:</link>
+      </metadata>
+      <version name="1.0pre1.2" author="Thomas Imbert" time="2024-03-13T16:56:46Z">
+        <changelog><![CDATA[# Added Default config json generation and loading]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20(Better%20Track%20Fixed%20Item%20Lanes).lua</source>
+        <source main="main" file="timbert_FILBetter Go to next content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Go%20to%20next%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Go%20to%20previous%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in currently soloed lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in first lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20first%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in last lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in last lane or first comp lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20or%20first%20comp%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in next lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20next%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in previous lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20previous%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Push next content when recording.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Push%20next%20content%20when%20recording.lua</source>
+        <source main="main" file="timbert_FILBetter Record with context preview of previous content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Record%20with%20context%20preview%20of%20previous%20content.lua</source>
+        <source main="main" file="timbert_FILBetter Solo last lane or first comp lane with content of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Solo%20last%20lane%20or%20first%20comp%20lane%20with%20content%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Swap content under edit cursor in currently soloed lane with bottom or comp lane content (make preview favorite).lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/timbert_FILBetter%20Swap%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20with%20bottom%20or%20comp%20lane%20content%20(make%20preview%20favorite).lua</source>
+        <source file="utils/json.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/af9feb16873d9a823a3d3038c58676a3244e5e0b/FILBetter/utils/json.lua</source>
       </version>
     </reapack>
   </category>
@@ -482,51 +520,6 @@
       <version name="1.2" author="Thomas Imbert" time="2022-10-18T01:43:15Z">
         <changelog><![CDATA[# Fixed Alt takes previewing and removed remaining clutter]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Transport/timbert_VASC%20Record%20with%20context%20of%20previous%20line.lua</source>
-      </version>
-    </reapack>
-  </category>
-  <category name="Transport/Lanes">
-    <reapack name="timbert_Lanes.lua" type="script" desc="timbert_Lanes">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Thomas Imbert's Lanes suite of scripts\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Expands on the lanes functionality added in reaper 7\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Allows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\par}
-}
-]]></description>
-        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository:</link>
-        <link rel="website" href="https://thomasimbert.wixsite.com/audio">Website:</link>
-      </metadata>
-      <version name="1.0pre1" author="Thomas Imbert" time="2024-03-09T20:11:12Z">
-        <changelog><![CDATA[# Initial release]]></changelog>
-        <source main="main" file="timbert_Lanes Go to next content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Go%20to%20next%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Go to previous content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Go%20to%20previous%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in first lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20first%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in last lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in last lane or first comp lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20or%20first%20comp%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in next lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20next%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in previous lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20previous%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Record with context preview of previous content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Record%20with%20context%20preview%20of%20previous%20content.lua</source>
-        <source main="main" file="timbert_Lanes Solo last lane or first comp lane with content of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes%20Solo%20last%20lane%20or%20first%20comp%20lane%20with%20content%20of%20selected%20track.lua</source>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/38cb4e19fa86172cff6ea7d16f253430270f4a3b/Transport/Lanes/timbert_Lanes.lua</source>
-      </version>
-      <version name="1.0pre1.1" author="Thomas Imbert" time="2024-03-09T20:24:57Z">
-        <changelog><![CDATA[# Initial release]]></changelog>
-        <source main="main" file="timbert_Lanes Go to next content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Go%20to%20next%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Go to previous content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Go%20to%20previous%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in currently soloed lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in first lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20first%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in last lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in last lane or first comp lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20or%20first%20comp%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in next lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20next%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Preview content under edit cursor in previous lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Preview%20content%20under%20edit%20cursor%20in%20previous%20lane%20of%20selected%20track.lua</source>
-        <source main="main" file="timbert_Lanes Record with context preview of previous content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Record%20with%20context%20preview%20of%20previous%20content.lua</source>
-        <source main="main" file="timbert_Lanes Solo last lane or first comp lane with content of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes%20Solo%20last%20lane%20or%20first%20comp%20lane%20with%20content%20of%20selected%20track.lua</source>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/dd841ee575a4432573ba02d420b67b26cdd00301/Transport/Lanes/timbert_Lanes.lua</source>
       </version>
     </reapack>
   </category>
