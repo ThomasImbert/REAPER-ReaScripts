@@ -55,21 +55,20 @@ end
 -- If run from action list, expain FILBetter and return
 if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2) then
     reaper.MB(
-        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7\n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\n\nby Thomas Imbert",
+        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more! \n\nYou can change some script settings by going to your Reaper resource path folder > Scripts > TImbert Scripts > FILBetter, and modifying FILBetterConfig.json, which will generate as soon as you've used one of the scripts once \n\nby Thomas Imbert",
         script_name, 0)
     return
 end
-
 
 FILBetter = {}
 
 local defaultFILBetter = {
     recordingBellOn = false,
-    prioritizeCompLaneOverLastLane = true, 
+    prioritizeCompLaneOverLastLane = true,
     compLanePriority = "first", -- "first" or "last"
-    deleteSourceOnPreview = false, 
-    previewOnLaneSelection = true, 
-    showValidationErrorMsg = false 
+    deleteSourceOnPreview = false,
+    previewOnLaneSelection = true,
+    showValidationErrorMsg = false
 }
 
 -- Load FILBETTER.cfg
@@ -82,5 +81,5 @@ function FILBetter.LoadConfig(configKeyString)
     end
     -- load configKey value
     local loadedValue = load_json(ScriptPath, "FILBetterConfig")
-    return loadedValue[configKeyString] 
+    return loadedValue[configKeyString]
 end
