@@ -20,9 +20,10 @@ if not timbert or timbert.version() < 1.923 then
 end
 
 local _, _, sectionID, cmdID, _, _, _ = reaper.get_action_context()
-local cursorPos1, cursorPos2, nextContentPos, emptyItem, currentContentEndPos, playPos, timeStart, timeEnd, track, lane
-local retval_recPushRecordingEXT, val_recPushRecordingEXT
-local timeThreshold = 10
+local cursorPos1, cursorPos2, nextContentPos, nextContentItem, emptyItem, currentContentEndPos, playPos, timeStart,
+    timeEnd, track, lane, arrangeStart, arrangeEnd
+local val_recPushRecordingEXT
+local timeThreshold = 3
 
 function Exit()
     reaper.SetToggleCommandState(sectionID, cmdID, 0)
@@ -32,39 +33,45 @@ function main()
     timeStart, timeEnd = reaper.GetSet_LoopTimeRange(false, false, _, _, false) -- Save TimeSelect at time of recording
     if reaper.GetPlayState() <= 04 then -- if no recording
         reaper.SetProjExtState(0, "FILBetter", "RecPush_RecordingStarted", "false")
+        reaper.SetProjExtState(0, "FILBetter", "RecPush_RecordingStartPos", "")
         return reaper.defer(main)
     end
-    retval_recPushRecordingEXT, val_recPushRecordingEXT = reaper.GetProjExtState(0, "FILBetter",
-        "RecPush_RecordingStarted")
+
+    -- if Recording
+    _, val_recPushRecordingEXT = reaper.GetProjExtState(0, "FILBetter", "RecPush_RecordingStarted")
     reaper.Undo_BeginBlock()
     reaper.PreventUIRefresh(1)
-    if val_recPushRecordingEXT ~= "true" then
+
+    if val_recPushRecordingEXT ~= "true" then -- do once the following, reset when stopping recording
         reaper.SetProjExtState(0, "FILBetter", "RecPush_RecordingStarted", "true")
         reaper.SetProjExtState(0, "FILBetter", "RecPush_TimeStart", timeStart)
         reaper.SetProjExtState(0, "FILBetter", "RecPush_TimeEnd", timeEnd)
-
         track = reaper.GetSelectedTrack(0, 0)
         cursorPos1 = reaper.GetCursorPosition()
+        reaper.SetProjExtState(0, "FILBetter", "RecPush_RecordingStartPos", cursorPos1)
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
         reaper.Main_OnCommand(40631, 0) -- Go to end of time selection   
         currentContentEndPos = reaper.GetCursorPosition()
+        reaper.SetProjExtState(0, "FILBetter", "RecPush_AnchorContentEndPos", currentContentEndPos)
         lane = timbert.GetActiveTrackLane(track)
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
-        reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(lane), 1)
-        if reaper.GetCursorPosition() == currentContentEndPos then
-            return reaper.defer(main)
-        else
-            nextContentPos = reaper.GetCursorPosition()
-            reaper.MoveEditCursor(cursorPos1 - nextContentPos, false)
+        if reaper.GetCursorPosition() ~= currentContentEndPos then
+            _, nextContentItem = reaper.GetSetMediaItemInfo_String(reaper.GetSelectedMediaItem(0, 0), "GUID",
+                "nextContentItem", false)
+            reaper.SetProjExtState(0, "FILBetter", "RecPush_NextContentItem", nextContentItem)
+            nextContentPos = reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, 0), "D_POSITION")
             reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
         end
+        reaper.Main_OnCommand(40026, 0) -- File: Save project to Save all ProjExtState
+        reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(lane), 1) -- reset selected lane
+        reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection to initial state
+        reaper.SetEditCurPos(cursorPos1, false, false)
     end
 
-    reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection to initial state
-
+    _, cursorPos1 = reaper.GetProjExtState(0, "FILBetter", "RecPush_RecordingStartPos")
     playPos = reaper.GetPlayPosition()
-    if (nextContentPos - playPos) > timeThreshold or playPos < currentContentEndPos then
+    if nextContentPos == nil or (nextContentPos - playPos) > timeThreshold or playPos < currentContentEndPos then
         reaper.Undo_EndBlock(script_name, 0)
         reaper.PreventUIRefresh(-1)
         reaper.defer(main)
@@ -73,26 +80,31 @@ function main()
 
     cursorPos2 = reaper.GetCursorPosition()
     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_SAVESELITEMS1"), 0) -- SWS: Save selected track(s) selected item(s), slot 1    
+    timeStart, timeEnd = reaper.GetSet_LoopTimeRange(false, false, _, _, false) -- Save TimeSelect at before pushing items
     reaper.Main_OnCommand(40020, 0) -- Time selection: Remove (unselect) time selection and loop points
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    arrangeStart, arrangeEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, arrangeStart, arrangeEnd)
     while nextContentPos - playPos < timeThreshold do
-        reaper.GetSet_LoopTimeRange(true, false, playPos, nextContentPos, false) -- create a timeThreshold length time selection at play position
+        reaper.SetEditCurPos(playPos, true, false)
+        reaper.GetSet_LoopTimeRange(true, true, playPos, nextContentPos, false) -- create a timeThreshold length time selection at play position
         reaper.Main_OnCommand(40310, 0) -- Set ripple editing per-track
         reaper.Main_OnCommand(40142, 0) -- Insert empty item
         emptyItem = reaper.GetSelectedMediaItem(0, 0)
         reaper.Main_OnCommand(40309, 0) -- Set ripple editing off
         reaper.DeleteTrackMediaItem(track, emptyItem)
-        nextContentPos = nextContentPos + (nextContentPos - playPos)
+        _, nextContentItem = reaper.GetProjExtState(0, "FILBetter", "RecPush_NextContentItem")
+        nextContentPos = reaper.GetMediaItemInfo_Value(reaper.BR_GetMediaItemByGUID(0, nextContentItem), "D_POSITION")
     end
-    _, timeStart = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeStart")
-    _, timeEnd = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeEnd")
-    reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection to initial state
-    -- nextContentPos = nextContentPos + timeThreshold
-    reaper.MoveEditCursor(cursorPos1 - reaper.GetCursorPosition(), false)
+
+    -- _, timeStart = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeStart")
+    -- _, timeEnd = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeEnd")
+    reaper.SetEditCurPos(cursorPos2, false, false)
+    reaper.GetSet_ArrangeView2(0, true, 0, 0, arrangeStart, arrangeEnd)
+    reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_RESTSELITEMS1"), 0) -- SWS: Restore selected track(s) selected item(s), slot 1
+    reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection 
     reaper.defer(main)
     reaper.Undo_EndBlock(script_name, 8)
     reaper.PreventUIRefresh(-1)
-    reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_RESTSELITEMS1"), 0) -- SWS: Restore selected track(s) selected item(s), slot 1
 end
 
 reaper.set_action_options(1)
