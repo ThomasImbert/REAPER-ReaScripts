@@ -1,8 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.2
+-- @version 1.0pre1.3
 -- @changelog 
---   # Added Default config json generation and loading
+--   # updated Record with context and added calls to config var across all scripts
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -68,7 +68,8 @@ local defaultFILBetter = {
     compLanePriority = "first", -- "first" or "last"
     deleteSourceOnPreview = false,
     previewOnLaneSelection = true,
-    showValidationErrorMsg = false
+    showValidationErrorMsg = false,
+    pushNextContentTime = 3,
 }
 
 -- Load FILBETTER.cfg

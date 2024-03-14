@@ -1,7 +1,7 @@
 -- @noindex
 -- Record and immediately preview the previous content on the same track, in last lane or first comp lane
 -- TrimOnStop auto expands recorded item end beyond the timeselection auto punch
-----------------
+----------------------------
 -- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
@@ -15,7 +15,7 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.923 then
+if not timbert or timbert.version() < 1.924 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
@@ -51,7 +51,7 @@ local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
 ---------------
 
-local metronomePos, track
+local punchInPos, track, previewLength, laneIndexContext, _
 local itemsPre, takesPre, itemsPost, takesPost = {}, {}, {}, {}
 
 local function GetTakes(items)
@@ -100,21 +100,21 @@ local function IsLastContentOnTrack(keepSelectionState)
     end
     local nextContentPos = reaper.GetCursorPosition()
     if keepSelectionState == true then
-        reaper.MoveEditCursor(cursorPos - nextContentPos, false)
+        reaper.SetEditCurPos(cursorPos, false, false)
         reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     end
     return nextContentPos
 end
 
 local function TrimOnStop(retrigg) -- get last recorded item and trim start to current content stack
-    local item
+    local item, cursorRecall, punchInPos
     reaper.PreventUIRefresh(1)
 
     if not retrigg or retrigg == false then
-        reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
-        -- reaper.DeleteTempoTimeSigMarker(0, 1)
-        timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_4")
-        timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
+        reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages
+        cursorRecall = reaper.GetCursorPosition()
+        _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
+        reaper.SetEditCurPos(punchInPos, false, false)
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
         itemsPost = timbert.MakeItemArraySortByLane()
         takesPost = GetTakes(itemsPost)
@@ -124,7 +124,7 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
             return
         end
         reaper.SetMediaItemSelected(item, true)
-        timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
+        reaper.SetEditCurPos(punchInPos, false, false)
     else
         item = reaper.GetSelectedMediaItem(0, 0)
     end
@@ -132,6 +132,8 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     reaper.Main_OnCommand(42938, 0) -- Track lanes: Move items up if possible to minimize lane usage
+    -- reaper.SetEditCurPos(cursorRecall, false, false) -- MAKE USER OPTION
+
     reaper.PreventUIRefresh(-1)
     return
 end
@@ -141,6 +143,11 @@ local function RecordLoop(retrigg)
     if reaper.GetPlayState() == 0 then
         reaper.Undo_BeginBlock() -- Begining of the undo block. 
         TrimOnStop(retrigg)
+
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", "")
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", "")
         reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
         return
     end
@@ -151,12 +158,12 @@ local function RecordLoop(retrigg)
     end
 
     -- Enable Metronome tick as recording bell for 1 tick
-    if recordingBellOn == true and metronomePos ~= nil then
-        if reaper.GetPlayPosition() > metronomePos - 0.1 then
-            reaper.SetTempoTimeSigMarker(0, -1, metronomePos, -1, -1, reaper.Master_GetTempo(), 4, 4, false)
+    if recordingBellOn == true and punchInPos ~= nil then
+        if reaper.GetPlayPosition() > punchInPos - 0.1 then
+            reaper.SetTempoTimeSigMarker(0, -1, punchInPos, -1, -1, reaper.Master_GetTempo(), 4, 4, false)
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROON"), 0) -- SWS: Metronome enable
         end
-        if reaper.GetPlayPosition() > metronomePos + 0.2 then
+        if reaper.GetPlayPosition() > punchInPos + 0.2 then
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
             reaper.DeleteTempoTimeSigMarker(0, 1)
         end
@@ -165,59 +172,74 @@ local function RecordLoop(retrigg)
 end
 
 function main()
+    local cursorPosInitial, cursorPosContext
     reaper.Undo_BeginBlock() -- Begining of the undo block. 
     if reaper.GetPlayState() >= 4 then
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
+        reaper.SetEditCurPos(punchInPos, false, false)
         RecordLoop(true)
     end
 
-    -- Validate track selection
-    local track, error = timbert.ValidateLanesPreviewScriptsSetup()
-    if track == nil then
-        timbert.msg(error, script_name)
-        return
-    end
+    if reaper.GetPlayState() == 0 then
+        -- Validate track selection
+        local track, error = timbert.ValidateLanesPreviewScriptsSetup()
+        if track == nil then
+            timbert.msg(error, script_name)
+            return
+        end
 
-    if reaper.GetMediaTrackInfo_Value(track, "I_RECARM") == 0 then
-        timbert.msg("Selected track isn't record armed!", script_name)
-        return
-    end
+        if reaper.GetMediaTrackInfo_Value(track, "I_RECARM") == 0 then
+            timbert.msg("Selected track isn't record armed!", script_name)
+            return
+        end
 
-    timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
-    local cursorPos = reaper.GetCursorPosition()
+        -- store value once for this recording series
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", reaper.GetTrackGUID(track))
+        cursorPosInitial = reaper.GetCursorPosition()
+        dofile(timbert_GoToPrevious)
+        if not timbert.ValidateItemUnderEditCursor(true, 2) or cursorPosInitial == reaper.GetCursorPosition() then
+            reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+            timbert.smartRecord()
+            itemsPre = {}
+            return
+        end
+        cursorPosContext = reaper.GetCursorPosition()
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", cursorPosContext)
+        laneIndexContext = timbert.GetActiveTrackLane(track)
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", laneIndexContext)
 
-    dofile(timbert_GoToPrevious)
-    if not timbert.ValidateItemUnderEditCursor(true, 2) or cursorPos == reaper.GetCursorPosition() then
-        reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
-        timbert.smartRecord()
-        itemsPre = {}
-        return
-    end
-
-    local laneIndex, previewLength
-    laneIndex = timbert.GetActiveTrackLane(track)
-    previewLength = timbert.PreviewLaneContent(track, laneIndex, true)
-    timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
-
-    local nextContentPos = IsLastContentOnTrack(false)
-    if nextContentPos == nil then
-        timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
-        metronomePos = reaper.GetCursorPosition()
-        itemsPre = {}
-    else
-        timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_3")
-        timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
-        itemsPre = timbert.MakeItemArraySortByLane()
-        takesPre = GetTakes(itemsPre)
+        if IsLastContentOnTrack(false) == nil then
+            reaper.SetEditCurPos(cursorPosInitial, false, false)
+            punchInPos = cursorPosInitial
+            itemsPre = {}
+        else
+            punchInPos = reaper.GetCursorPosition()
+            timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
+            itemsPre = timbert.MakeItemArraySortByLane()
+            takesPre = GetTakes(itemsPre)
+        end
+        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", punchInPos)
+        reaper.Main_SaveProject(0, false)
     end
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    reaper.GetSet_LoopTimeRange(true, true, reaper.GetCursorPosition(), reaper.GetProjectLength(0) + 400, true)
-    metronomePos = reaper.GetCursorPosition()
-    reaper.MoveEditCursor((-previewLength), false)
+    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+    _, cursorPosContext = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_ContextPos")
+    _, track = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_Track")
+    track = reaper.BR_GetMediaTrackByGUID(0, track)
+    _, laneIndexContext = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_ContextLane")
+    reaper.SetEditCurPos(cursorPosContext+0.01, true, false) -- add 0.01 since cursorPoContext number got converted into string when stored in ExtState
+    previewLength = timbert.PreviewLaneContent(track, tonumber(laneIndexContext), true)
+
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
+    reaper.GetSet_LoopTimeRange(true, true, punchInPos, punchInPos + 400, false)
+    reaper.SetEditCurPos(punchInPos, false, false)
+    reaper.MoveEditCursor(-previewLength, false)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_ALLLANESPLAY", 0) -- unsolo all Lanes
     timbert.smartRecord()
-    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_3")
+    reaper.SetEditCurPos(punchInPos, false, false)
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
     RecordLoop()
 end

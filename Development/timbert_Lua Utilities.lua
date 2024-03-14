@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.923
+-- @version 1.924
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode
+--   # Fixed PreviewLaneContent function
 --[[
 
 -- Get this script's name and directory
@@ -582,11 +582,11 @@ end
 
 function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     if reaper.CountSelectedTracks(0) == 0 then
-        timbert.msg("Please select a track first", "TImbert Lua Utilities")
+        timbert.msg("Please select a track first", "TImbert Lua Utilities, GetSelectedItemsInLaneInfo")
         return
     end
     if reaper.CountSelectedMediaItems(0) == 0 then
-        timbert.msg("Please select items first", "TImbert Lua Utilities")
+        timbert.msg("Please select items first", "TImbert Lua Utilities, GetSelectedItemsInLaneInfo")
         return
     end
 
@@ -613,7 +613,6 @@ end
 function timbert.PreviewMultipleItems(items, track, isSourceDeleted)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     local originPosition = items[1].itemPosition
-    -- timbert.msg("Position : "..originPosition)
     local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
     for i = 1, #items do
         reaper.SetMediaItemSelected(items[i].item, true)
@@ -737,9 +736,7 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength)
         local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
         previewLength = endTime - startTime
     end
-
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-
     -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
     if #items > 1 then
         local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
