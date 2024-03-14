@@ -2,7 +2,7 @@
 -- @author Thomas Imbert
 -- @version 1.0pre1.3
 -- @changelog 
---   # updated Record with context and added calls to config var across all scripts
+--   # updated Record with context and added calls to config var across all scripts, updated Go to previous if called by other script
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio

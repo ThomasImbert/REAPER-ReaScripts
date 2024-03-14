@@ -57,6 +57,10 @@ function main()
     end
 
     if not timbert.ValidateItemUnderEditCursor(true) then
+        if select(2, reaper.get_action_context()) ~= debug.getinfo(1, 'S').source:sub(2) then
+            reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
+            return
+        end
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
         dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track

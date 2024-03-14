@@ -55,7 +55,7 @@ local punchInPos, track, previewLength, laneIndexContext, _
 local itemsPre, takesPre, itemsPost, takesPost = {}, {}, {}, {}
 
 local function GetTakes(items)
-    if #items < 1 then
+    if items == nil or #items < 1 then
         return
     end
     local takes = {}
@@ -130,11 +130,14 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     end
     reaper.Main_OnCommand(41305, 0) -- Item edit: Trim left edge of item to edit cursor
     reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     reaper.Main_OnCommand(42938, 0) -- Track lanes: Move items up if possible to minimize lane usage
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    reaper.SetMediaTrackInfo_Value(reaper.GetMediaItemInfo_Value(item, "P_TRACK"),
+        "C_LANEPLAYS:" .. reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE"), 1)
     -- reaper.SetEditCurPos(cursorRecall, false, false) -- MAKE USER OPTION
 
     reaper.PreventUIRefresh(-1)
+
     return
 end
 
@@ -159,6 +162,7 @@ local function RecordLoop(retrigg)
 
     -- Enable Metronome tick as recording bell for 1 tick
     if recordingBellOn == true and punchInPos ~= nil then
+        reaper.PreventUIRefresh(1)
         if reaper.GetPlayPosition() > punchInPos - 0.1 then
             reaper.SetTempoTimeSigMarker(0, -1, punchInPos, -1, -1, reaper.Master_GetTempo(), 4, 4, false)
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROON"), 0) -- SWS: Metronome enable
@@ -167,6 +171,7 @@ local function RecordLoop(retrigg)
             reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_METROOFF"), 0) -- SWS: Metronome disable
             reaper.DeleteTempoTimeSigMarker(0, 1)
         end
+        reaper.PreventUIRefresh(-1)
     end
     return reaper.defer(RecordLoop)
 end
@@ -202,6 +207,10 @@ function main()
             reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
             timbert.smartRecord()
             itemsPre = {}
+            punchInPos = cursorPosInitial
+            reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", punchInPos)
+            reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
+            RecordLoop()
             return
         end
         cursorPosContext = reaper.GetCursorPosition()
@@ -229,7 +238,7 @@ function main()
     _, track = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_Track")
     track = reaper.BR_GetMediaTrackByGUID(0, track)
     _, laneIndexContext = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_ContextLane")
-    reaper.SetEditCurPos(cursorPosContext+0.01, true, false) -- add 0.01 since cursorPoContext number got converted into string when stored in ExtState
+    reaper.SetEditCurPos(cursorPosContext + 0.01, true, false) -- add 0.01 since cursorPoContext number got converted into string when stored in ExtState
     previewLength = timbert.PreviewLaneContent(track, tonumber(laneIndexContext), true)
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
