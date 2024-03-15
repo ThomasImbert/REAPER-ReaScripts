@@ -12,18 +12,28 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.923 then
+if not timbert or timbert.version() < 1.924 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
     return
 end
 
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
+
+-- USERSETTING Loaded from FILBetterCFG.json--
+local pushNextContentTime = FILBetter.LoadConfig("pushNextContentTime")
+---------------
+
 local _, _, sectionID, cmdID, _, _, _ = reaper.get_action_context()
 local cursorPos1, cursorPos2, nextContentPos, nextContentItem, emptyItem, currentContentEndPos, playPos, timeStart,
     timeEnd, track, lane, arrangeStart, arrangeEnd
 local val_recPushRecordingEXT
-local timeThreshold = 3
+local timeThreshold = pushNextContentTime
 
 function Exit()
     reaper.SetToggleCommandState(sectionID, cmdID, 0)
@@ -96,8 +106,6 @@ function main()
         nextContentPos = reaper.GetMediaItemInfo_Value(reaper.BR_GetMediaItemByGUID(0, nextContentItem), "D_POSITION")
     end
 
-    -- _, timeStart = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeStart")
-    -- _, timeEnd = reaper.GetProjExtState(0, "FILBetter", "RecPush_TimeEnd")
     reaper.SetEditCurPos(cursorPos2, false, false)
     reaper.GetSet_ArrangeView2(0, true, 0, 0, arrangeStart, arrangeEnd)
     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_RESTSELITEMS1"), 0) -- SWS: Restore selected track(s) selected item(s), slot 1

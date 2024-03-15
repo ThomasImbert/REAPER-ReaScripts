@@ -12,36 +12,58 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.923 then
+if not timbert or timbert.version() < 1.924 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
     return
 end
 
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
+-- USERSETTING Loaded from FILBetterCFG.json--
+local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
+local previewOnLaneSelection = FILBetter.LoadConfig("previewOnLaneSelection")
+---------------
+
 function main()
     -- Validate track selection
     local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
-        timbert.msg(error, script_name)
+        if showValidationErrorMsg == true then
+            timbert.msg(error, script_name)
+        end
         return
     end
 
-    if not timbert.ValidateItemUnderEditCursor(true) then
+    if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
         return
     end
-
+    
+    local cursPos = reaper.GetCursorPosition()
+    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
+    timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items, lastLane = timbert.MakeItemArraySortByLane()
-    items = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
-
     local laneIndex = lastLane
-    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex)
 
-    -- Recall edit cursor and time selection set during timbert.ValidateItemUnderEditCursor
-    timbert.swsCommand("_SWS_RESTTIME1")
-    timbert.swsCommand("_BR_RESTORE_CURSOR_POS_SLOT_1")
+    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
+    if previewOnLaneSelection == true then
+        timbert.PreviewLaneContent(track, laneIndex)
+    else
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        for i = 1, #items do
+            if items[i].laneIndex == laneIndex then
+                reaper.SetMediaItemSelected(items[i].item, true)
+            end
+        end
+    end
+
+    reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
+    reaper.SetEditCurPos(cursPos, false, false)
 end
 
 reaper.PreventUIRefresh(1)

@@ -2,7 +2,9 @@
 -- @author Thomas Imbert
 -- @version 1.0pre1.3
 -- @changelog 
---   # updated Record with context and added calls to config var across all scripts, updated Go to previous if called by other script
+--   # Updated Record with context and added calls to config var across all scripts, updated Go to previous if called by other script
+--   # Updated Lua Utils dependencies, rewrote validation accordingly in all scripts of the suite
+--   # Added calls to Config file
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -64,12 +66,15 @@ FILBetter = {}
 
 local defaultFILBetter = {
     recordingBellOn = false,
-    prioritizeCompLaneOverLastLane = true,
-    compLanePriority = "first", -- "first" or "last"
+    goToNextSnapToLastContent = true, -- When triggered after last content, goes back to last content
+    goToPreviousSnapTofirstContent = true, -- When triggered before first content, goes forward to first content
+    prioritizeCompLaneOverLastLane = true, -- change this setting to be a general priority selector, comp, last lane, top/first, bottom/last 
+    compLanePriority = "first", -- "first" or "last" // when selecting comp lanes
     deleteSourceOnPreview = false,
     previewOnLaneSelection = true,
-    showValidationErrorMsg = false,
+    showValidationErrorMsg = true,
     pushNextContentTime = 3,
+    recallCursPosWhenTrimingOnStop = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
 -- Load FILBETTER.cfg

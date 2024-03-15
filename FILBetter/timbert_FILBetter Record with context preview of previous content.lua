@@ -22,11 +22,6 @@ if not timbert or timbert.version() < 1.924 then
     return
 end
 
--- Load Config
-timbert_FILBetter = reaper.GetResourcePath() ..
-                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
-dofile(timbert_FILBetter)
-
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToPrevious = reaper.GetResourcePath() ..
                            '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua'
@@ -45,7 +40,14 @@ if not reaper.file_exists(timbert_GoToNext) then
     return
 end
 
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
 -- USERSETTING Loaded from FILBetterCFG.json--
+local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
+local recallCursPosWhenTrimingOnStop = FILBetter.LoadConfig("recallCursPosWhenTrimingOnStop")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
@@ -134,10 +136,11 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     reaper.SetMediaTrackInfo_Value(reaper.GetMediaItemInfo_Value(item, "P_TRACK"),
         "C_LANEPLAYS:" .. reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE"), 1)
-    -- reaper.SetEditCurPos(cursorRecall, false, false) -- MAKE USER OPTION
 
     reaper.PreventUIRefresh(-1)
-
+    if not retrigg and recallCursPosWhenTrimingOnStop == true then
+        reaper.SetEditCurPos(cursorRecall, false, false)
+    end
     return
 end
 
@@ -146,7 +149,6 @@ local function RecordLoop(retrigg)
     if reaper.GetPlayState() == 0 then
         reaper.Undo_BeginBlock() -- Begining of the undo block. 
         TrimOnStop(retrigg)
-
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", "")
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
@@ -184,18 +186,23 @@ function main()
         _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
         reaper.SetEditCurPos(punchInPos, false, false)
         RecordLoop(true)
+
     end
 
     if reaper.GetPlayState() == 0 then
         -- Validate track selection
         local track, error = timbert.ValidateLanesPreviewScriptsSetup()
         if track == nil then
-            timbert.msg(error, script_name)
+            if showValidationErrorMsg == true then
+                timbert.msg(error, script_name)
+            end
             return
         end
 
         if reaper.GetMediaTrackInfo_Value(track, "I_RECARM") == 0 then
-            timbert.msg("Selected track isn't record armed!", script_name)
+            if showValidationErrorMsg == true then
+                timbert.msg("Selected track isn't record armed!", script_name)
+            end
             return
         end
 
@@ -203,14 +210,15 @@ function main()
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", reaper.GetTrackGUID(track))
         cursorPosInitial = reaper.GetCursorPosition()
         dofile(timbert_GoToPrevious)
-        if not timbert.ValidateItemUnderEditCursor(true, 2) or cursorPosInitial == reaper.GetCursorPosition() then
+        if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false or cursorPosInitial ==
+            reaper.GetCursorPosition() then
             reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
             timbert.smartRecord()
             itemsPre = {}
             punchInPos = cursorPosInitial
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", punchInPos)
             reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
-            RecordLoop()
+            RecordLoop(false)
             return
         end
         cursorPosContext = reaper.GetCursorPosition()
@@ -250,7 +258,7 @@ function main()
     timbert.smartRecord()
     reaper.SetEditCurPos(punchInPos, false, false)
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
-    RecordLoop()
+    RecordLoop(false)
 end
 
 reaper.PreventUIRefresh(1)

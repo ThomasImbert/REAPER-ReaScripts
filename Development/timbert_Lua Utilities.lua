@@ -676,19 +676,13 @@ function timbert.ValidateLanesPreviewScriptsSetup()
     return track
 end
 
-function timbert.ValidateItemUnderEditCursor(saveTimeEdit, int)
-    if saveTimeEdit ~= nil or saveTimeEdit == false then
-        local int = int or 1
-        timbert.swsCommand("_SWS_SAVETIME" .. tostring(int))
-        timbert.swsCommand("_BR_SAVE_CURSOR_POS_SLOT_" .. tostring(int))
-    end
-
-    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+function timbert.ValidateItemsUnderEditCursorOnSelectedTracks(unselectItems)
     timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
-    reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
-    reaper.Main_OnCommand(40718, 0) -- Item: Select all items on selected tracks in current time selection
     if reaper.CountSelectedMediaItems(0) < 1 then
-        return
+        return false
+    end
+    if unselectItems == true then
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     end
     return true
 end

@@ -12,12 +12,17 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.923 then
+if not timbert or timbert.version() < 1.924 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
     return
 end
+
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
 
 -- Load 'Solo last lane or first comp lane with content of selected track' script
 timbert_SoloLanePriority = reaper.GetResourcePath() ..
@@ -29,12 +34,15 @@ if not reaper.file_exists(timbert_SoloLanePriority) then
     return
 end
 
+-- USERSETTING Loaded from FILBetterCFG.json--
+local goToNextSnapToLastContent = FILBetter.LoadConfig("goToNextSnapToLastContent")
+---------------
+
 function main()
     -- Validate track selection
     local track, error = timbert.ValidateLanesPreviewScriptsSetup()
     if track == nil then
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
-        -- timbert.msg(error, script_name)
         return
     end
 
@@ -42,7 +50,7 @@ function main()
         return
     end
 
-    if timbert.ValidateItemUnderEditCursor(true) then
+    if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == true then
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
         reaper.Main_OnCommand(40631, 0) -- Go to end of time selection      
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
@@ -51,14 +59,15 @@ function main()
         dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
         return
     else
+        
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
         reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
     end
 
-    if not timbert.ValidateItemUnderEditCursor(true) then
-        -- if called by another script
-        if select(2, reaper.get_action_context()) ~= debug.getinfo(1, 'S').source:sub(2) then
+    if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
+        -- When triggered after last content, don't go back to last content if called by another script or set in config
+        if select(2, reaper.get_action_context()) ~= debug.getinfo(1, 'S').source:sub(2) or goToNextSnapToLastContent == false then
             reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
             return
         end
