@@ -27,10 +27,10 @@ dofile(timbert_FILBetter)
 
 -- Load 'Solo last lane or first comp lane with content of selected track' script
 timbert_SoloLanePriority = reaper.GetResourcePath() ..
-                               '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo last lane or first comp lane with content of selected track.lua'
+                               '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua'
 if not reaper.file_exists(timbert_SoloLanePriority) then
     reaper.MB(
-        "This script requires 'Solo last lane or first comp lane with content of selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'",
+        "This script requires 'Solo priority lane with content under edit cursor in selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'",
         script_name, 0)
     return
 end
@@ -58,7 +58,7 @@ function main()
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
         reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
-        dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+        dofile(timbert_SoloLanePriority) -- Solo priority lane
         return
     else
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
@@ -74,11 +74,11 @@ function main()
         end
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
-        dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+        dofile(timbert_SoloLanePriority) --  Solo priority lane
         return
     end
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
-    dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+    dofile(timbert_SoloLanePriority) --  Solo priority lane
 end
 
 reaper.PreventUIRefresh(1)

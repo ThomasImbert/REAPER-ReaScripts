@@ -26,13 +26,59 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
+local lanePriority = FILBetter.LoadConfig("lanePriority")
+local prioritizeCompLaneOverLastLane = FILBetter.LoadConfig("prioritizeCompLaneOverLastLane")
+local compLanePriority = FILBetter.LoadConfig("compLanePriority")
 ---------------
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    if hasCompLane == true then
-        laneIndex = compLanes[1] -- go to first complane
+    local laneOutsideComp
+    if hasCompLane == true and prioritizeCompLaneOverLastLane == true then
+        if compLanePriority == "first" then
+            laneIndex = compLanes[1] -- go to first complane
+        else
+            laneIndex = compLanes[#compLanes] -- go to last complane
+        end
     else
-        laneIndex = items[#items].laneIndex
+        if lanePriority == "last" then
+            if hasCompLane == false then
+                laneIndex = items[#items].laneIndex
+            else
+                -- Get last lane outside of compLanes
+                for i = #items, 1, -1 do
+                    for j = 1, #compLanes do
+                        if items[i].laneIndex == compLanes[j] then
+                            laneOutsideComp = false
+                            break
+                        else
+                            laneOutsideComp = true
+                        end
+                    end
+                    if laneOutsideComp == true then
+                        laneIndex = items[i].laneIndex
+                        break
+                    end
+                end
+            end
+        elseif hasCompLane == true then
+            -- Get first lane with content outside of compLanes
+            for i = 1, #items do
+                for j = 1, #compLanes do
+                    if items[i].laneIndex == compLanes[j] then
+                        laneOutsideComp = false
+                        break
+                    else
+                        laneOutsideComp = true
+                    end
+                end
+                if laneOutsideComp == true then
+                    laneIndex = items[i].laneIndex
+                    break
+                end
+            end
+        else
+            laneIndex = items[1].laneIndex
+        end
     end
     return laneIndex
 end

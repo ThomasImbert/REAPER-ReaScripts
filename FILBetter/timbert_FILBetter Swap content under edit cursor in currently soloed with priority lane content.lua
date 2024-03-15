@@ -19,6 +19,16 @@ if not timbert or timbert.version() < 1.924 then
     return
 end
 
+-- Load 'Solo last lane or first comp lane with content of selected track' script
+timbert_SoloLanePriority = reaper.GetResourcePath() ..
+                               '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua'
+if not reaper.file_exists(timbert_SoloLanePriority) then
+    reaper.MB(
+        "This script requires 'Solo priority lane with content under edit cursor in selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'",
+        script_name, 0)
+    return
+end
+
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
@@ -73,11 +83,8 @@ function main()
         return
     end
 
-    if hasCompLane == true then
-        laneDestination = compLanes[1]
-    else
-        laneDestination = lastLane
-    end
+    dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+    laneDestination = timbert.GetActiveTrackLane(track) 
 
     for i = 1, #items do
         if items[i].laneIndex == laneDestination then
@@ -93,6 +100,7 @@ function main()
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     reaper.SetEditCurPos(cursPos, false, false)
+    -- Set selection to swapped items?
 end
 
 reaper.PreventUIRefresh(1)

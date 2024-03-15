@@ -640,12 +640,13 @@ function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, it
     local hasCompLane = false
     local laneName, _
     local compLanes = {}
+    local _, itemsFirst = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     -- Identify if a Lane is a Comping lane (containing multiple items generally) by name starting with "C"
-    for i = 1, #items do
-        _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(items[i].laneIndex),
+    for i = 1, #itemsFirst do
+        _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(reaper.GetMediaItemInfo_Value(itemsFirst[i].item, "I_FIXEDLANE")),
             "laneName", false)
         if string.find(laneName, "C") == 1 then
-            table.insert(compLanes, items[i].laneIndex)
+            table.insert(compLanes, reaper.GetMediaItemInfo_Value(itemsFirst[i].item, "I_FIXEDLANE"))
         end
     end
     if #compLanes >= 1 then

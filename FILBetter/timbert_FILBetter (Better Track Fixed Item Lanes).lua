@@ -19,8 +19,8 @@
 --      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 
--- Thanks to rxi for the lua and JSON functions
--- Thanks to gxray  and Daniel Lumertz. 
+
+-- Thanks to rxi for the lua and JSON functions, gxray and Daniel Lumertz for the config file explainer
 -- Get a Path to save json (using script path)
 local info = debug.getinfo(1, 'S');
 local ScriptPath = info.source:match [[^@?(.*[\/])[^\/]-$]];
@@ -70,6 +70,7 @@ local defaultFILBetter = {
     goToPreviousSnapTofirstContent = true, -- When triggered before first content, goes forward to first content
     prioritizeCompLaneOverLastLane = true, -- change this setting to be a general priority selector, comp, last lane, top/first, bottom/last 
     compLanePriority = "first", -- "first" or "last" // when selecting comp lanes
+    lanePriority = "last", -- "first" or "last" // when selecting priority lane outside of compLanes
     deleteSourceOnPreview = false,
     previewOnLaneSelection = true,
     showValidationErrorMsg = true,
