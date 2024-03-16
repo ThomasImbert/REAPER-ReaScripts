@@ -113,12 +113,13 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     reaper.PreventUIRefresh(1)
 
     if not retrigg or retrigg == false then
-        reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages
+        reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
         cursorRecall = reaper.GetCursorPosition()
         _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
-        reaper.SetEditCurPos(punchInPos, false, false)
+        reaper.SetEditCurPos(tonumber(punchInPos)+0.01, false, false) -- +0.01 as a security, making sure we're on item despite converting punchinPos back to number from string
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
         itemsPost = timbert.MakeItemArraySortByLane()
+        reaper.SetEditCurPos(tonumber(punchInPos), false, false)
         takesPost = GetTakes(itemsPost)
         item = FindRecordedItem(takesPre, takesPost)
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
@@ -144,22 +145,32 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
     return
 end
 
-local function RecordLoop(retrigg)
+local function RecordLoop(retrigg, punchInPos)
+    local isPlayAfterPunchIn = false
+    if reaper.GetPlayPosition() > tonumber(punchInPos) then
+        isPlayAfterPunchIn = true
+    end
+
     -- If stopped, trimOnStop and exit
     if reaper.GetPlayState() == 0 then
-        reaper.Undo_BeginBlock() -- Begining of the undo block. 
-        TrimOnStop(retrigg)
-        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", "")
-        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
-        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
-        reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", "")
-        reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
-        return
+        if isPlayAfterPunchIn == true then
+            reaper.Undo_BeginBlock() -- Begining of the undo block. 
+            TrimOnStop(retrigg)
+            reaper.SetProjExtState(0, "FILBetter", "RecWithContext_Track", "")
+            reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
+            reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
+            reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", "")
+            reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
+            return
+        else
+            reaper.Main_OnCommand(40006, 0) -- Item: Remove items
+            return
+        end
     end
 
     -- if not recording
     if reaper.GetPlayState() < 4 then
-        return reaper.defer(RecordLoop)
+        return reaper.defer(function() RecordLoop(retrigg, punchInPos) end)
     end
 
     -- Enable Metronome tick as recording bell for 1 tick
@@ -175,7 +186,7 @@ local function RecordLoop(retrigg)
         end
         reaper.PreventUIRefresh(-1)
     end
-    return reaper.defer(RecordLoop)
+    return reaper.defer(function() RecordLoop(retrigg, punchInPos) end)
 end
 
 function main()
@@ -185,7 +196,7 @@ function main()
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
         _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
         reaper.SetEditCurPos(punchInPos, false, false)
-        RecordLoop(true)
+        RecordLoop(true, punchInPos)
 
     end
 
@@ -218,7 +229,7 @@ function main()
             punchInPos = cursorPosInitial
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos", punchInPos)
             reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
-            RecordLoop(false)
+            RecordLoop(false, punchInPos)
             return
         end
         cursorPosContext = reaper.GetCursorPosition()
@@ -251,14 +262,14 @@ function main()
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
-    reaper.GetSet_LoopTimeRange(true, true, punchInPos, punchInPos + 400, false)
+    reaper.GetSet_LoopTimeRange(true, false, punchInPos, punchInPos + 400, false)
     reaper.SetEditCurPos(punchInPos, false, false)
     reaper.MoveEditCursor(-previewLength, false)
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_ALLLANESPLAY", 0) -- unsolo all Lanes
     timbert.smartRecord()
     reaper.SetEditCurPos(punchInPos, false, false)
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
-    RecordLoop(false)
+    RecordLoop(false, punchInPos)
 end
 
 reaper.PreventUIRefresh(1)

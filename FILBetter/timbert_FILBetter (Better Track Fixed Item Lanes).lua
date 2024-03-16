@@ -5,6 +5,7 @@
 --   # Updated Record with context and added calls to config var across all scripts, updated Go to previous if called by other script
 --   # Updated Lua Utils dependencies, rewrote validation accordingly in all scripts of the suite
 --   # Added calls to Config file
+--   # Remove recorded item in record with context if stopped before end of preview context time
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio

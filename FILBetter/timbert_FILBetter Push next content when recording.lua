@@ -24,7 +24,6 @@ timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
 dofile(timbert_FILBetter)
 
-
 -- USERSETTING Loaded from FILBetterCFG.json--
 local pushNextContentTime = FILBetter.LoadConfig("pushNextContentTime")
 ---------------
@@ -53,6 +52,7 @@ function main()
     reaper.PreventUIRefresh(1)
 
     if val_recPushRecordingEXT ~= "true" then -- do once the following, reset when stopping recording
+        arrangeStart, arrangeEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, _, _)
         reaper.SetProjExtState(0, "FILBetter", "RecPush_RecordingStarted", "true")
         reaper.SetProjExtState(0, "FILBetter", "RecPush_TimeStart", timeStart)
         reaper.SetProjExtState(0, "FILBetter", "RecPush_TimeEnd", timeEnd)
@@ -77,6 +77,7 @@ function main()
         reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(lane), 1) -- reset selected lane
         reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection to initial state
         reaper.SetEditCurPos(cursorPos1, false, false)
+        reaper.GetSet_ArrangeView2(0, true, 0, 0, arrangeStart, arrangeEnd)
     end
 
     _, cursorPos1 = reaper.GetProjExtState(0, "FILBetter", "RecPush_RecordingStartPos")
@@ -93,7 +94,7 @@ function main()
     timeStart, timeEnd = reaper.GetSet_LoopTimeRange(false, false, _, _, false) -- Save TimeSelect at before pushing items
     reaper.Main_OnCommand(40020, 0) -- Time selection: Remove (unselect) time selection and loop points
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    arrangeStart, arrangeEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, arrangeStart, arrangeEnd)
+    arrangeStart, arrangeEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, _, _)
     while nextContentPos - playPos < timeThreshold do
         reaper.SetEditCurPos(playPos, true, false)
         reaper.GetSet_LoopTimeRange(true, true, playPos, nextContentPos, false) -- create a timeThreshold length time selection at play position
@@ -107,9 +108,9 @@ function main()
     end
 
     reaper.SetEditCurPos(cursorPos2, false, false)
-    reaper.GetSet_ArrangeView2(0, true, 0, 0, arrangeStart, arrangeEnd)
     reaper.Main_OnCommand(reaper.NamedCommandLookup("_SWS_RESTSELITEMS1"), 0) -- SWS: Restore selected track(s) selected item(s), slot 1
     reaper.GetSet_LoopTimeRange(true, false, timeStart, timeEnd, false) -- reset timeselection 
+    reaper.GetSet_ArrangeView2(0, true, 0, 0, arrangeStart, arrangeEnd)
     reaper.defer(main)
     reaper.Undo_EndBlock(script_name, 8)
     reaper.PreventUIRefresh(-1)

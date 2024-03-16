@@ -638,13 +638,17 @@ end
 
 function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, items created with timbert.MakeItemArraySortByLane() 
     local hasCompLane = false
-    local laneName, _
+    local laneName, itemsFirst, _
     local compLanes = {}
-    local _, itemsFirst = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
+    if #items > 1 then
+        _, itemsFirst = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
+    else
+        itemsFirst = items
+    end
     -- Identify if a Lane is a Comping lane (containing multiple items generally) by name starting with "C"
     for i = 1, #itemsFirst do
-        _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" .. tostring(reaper.GetMediaItemInfo_Value(itemsFirst[i].item, "I_FIXEDLANE")),
-            "laneName", false)
+        _, laneName = reaper.GetSetMediaTrackInfo_String(track, "P_LANENAME:" ..
+            tostring(reaper.GetMediaItemInfo_Value(itemsFirst[i].item, "I_FIXEDLANE")), "laneName", false)
         if string.find(laneName, "C") == 1 then
             table.insert(compLanes, reaper.GetMediaItemInfo_Value(itemsFirst[i].item, "I_FIXEDLANE"))
         end
