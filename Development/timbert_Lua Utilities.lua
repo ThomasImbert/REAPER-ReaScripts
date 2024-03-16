@@ -621,7 +621,7 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted)
     reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
     timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
 
-    if isSourceDeleted then
+    if isSourceDeleted == true then
         timbert.swsCommand("_S&M_DELTAKEANDFILE2") -- SWS/S&M: Delete selected items' takes and source files (no undo)
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))

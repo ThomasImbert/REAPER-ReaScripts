@@ -66,7 +66,7 @@ function main()
     local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items, lastLane = timbert.MakeItemArraySortByLane()
-    dofile(timbert_SoloLanePriority) -- Solo last lane or first comp lane with content of selected track
+    dofile(timbert_SoloLanePriority) -- Solo priority lane
     local laneIndex = timbert.GetActiveTrackLane(track)
 
     if previewOnLaneSelection == true then

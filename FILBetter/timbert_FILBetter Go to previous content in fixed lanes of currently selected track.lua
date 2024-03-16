@@ -37,7 +37,17 @@ end
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local goToPreviousSnapTofirstContent = FILBetter.LoadConfig("goToPreviousSnapTofirstContent")
+local goToContentTimeSelectionMode = FILBetter.LoadConfig("goToContentTimeSelectionMode")
 ---------------
+
+local function GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
+    if goToContentTimeSelectionMode == "recall" then
+        reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
+    elseif goToContentTimeSelectionMode == "clear" then
+        reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+    end
+    -- implicit elseif goToContentTimeSelectionMode == "content" or none of the above, do nothing (keep content selected)
+end
 
 function main()
     -- Validate track selection
@@ -51,6 +61,8 @@ function main()
     if reaper.CountTrackMediaItems(track) == 0 then
         return
     end
+    
+    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
 
     if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == true then
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
@@ -59,6 +71,7 @@ function main()
         reaper.Main_OnCommand(40416, 0) -- Item navigation: Select and move to previous item
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
         dofile(timbert_SoloLanePriority) -- Solo priority lane
+        GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
         return
     else
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
@@ -70,15 +83,18 @@ function main()
         -- When triggered before first content, don't go forward to first content if called by another script or set in config
         if select(2, reaper.get_action_context()) ~= debug.getinfo(1, 'S').source:sub(2) or goToPreviousSnapTofirstContent == false then
             reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
+            GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
             return
         end
         reaper.Main_OnCommand(40417, 0) -- Item navigation: Select and move to next item
         timbert.SetTimeSelectionToAllItemsInVerticalStack()
         dofile(timbert_SoloLanePriority) --  Solo priority lane
+        GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
         return
     end
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     dofile(timbert_SoloLanePriority) --  Solo priority lane
+    GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
 end
 
 reaper.PreventUIRefresh(1)

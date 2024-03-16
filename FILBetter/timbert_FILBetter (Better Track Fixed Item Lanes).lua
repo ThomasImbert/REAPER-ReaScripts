@@ -66,12 +66,12 @@ FILBetter = {}
 
 local defaultFILBetter = {
     recordingBellOn = false,
+    goToContentTimeSelectionMode = "clear", -- "clear", "recall" or "content"
     goToNextSnapToLastContent = true, -- When triggered after last content, goes back to last content
     goToPreviousSnapTofirstContent = true, -- When triggered before first content, goes forward to first content
     prioritizeCompLaneOverLastLane = true, -- change this setting to be a general priority selector, comp, last lane, top/first, bottom/last 
     compLanePriority = "first", -- "first" or "last" // when selecting comp lanes
     lanePriority = "last", -- "first" or "last" // when selecting priority lane outside of compLanes
-    deleteSourceOnPreview = false,
     previewOnLaneSelection = true,
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
