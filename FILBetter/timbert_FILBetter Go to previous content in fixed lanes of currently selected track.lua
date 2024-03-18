@@ -25,7 +25,7 @@ timbert_FILBetter = reaper.GetResourcePath() ..
 dofile(timbert_FILBetter)
 
 
--- Load 'Solo last lane or first comp lane with content of selected track' script
+-- Load 'Solo priority lane with content under edit cursor in selected track' script
 timbert_SoloLanePriority = reaper.GetResourcePath() ..
                                '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua'
 if not reaper.file_exists(timbert_SoloLanePriority) then

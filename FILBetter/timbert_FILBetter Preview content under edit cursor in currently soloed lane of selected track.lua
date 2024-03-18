@@ -26,6 +26,7 @@ dofile(timbert_FILBetter)
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
+local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 ---------------
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
@@ -93,7 +94,7 @@ function main()
 
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex, false, true)
+    timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName, true)
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     if moveEditCurToStartOfContent == true then

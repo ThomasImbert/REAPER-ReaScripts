@@ -76,6 +76,9 @@ local defaultFILBetter = {
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
     moveEditCurToStartOfContent = false, -- When going to next / previous lane 
+    makePreviewMarkerAtMouseCursor = true, -- false = make take marker at edit cursor position
+    findTakeInPriorityLanePreviewMarkerAtEditCursor = true, -- when makePreviewMarkerAtMouseCursor is false, make take marker in content in priority lane instead of clicked content
+    previewMarkerName = "[FILB]",
     recallCursPosWhenTrimingOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 

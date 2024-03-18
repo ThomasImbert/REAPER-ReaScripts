@@ -610,28 +610,44 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     return items
 end
 
-function timbert.PreviewMultipleItems(items, track, isSourceDeleted, toggle)
+function timbert.PreviewMultipleItems(items, track, isSourceDeleted, previewMarkerName, toggle)
+    local previewPos, previewItemLeft, previewItemRight
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     local originPosition = items[1].itemPosition
     local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
     for i = 1, #items do
         reaper.SetMediaItemSelected(items[i].item, true)
     end
+    previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
     reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
     reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
-    if toggle == true then
-        timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+    previewItemLeft = reaper.GetSelectedMediaItem(0, 0)
+
+    if previewPos ~= nil then
+        previewItemRight = reaper.SplitMediaItem(reaper.GetSelectedMediaItem(0, 0), previewPos)
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        reaper.SetMediaItemSelected(previewItemRight, true)
+        if toggle == true then
+            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+        else
+            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+        end
+        reaper.SetMediaItemSelected(previewItemLeft, true)
+        reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
     else
-        timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+        if toggle == true then
+            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+        else
+            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+        end
     end
+
     if isSourceDeleted == true then
         timbert.swsCommand("_S&M_DELTAKEANDFILE2") -- SWS/S&M: Delete selected items' takes and source files (no undo)
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
     end
-
-    reaper.Main_OnCommand(40042, 0) -- Transport: Go to start of project
-    reaper.MoveEditCursor(originPosition, false)
+    reaper.SetEditCurPos( originPosition, false, false )
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
     items = timbert.MakeItemArraySortByLane()
     for i = 1, #items do
@@ -725,31 +741,40 @@ function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     return items, itemsCopy
 end
 
-function timbert.PreviewLaneContent(track, laneIndex, retLength, toggle)
+function timbert.PreviewLaneContent(track, laneIndex, retLength, previewMarkerName, toggle)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
-    local previewLength
+    local previewLength, sourcePos, previewPos
     if retLength ~= nil or retLength == true then
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-        for i = 1, #items do
-            reaper.SetMediaItemSelected(items[i].item, true)
-        end
-        reaper.Main_OnCommand(40290, 0) -- Time selection: Set time selection to items
-        local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
-        previewLength = endTime - startTime
+        previewLength = items[#items].itemPosition + reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") -
+                            items[1].itemPosition
     end
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
     if #items > 1 then
         local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        timbert.PreviewMultipleItems(items, track, false, toggle)
+        timbert.PreviewMultipleItems(items, track, false, previewMarkerName, toggle)
         reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
     else
         reaper.SetMediaItemSelected(items[1].item, true)
-        if toggle == true then
-            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+        previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
+        if previewPos ~= nil then
+            local previewItem = reaper.SplitMediaItem(items[1].item, previewPos)
+            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+            reaper.SetMediaItemSelected(previewItem, true)
+            if toggle == true then
+                timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+            else
+                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+            end
+            reaper.SetMediaItemSelected(items[1].item, true)
+            reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
         else
-            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+            if toggle == true then
+                timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+            else
+                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+            end
         end
     end
     return previewLength
@@ -772,4 +797,35 @@ function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
         return
     end
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+end
+
+function timbert.GetTakeMarkerPos(items, takeMarkerName) -- credits to XRaym's Create project marker from selected take marker
+    local itemTake, itemPos, itemLength, takeRate, takeMarkerCount, takeOffs, markerName, sourcePos, takeMarkerPos, _
+    for i = 1, #items do
+        itemTake = reaper.GetActiveTake(items[i].item)
+        itemPos = reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION")
+        itemLength = reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")
+        takeRate = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_PLAYRATE")
+        takeOffs = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_STARTOFFS")
+        takeMarkerCount = reaper.GetNumTakeMarkers(itemTake)
+        if takeMarkerCount > 0 then
+            for j = 0, takeMarkerCount - 1 do
+                sourcePos, markerName, _ = reaper.GetTakeMarker(itemTake, j)
+                if markerName == takeMarkerName then
+                    takeMarkerPos = sourcePos
+                    break
+                end
+            end
+        end
+        if takeMarkerPos ~= nil then
+            -- adjust and correct takeMarkerPos accounting for takeRate and item source position
+            -- Make sure takeMarkerPos is in the bounds of its parent item
+            takeMarkerPos = itemPos - takeOffs + sourcePos / takeRate
+            if takeMarkerPos < itemPos or takeMarkerPos > (itemPos + itemLength) then
+                takeMarkerPos = nil
+            end
+            break
+        end
+    end
+    return takeMarkerPos
 end

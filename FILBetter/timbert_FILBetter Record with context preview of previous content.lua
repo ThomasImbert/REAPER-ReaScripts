@@ -48,6 +48,7 @@ dofile(timbert_FILBetter)
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local recallCursPosWhenTrimingOnStop = FILBetter.LoadConfig("recallCursPosWhenTrimingOnStop")
+local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
@@ -258,7 +259,7 @@ function main()
     track = reaper.BR_GetMediaTrackByGUID(0, track)
     _, laneIndexContext = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_ContextLane")
     reaper.SetEditCurPos(cursorPosContext + 0.01, true, false) -- add 0.01 since cursorPoContext number got converted into string when stored in ExtState
-    previewLength = timbert.PreviewLaneContent(track, tonumber(laneIndexContext), true)
+    previewLength = timbert.PreviewLaneContent(track, tonumber(laneIndexContext), true, previewMarkerName)
 
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")

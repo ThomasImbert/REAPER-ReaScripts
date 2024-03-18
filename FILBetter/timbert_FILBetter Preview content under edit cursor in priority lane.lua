@@ -19,7 +19,7 @@ if not timbert or timbert.version() < 1.924 then
     return
 end
 
--- Load 'Solo last lane or first comp lane with content of selected track' script
+-- Load 'Solo priority lane with content under edit cursor in selected track' script
 timbert_SoloLanePriority = reaper.GetResourcePath() ..
                                '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua'
 if not reaper.file_exists(timbert_SoloLanePriority) then
@@ -38,6 +38,7 @@ dofile(timbert_FILBetter)
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local previewOnLaneSelection = FILBetter.LoadConfig("previewOnLaneSelection")
 local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
+local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 ---------------
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
@@ -71,7 +72,7 @@ function main()
     local laneIndex = timbert.GetActiveTrackLane(track)
 
     if previewOnLaneSelection == true then
-        timbert.PreviewLaneContent(track, laneIndex)
+        timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName)
     else
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
         for i = 1, #items do

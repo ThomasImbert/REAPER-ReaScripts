@@ -28,6 +28,7 @@ dofile(timbert_FILBetter)
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local previewOnLaneSelection = FILBetter.LoadConfig("previewOnLaneSelection")
 local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
+local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 ---------------
 
 function main()
@@ -53,7 +54,7 @@ function main()
 
     reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
     if previewOnLaneSelection == true then
-        timbert.PreviewLaneContent(track, laneIndex )
+        timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName )
     else
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
         for i = 1, #items do
