@@ -27,6 +27,7 @@ dofile(timbert_FILBetter)
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local previewOnLaneSelection = FILBetter.LoadConfig("previewOnLaneSelection")
+local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
 ---------------
 
 local function CycleLaneIndexBack(laneIndex, lastLane, items, hasCompLane, compLanes) -- Guard against laneIndex outside possible laneIndex with content
@@ -92,7 +93,12 @@ function main()
     end
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    reaper.SetEditCurPos(cursPos, false, false)
+    reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
+    if moveEditCurToStartOfContent == true then
+        reaper.SetEditCurPos(timbert.GetSelectedItemsInLaneInfo(laneIndex)[1].itemPosition, false, false)
+    else
+        reaper.SetEditCurPos(cursPos, false, false)
+    end
 end
 
 reaper.PreventUIRefresh(1)

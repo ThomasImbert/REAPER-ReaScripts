@@ -76,6 +76,7 @@ local defaultFILBetter = {
     previewOnLaneSelection = true,
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
+    moveEditCurToStartOfContent = false, -- When going to next / previous lane 
     recallCursPosWhenTrimingOnStop = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
