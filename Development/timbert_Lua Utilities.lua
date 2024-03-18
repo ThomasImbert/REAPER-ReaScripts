@@ -610,7 +610,7 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     return items
 end
 
-function timbert.PreviewMultipleItems(items, track, isSourceDeleted)
+function timbert.PreviewMultipleItems(items, track, isSourceDeleted, toggle)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     local originPosition = items[1].itemPosition
     local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
@@ -619,8 +619,11 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted)
     end
     reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
     reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
-    timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-
+    if toggle == true then
+        timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+    else
+        timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+    end
     if isSourceDeleted == true then
         timbert.swsCommand("_S&M_DELTAKEANDFILE2") -- SWS/S&M: Delete selected items' takes and source files (no undo)
     else
@@ -722,7 +725,7 @@ function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     return items, itemsCopy
 end
 
-function timbert.PreviewLaneContent(track, laneIndex, retLength)
+function timbert.PreviewLaneContent(track, laneIndex, retLength, toggle)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
     local previewLength
@@ -739,11 +742,15 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength)
     -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
     if #items > 1 then
         local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        timbert.PreviewMultipleItems(items, track, false)
+        timbert.PreviewMultipleItems(items, track, false, toggle)
         reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
     else
         reaper.SetMediaItemSelected(items[1].item, true)
-        timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+        if toggle == true then
+            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+        else
+            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+        end
     end
     return previewLength
 end

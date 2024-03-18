@@ -20,7 +20,6 @@
 --      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 
-
 -- Thanks to rxi for the lua and JSON functions, gxray and Daniel Lumertz for the config file explainer
 -- Get a Path to save json (using script path)
 local info = debug.getinfo(1, 'S');
@@ -77,7 +76,7 @@ local defaultFILBetter = {
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
     moveEditCurToStartOfContent = false, -- When going to next / previous lane 
-    recallCursPosWhenTrimingOnStop = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    recallCursPosWhenTrimingOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
 -- Load FILBETTER.cfg
