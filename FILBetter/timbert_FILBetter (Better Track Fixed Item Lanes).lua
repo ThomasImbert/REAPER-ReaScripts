@@ -79,11 +79,22 @@ local defaultFILBetter = {
     makePreviewMarkerAtMouseCursor = true, -- false = make take marker at edit cursor position
     findTakeInPriorityLanePreviewMarkerAtEditCursor = true, -- when makePreviewMarkerAtMouseCursor is false, make take marker in content in priority lane instead of clicked content
     previewMarkerName = "[FILB]",
-    recallCursPosWhenTrimingOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    recallCursPosWhenTrimOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
 -- Load FILBETTER.cfg
 timbert_FILBetterCFG = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
+
+function FILBetter.LoadFullConfig()
+    if not reaper.file_exists(timbert_FILBetterCFG) then
+        -- Create default config if it doesn't already exist
+        save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
+    end
+    -- load configKey value
+    local table = load_json(ScriptPath, "FILBetterConfig")
+
+    return table
+end
 
 function FILBetter.LoadConfig(configKeyString)
     if not reaper.file_exists(timbert_FILBetterCFG) then

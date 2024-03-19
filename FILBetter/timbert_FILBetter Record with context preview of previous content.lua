@@ -47,7 +47,7 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
-local recallCursPosWhenTrimingOnStop = FILBetter.LoadConfig("recallCursPosWhenTrimingOnStop")
+local recallCursPosWhenTrimOnStop = FILBetter.LoadConfig("recallCursPosWhenTrimOnStop")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
@@ -140,7 +140,7 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
         "C_LANEPLAYS:" .. reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE"), 1)
 
     reaper.PreventUIRefresh(-1)
-    if not retrigg and recallCursPosWhenTrimingOnStop == true then
+    if not retrigg and recallCursPosWhenTrimOnStop == true then
         reaper.SetEditCurPos(cursorRecall, false, false)
     end
     return
