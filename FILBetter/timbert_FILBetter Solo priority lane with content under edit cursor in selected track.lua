@@ -18,6 +18,7 @@ if not timbert or timbert.version() < 1.924 then
         script_name, 0)
     return
 end
+
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
@@ -25,49 +26,60 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
-local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
-local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
+local lanePriority = FILBetter.LoadConfig("lanePriority")
+local prioritizeCompLaneOverLastLane = FILBetter.LoadConfig("prioritizeCompLaneOverLastLane")
+local compLanePriority = FILBetter.LoadConfig("compLanePriority")
 ---------------
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    -- Test if currently selected lane is included in items lane range
-    if laneIndex > lastLane then
-        if hasCompLane == true then
+    local laneOutsideComp
+    if hasCompLane == true and prioritizeCompLaneOverLastLane == true then
+        if compLanePriority == "first" then
             laneIndex = compLanes[1] -- go to first complane
         else
-            laneIndex = items[#items].laneIndex
+            laneIndex = compLanes[#compLanes] -- go to last complane
         end
-        return laneIndex
-    end
-
-    if laneIndex < items[1].laneIndex then
-        laneIndex = items[1].laneIndex
-        return laneIndex
-    end
-
-    -- Test if lane has content
-    local foundLane, foundLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex == laneIndex then
-            foundLane = items[i].laneIndex
-            foundLaneIndex = i
+    else
+        if lanePriority == "last" then
+            if hasCompLane == false then
+                laneIndex = items[#items].laneIndex
+            else
+                -- Get last lane outside of compLanes
+                for i = #items, 1, -1 do
+                    for j = 1, #compLanes do
+                        if items[i].laneIndex == compLanes[j] then
+                            laneOutsideComp = false
+                            break
+                        else
+                            laneOutsideComp = true
+                        end
+                    end
+                    if laneOutsideComp == true then
+                        laneIndex = items[i].laneIndex
+                        break
+                    end
+                end
+            end
+        elseif hasCompLane == true then
+            -- Get first lane with content outside of compLanes
+            for i = 1, #items do
+                for j = 1, #compLanes do
+                    if items[i].laneIndex == compLanes[j] then
+                        laneOutsideComp = false
+                        break
+                    else
+                        laneOutsideComp = true
+                    end
+                end
+                if laneOutsideComp == true then
+                    laneIndex = items[i].laneIndex
+                    break
+                end
+            end
+        else
+            laneIndex = items[1].laneIndex
         end
     end
-    if foundLaneIndex ~= nil then
-        laneIndex = items[foundLaneIndex].laneIndex
-        return laneIndex
-    end
-
-    -- If Lane doesn't have content, go to next lane with content in item lanes range
-    local closestNextLane, closestNextLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex - laneIndex > 0 then
-            closestNextLane = items[i].laneIndex
-            closestNextLaneIndex = i
-            break
-        end
-    end
-    laneIndex = items[closestNextLaneIndex].laneIndex
     return laneIndex
 end
 
@@ -90,18 +102,16 @@ function main()
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items, lastLane = timbert.MakeItemArraySortByLane()
     local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
-    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
+    local laneIndex = lastLane
 
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName, true)
+    reaper.SetMediaTrackInfo_Value(reaper.GetSelectedTrack(0, 0), "C_LANEPLAYS:" .. tostring(laneIndex), 1)
+
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of all items)
+    reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    if moveEditCurToStartOfContent == true then
-        reaper.SetEditCurPos(timbert.GetSelectedItemsInLaneInfo(laneIndex)[1].itemPosition, false, false)
-    else
-        reaper.SetEditCurPos(cursPos, false, false)
-    end
+    reaper.SetEditCurPos(cursPos, false, false)
 end
 
 reaper.PreventUIRefresh(1)

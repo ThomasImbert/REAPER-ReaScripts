@@ -18,6 +18,17 @@ if not timbert or timbert.version() < 1.924 then
         script_name, 0)
     return
 end
+
+-- Load 'Solo priority lane with content under edit cursor in selected track' script
+timbert_SoloLanePriority = reaper.GetResourcePath() ..
+                               '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua'
+if not reaper.file_exists(timbert_SoloLanePriority) then
+    reaper.MB(
+        "This script requires 'Solo priority lane with content under edit cursor in selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'",
+        script_name, 0)
+    return
+end
+
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
@@ -25,49 +36,17 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
+local previewOnLaneSelection = FILBetter.LoadConfig("previewOnLaneSelection")
 local moveEditCurToStartOfContent = FILBetter.LoadConfig("moveEditCurToStartOfContent")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 ---------------
 
 local function CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    -- Test if currently selected lane is included in items lane range
-    if laneIndex > lastLane then
-        if hasCompLane == true then
-            laneIndex = compLanes[1] -- go to first complane
-        else
-            laneIndex = items[#items].laneIndex
-        end
-        return laneIndex
+    if hasCompLane == true then
+        laneIndex = compLanes[1] -- go to first complane
+    else
+        laneIndex = items[#items].laneIndex
     end
-
-    if laneIndex < items[1].laneIndex then
-        laneIndex = items[1].laneIndex
-        return laneIndex
-    end
-
-    -- Test if lane has content
-    local foundLane, foundLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex == laneIndex then
-            foundLane = items[i].laneIndex
-            foundLaneIndex = i
-        end
-    end
-    if foundLaneIndex ~= nil then
-        laneIndex = items[foundLaneIndex].laneIndex
-        return laneIndex
-    end
-
-    -- If Lane doesn't have content, go to next lane with content in item lanes range
-    local closestNextLane, closestNextLaneIndex
-    for i = 1, #items do
-        if items[i].laneIndex - laneIndex > 0 then
-            closestNextLane = items[i].laneIndex
-            closestNextLaneIndex = i
-            break
-        end
-    end
-    laneIndex = items[closestNextLaneIndex].laneIndex
     return laneIndex
 end
 
@@ -89,12 +68,19 @@ function main()
     local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items, lastLane = timbert.MakeItemArraySortByLane()
-    local hasCompLane, compLanes = timbert.GetCompLanes(items, track)
-    local laneIndex = timbert.GetActiveTrackLane(track) or lastLane + 1
+    dofile(timbert_SoloLanePriority) -- Solo priority lane
+    local laneIndex = timbert.GetActiveTrackLane(track)
 
-    laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
-    reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName, true)
+    if previewOnLaneSelection == true then
+        timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName)
+    else
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        for i = 1, #items do
+            if items[i].laneIndex == laneIndex then
+                reaper.SetMediaItemSelected(items[i].item, true)
+            end
+        end
+    end
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     if moveEditCurToStartOfContent == true then
