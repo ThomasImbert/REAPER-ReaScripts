@@ -20,10 +20,15 @@
 --      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 
+
+FILBetter = {}
+
 -- Thanks to rxi for the lua and JSON functions, gxray and Daniel Lumertz for the config file explainer
 -- Get a Path to save json (using script path)
 local info = debug.getinfo(1, 'S');
 local ScriptPath = info.source:match [[^@?(.*[\/])[^\/]-$]];
+FILBetter.scriptPath = ScriptPath
+-- reaper.ShowConsoleMsg( ScriptPath ) 
 
 -- Load json file from "./utils.json"
 -- Load the json functions
@@ -32,7 +37,7 @@ package.path =
 local json = require("./utils.json")
 
 -- Save function
-function save_json(path, name, var)
+function FILBetter.save_json(path, name, var)
     local filepath = path .. "/" .. name .. ".json"
     local file = assert(io.open(filepath, "w+"))
 
@@ -44,7 +49,7 @@ function save_json(path, name, var)
 end
 
 -- Load function
-function load_json(path, name)
+function FILBetter.load_json(path, name)
     local filepath = path .. "/" .. name .. ".json"
     local file = assert(io.open(filepath, "rb"))
 
@@ -62,7 +67,6 @@ if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2)
     return
 end
 
-FILBetter = {}
 
 local defaultFILBetter = {
     recordingBellOn = false,
@@ -82,16 +86,21 @@ local defaultFILBetter = {
     recallCursPosWhenTrimOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
+FILBetter.timeSelectModes = {"clear", "recall", "content"}
+FILBetter.LanePriorities = {"first", "last"}
+
+FILBetter.defaultFILBetter = defaultFILBetter
+
 -- Load FILBETTER.cfg
 timbert_FILBetterCFG = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
 
 function FILBetter.LoadFullConfig()
     if not reaper.file_exists(timbert_FILBetterCFG) then
         -- Create default config if it doesn't already exist
-        save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
+        FILBetter.save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
     end
     -- load configKey value
-    local table = load_json(ScriptPath, "FILBetterConfig")
+    local table = FILBetter.load_json(ScriptPath, "FILBetterConfig")
 
     return table
 end
@@ -99,9 +108,9 @@ end
 function FILBetter.LoadConfig(configKeyString)
     if not reaper.file_exists(timbert_FILBetterCFG) then
         -- Create default config if it doesn't already exist
-        save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
+        FILBetter.save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
     end
     -- load configKey value
-    local loadedValue = load_json(ScriptPath, "FILBetterConfig")
+    local loadedValue = FILBetter.load_json(ScriptPath, "FILBetterConfig")
     return loadedValue[configKeyString]
 end

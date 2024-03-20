@@ -611,7 +611,7 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
 end
 
 function timbert.PreviewMultipleItems(items, track, isSourceDeleted, previewMarkerName, toggle)
-    local previewPos, previewItemLeft, previewItemRight
+    local previewPos, previewItemLeft, previewItemRight, previewLength
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     local originPosition = items[1].itemPosition
     local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
@@ -625,6 +625,7 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted, previewMark
 
     if previewPos ~= nil then
         previewItemRight = reaper.SplitMediaItem(reaper.GetSelectedMediaItem(0, 0), previewPos)
+        previewLength = reaper.GetMediaItemInfo_Value(previewItemRight, "D_LENGTH")
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
         reaper.SetMediaItemSelected(previewItemRight, true)
         if toggle == true then
@@ -647,12 +648,13 @@ function timbert.PreviewMultipleItems(items, track, isSourceDeleted, previewMark
     else
         reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
     end
-    reaper.SetEditCurPos( originPosition, false, false )
+    reaper.SetEditCurPos(originPosition, false, false)
     reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
     items = timbert.MakeItemArraySortByLane()
     for i = 1, #items do
         reaper.SetMediaItemInfo_Value(items[i].item, "I_FIXEDLANE", originLane)
     end
+    return previewLength
 end
 
 function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, items created with timbert.MakeItemArraySortByLane() 
@@ -744,7 +746,7 @@ end
 function timbert.PreviewLaneContent(track, laneIndex, retLength, previewMarkerName, toggle)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
-    local previewLength, sourcePos, previewPos
+    local previewLength, sourcePos, previewPos, previewMultipleLength
     if retLength ~= nil or retLength == true then
         previewLength = items[#items].itemPosition + reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") -
                             items[1].itemPosition
@@ -753,13 +755,14 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength, previewMarkerNa
     -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
     if #items > 1 then
         local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        timbert.PreviewMultipleItems(items, track, false, previewMarkerName, toggle)
+        previewMultipleLength = timbert.PreviewMultipleItems(items, track, false, previewMarkerName, toggle)
         reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
     else
         reaper.SetMediaItemSelected(items[1].item, true)
         previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
         if previewPos ~= nil then
             local previewItem = reaper.SplitMediaItem(items[1].item, previewPos)
+            previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
             reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
             reaper.SetMediaItemSelected(previewItem, true)
             if toggle == true then
@@ -776,6 +779,9 @@ function timbert.PreviewLaneContent(track, laneIndex, retLength, previewMarkerNa
                 timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
             end
         end
+    end
+    if previewMultipleLength ~= nil then
+        previewLength = previewMultipleLength
     end
     return previewLength
 end
