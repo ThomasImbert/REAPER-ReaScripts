@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.924
+-- @version 1.925
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Fixed PreviewLaneContent function
+--   # Fixed Preview markers for preview length
 --[[
 
 -- Get this script's name and directory
