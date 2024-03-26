@@ -94,7 +94,6 @@ function main()
     end
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     if moveEditCurToStartOfContent == true then
         reaper.SetEditCurPos(timbert.GetSelectedItemsInLaneInfo(laneIndex)[1].itemPosition, false, false)
     else
