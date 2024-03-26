@@ -1,8 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.4
+-- @version 1.0pre1.5
 -- @changelog 
---   # Updated version to try and add new scripts
+--   # Added dependency check for reaImGui
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio

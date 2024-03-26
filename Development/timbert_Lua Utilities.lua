@@ -17,7 +17,7 @@ local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_a
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
-if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.921 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
+if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.925 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]] --
 timbert = {}
@@ -834,4 +834,75 @@ function timbert.GetTakeMarkerPos(items, takeMarkerName) -- credits to XRaym's C
         end
     end
     return takeMarkerPos
+end
+
+function timbert.SelectContentForPreview(items, previewMarkerName)
+    local previewPos, previewItemIndex, previewItem
+    previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
+
+    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    -- item selection, could be a separate function
+    for i = 1, #items do
+        if previewPos ~= nil then
+            if (items[i].position + items[i].length) > previewPos then
+                if items[i].position < previewPos then
+                    previewItem = items[i].item
+                    previewItemIndex = i
+                end
+                reaper.SetMediaItemSelected(items[i].item, true)
+            end
+        else
+            reaper.SetMediaItemSelected(items[i].item, true)
+        end
+    end
+    return previewPos, previewItem, previewItemIndex
+end
+
+function timbert.PreviewSetup(items) --takes care of glueing
+    local previewPos, previewLength, previewItemIndex, previewItemLeft, previewItem
+
+    -- item glueing conditional
+
+    -- if #items == 1 or previewItemIndex == #items (marker on last item) ==== no glueing
+    if previewPos ~= nil then
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        previewItemLeft = previewItem
+
+        -- check if preview pos ~= item position, if not, don't split
+        previewItem = reaper.SplitMediaItem(previewItem, previewPos)
+
+        -- create table of items before they'll be glued, with GUID info
+        reaper.SetMediaItemSelected(previewItem, true)
+
+        -- Arrange view save and restore around glueing
+        -- start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
+        -- reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
+
+        if previewItemIndex < #items then
+            reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
+            reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
+            previewItem = reaper.GetSelectedMediaItem(0, 0)
+        end
+        previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        reaper.SetMediaItemSelected(previewItem, true)
+        if #items > 1 then
+            reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
+            previewItem = reaper.GetSelectedMediaItem(0, 0)
+            previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
+        end
+    end
+
+    -- return preview length, previewItem, table of item before glue if applicable
+    -- handle previewing in separate function
+end
+
+function timbert.PreviewContent(items, previewMarkerName, previewPos, toggle)
+    local previewLength, previewItem, itemsBackup = timbert.PreviewSetup(items, previewMarkerName)
+
+    if toggle == true then
+        timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
+    else
+        timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
+    end
 end

@@ -3,6 +3,14 @@
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
 
+reaImGui = reaper.GetResourcePath() .. '/UserPlugins/reaper_imgui-x64.dll'
+if not reaper.file_exists(reaImGui) then
+    reaper.MB(
+        "This script requires the ReaImGui extension! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'ReaImGui: ReaScript binding for Dear ImGui'",
+        script_name, 0)
+    return
+end
+
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if not reaper.file_exists(timbert_LuaUtils) then
@@ -12,7 +20,7 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.924 then
+if not timbert or timbert.version() < 1.925 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
@@ -50,7 +58,7 @@ local filbGUI = {
     no_titlebar = false,
     no_menu = true,
     no_resize = true,
-    no_collapse = true,
+    no_collapse = true
 }
 
 local cache = {}
@@ -301,7 +309,7 @@ function filbGUI.UpdateFILBSettings()
 
     if filbSettings.clickedApply & 1 ~= 0 then
         ImGui.Text(ctx, 'Changes applied to Config files!')
-            delay = delay + 1
+        delay = delay + 1
         if delay == 20 then
             filbSettings.clickedApply = 0
             delay = 0
@@ -312,7 +320,7 @@ function filbGUI.UpdateFILBSettings()
         ImGui.Text(ctx, 'Settings set to default!')
         delay = delay + 1
         if delay == 20 then
-            filbSettings.clickedReset  = 0
+            filbSettings.clickedReset = 0
             delay = 0
         end
     end
