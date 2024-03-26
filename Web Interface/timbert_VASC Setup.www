@@ -1,9 +1,0 @@
-@description VASC Web Interface
-@author Thomas Imbert
-@version 0.19
-@provides
-  timbert_VASC.html
-  VASC_lib/*.{js,png,css,svg,map,txt}
-@about Voice Acting Spreadsheet Connect
-@changelog
-   # Fix ProjExtState corrupted value by converting text to base64
