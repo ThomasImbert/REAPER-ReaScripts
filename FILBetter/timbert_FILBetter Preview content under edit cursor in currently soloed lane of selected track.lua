@@ -94,8 +94,7 @@ function main()
 
     laneIndex = CorrectLaneIndex(laneIndex, lastLane, items, hasCompLane, compLanes)
     reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(laneIndex), 1)
-    timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName, true)
-
+    timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, true)
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     if moveEditCurToStartOfContent == true then
         reaper.SetEditCurPos(timbert.GetSelectedItemsInLaneInfo(laneIndex)[1].itemPosition, false, false)

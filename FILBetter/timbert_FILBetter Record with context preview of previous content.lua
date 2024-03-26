@@ -259,8 +259,7 @@ function main()
     track = reaper.BR_GetMediaTrackByGUID(0, track)
     _, laneIndexContext = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_ContextLane")
     reaper.SetEditCurPos(cursorPosContext + 0.01, true, false) -- add 0.01 since cursorPoContext number got converted into string when stored in ExtState
-    previewLength = timbert.PreviewLaneContent(track, tonumber(laneIndexContext), true, previewMarkerName)
-
+    previewLength = timbert.PreviewLaneContent(previewMarkerName, track, tonumber(laneIndexContext), false)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
     _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "RecWithContext_PunchInPos")
     reaper.GetSet_LoopTimeRange(true, false, punchInPos, punchInPos + 400, false)

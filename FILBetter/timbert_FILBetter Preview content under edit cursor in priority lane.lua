@@ -72,7 +72,7 @@ function main()
     local laneIndex = timbert.GetActiveTrackLane(track)
 
     if previewOnLaneSelection == true then
-        timbert.PreviewLaneContent(track, laneIndex, false, previewMarkerName)
+        timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, false)
     else
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
         for i = 1, #items do

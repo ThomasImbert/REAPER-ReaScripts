@@ -9,6 +9,9 @@
 --   # Lua Utilities
 -- @changelog
 --   # Fixed Preview markers for preview length
+--   # Rewrite of PreviewLaneContent(), can now take care of glueing 
+--   # Rewrote SelectOnlyFirstItemPerLaneInSelection into GetOnlyFirstItemPerLaneInSelection and avoid changing item selection
+--   # Updated GetCompLanes accordingly
 --[[
 
 -- Get this script's name and directory
@@ -610,59 +613,12 @@ function timbert.GetSelectedItemsInLaneInfo(laneIndex)
     return items
 end
 
-function timbert.PreviewMultipleItems(items, track, isSourceDeleted, previewMarkerName, toggle)
-    local previewPos, previewItemLeft, previewItemRight, previewLength
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    local originPosition = items[1].itemPosition
-    local originLane = reaper.GetMediaItemInfo_Value(items[1].item, "I_FIXEDLANE")
-    for i = 1, #items do
-        reaper.SetMediaItemSelected(items[i].item, true)
-    end
-    previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
-    reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
-    reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
-    previewItemLeft = reaper.GetSelectedMediaItem(0, 0)
-
-    if previewPos ~= nil then
-        previewItemRight = reaper.SplitMediaItem(reaper.GetSelectedMediaItem(0, 0), previewPos)
-        previewLength = reaper.GetMediaItemInfo_Value(previewItemRight, "D_LENGTH")
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-        reaper.SetMediaItemSelected(previewItemRight, true)
-        if toggle == true then
-            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
-        else
-            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-        end
-        reaper.SetMediaItemSelected(previewItemLeft, true)
-        reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
-    else
-        if toggle == true then
-            timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
-        else
-            timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-        end
-    end
-
-    if isSourceDeleted == true then
-        timbert.swsCommand("_S&M_DELTAKEANDFILE2") -- SWS/S&M: Delete selected items' takes and source files (no undo)
-    else
-        reaper.DeleteTrackMediaItem(track, reaper.GetSelectedMediaItem(0, 0))
-    end
-    reaper.SetEditCurPos(originPosition, false, false)
-    reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
-    items = timbert.MakeItemArraySortByLane()
-    for i = 1, #items do
-        reaper.SetMediaItemInfo_Value(items[i].item, "I_FIXEDLANE", originLane)
-    end
-    return previewLength
-end
-
 function timbert.GetCompLanes(items, track) -- items[i].laneIndex must exist, items created with timbert.MakeItemArraySortByLane() 
     local hasCompLane = false
     local laneName, itemsFirst, _
     local compLanes = {}
     if #items > 1 then
-        _, itemsFirst = timbert.SelectOnlyFirstItemPerLaneInSelection(items)
+        _, itemsFirst = timbert.GetOnlyFirstItemPerLaneInSelection(items)
     else
         itemsFirst = items
     end
@@ -713,13 +669,12 @@ function timbert.ValidateItemsUnderEditCursorOnSelectedTracks(unselectItems)
     return true
 end
 
-function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
+function timbert.GetOnlyFirstItemPerLaneInSelection(items)
     if #items < 2 then
         return items
     end
     local itemsCopy = {}
     for i = 1, #items do
-        reaper.SetMediaItemSelected(items[i].item, true)
         table.insert(itemsCopy, {
             item = items[i].item
         })
@@ -736,54 +691,7 @@ function timbert.SelectOnlyFirstItemPerLaneInSelection(items)
     for i = #indexesToRemove, 1, -1 do
         table.remove(itemsCopy, indexesToRemove[i])
     end
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    for i = 1, #itemsCopy do
-        reaper.SetMediaItemSelected(itemsCopy[i].item, true)
-    end
     return items, itemsCopy
-end
-
-function timbert.PreviewLaneContent(track, laneIndex, retLength, previewMarkerName, toggle)
-    timbert.SetTimeSelectionToAllItemsInVerticalStack()
-    local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
-    local previewLength, sourcePos, previewPos, previewMultipleLength
-    if retLength ~= nil or retLength == true then
-        previewLength = items[#items].itemPosition + reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") -
-                            items[1].itemPosition
-    end
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    -- if comp lane has multiple items, glue on a temporary lane, preview then remove glued item + lane
-    if #items > 1 then
-        local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        previewMultipleLength = timbert.PreviewMultipleItems(items, track, false, previewMarkerName, toggle)
-        reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
-    else
-        reaper.SetMediaItemSelected(items[1].item, true)
-        previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
-        if previewPos ~= nil then
-            local previewItem = reaper.SplitMediaItem(items[1].item, previewPos)
-            previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
-            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-            reaper.SetMediaItemSelected(previewItem, true)
-            if toggle == true then
-                timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
-            else
-                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-            end
-            reaper.SetMediaItemSelected(items[1].item, true)
-            reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
-        else
-            if toggle == true then
-                timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
-            else
-                timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
-            end
-        end
-    end
-    if previewMultipleLength ~= nil then
-        previewLength = previewMultipleLength
-    end
-    return previewLength
 end
 
 function timbert.SetTimeSelectionToAllItemsInVerticalStack(selectItems)
@@ -809,12 +717,12 @@ function timbert.GetTakeMarkerPos(items, takeMarkerName) -- credits to XRaym's C
     local itemTake, itemPos, itemLength, takeRate, takeMarkerCount, takeOffs, markerName, sourcePos, takeMarkerPos, _
     for i = 1, #items do
         itemTake = reaper.GetActiveTake(items[i].item)
-        itemPos = reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION")
-        itemLength = reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")
-        takeRate = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_PLAYRATE")
-        takeOffs = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_STARTOFFS")
         takeMarkerCount = reaper.GetNumTakeMarkers(itemTake)
         if takeMarkerCount > 0 then
+            itemPos = reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION")
+            itemLength = reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")
+            takeRate = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_PLAYRATE")
+            takeOffs = reaper.GetMediaItemTakeInfo_Value(itemTake, "D_STARTOFFS")
             for j = 0, takeMarkerCount - 1 do
                 sourcePos, markerName, _ = reaper.GetTakeMarker(itemTake, j)
                 if markerName == takeMarkerName then
@@ -822,87 +730,115 @@ function timbert.GetTakeMarkerPos(items, takeMarkerName) -- credits to XRaym's C
                     break
                 end
             end
-        end
-        if takeMarkerPos ~= nil then
-            -- adjust and correct takeMarkerPos accounting for takeRate and item source position
-            -- Make sure takeMarkerPos is in the bounds of its parent item
-            takeMarkerPos = itemPos - takeOffs + sourcePos / takeRate
-            if takeMarkerPos < itemPos or takeMarkerPos > (itemPos + itemLength) then
-                takeMarkerPos = nil
+            if takeMarkerPos ~= nil then
+                -- adjust and correct takeMarkerPos accounting for takeRate and item source position
+                -- Make sure takeMarkerPos is in the bounds of its parent item
+                takeMarkerPos = itemPos - takeOffs + sourcePos / takeRate
+                if takeMarkerPos < itemPos or takeMarkerPos > (itemPos + itemLength) then
+                    takeMarkerPos = nil
+                end
+                break
             end
-            break
         end
     end
     return takeMarkerPos
 end
 
 function timbert.SelectContentForPreview(items, previewMarkerName)
-    local previewPos, previewItemIndex, previewItem
-    previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
-
+    local previewLength
+    local previewPos = timbert.GetTakeMarkerPos(items, previewMarkerName)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-    -- item selection, could be a separate function
-    for i = 1, #items do
-        if previewPos ~= nil then
-            if (items[i].position + items[i].length) > previewPos then
-                if items[i].position < previewPos then
-                    previewItem = items[i].item
-                    previewItemIndex = i
-                end
-                reaper.SetMediaItemSelected(items[i].item, true)
-            end
-        else
+    if previewPos == nil then
+        for i = 1, #items do
             reaper.SetMediaItemSelected(items[i].item, true)
         end
+        previewLength = reaper.GetMediaItemInfo_Value(items[#items].item, "D_POSITION") +
+                            reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") -
+                            reaper.GetMediaItemInfo_Value(items[1].item, "D_POSITION")
+        return items, previewLength
     end
-    return previewPos, previewItem, previewItemIndex
+
+    local previewItemIndex, previewItem
+    local selectedItems = {}
+    for i = 1, #items do
+        if (reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") +
+            reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")) > previewPos then
+            if reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") < previewPos then
+                previewItem = items[i].item
+                previewItemIndex = i
+            end
+            reaper.SetMediaItemSelected(items[i].item, true)
+            table.insert(selectedItems, {
+                item = items[i].item
+            })
+        end
+    end
+    previewLength = reaper.GetMediaItemInfo_Value(items[#items].item, "D_POSITION") +
+                        reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") - previewPos
+    return selectedItems, previewLength, previewPos, previewItem, previewItemIndex
 end
 
-function timbert.PreviewSetup(items) --takes care of glueing
-    local previewPos, previewLength, previewItemIndex, previewItemLeft, previewItem
+function timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, toggle)
+    timbert.SetTimeSelectionToAllItemsInVerticalStack()
+    local items = timbert.GetSelectedItemsInLaneInfo(laneIndex)
+    local selectedItems, previewLength, previewPos, previewItem, previewItemIndex =
+        timbert.SelectContentForPreview(items, previewMarkerName)
+    local start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
+    local cursorPos, previewItemLeft, isGlued, isSplit
 
-    -- item glueing conditional
+    -- if #items == 1  == no glueing
+    if previewPos == nil and #selectedItems > 1 then
+        cursorPos = reaper.GetMediaItemInfo_Value(selectedItems[1].item, "D_POSITION")
+        reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
+        reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
+        previewItem = reaper.GetSelectedMediaItem(0, 0)
+        isGlued = true
+    end
 
-    -- if #items == 1 or previewItemIndex == #items (marker on last item) ==== no glueing
+    -- if previewItemIndex == #items (marker on last item) ==== no glueing
     if previewPos ~= nil then
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-        previewItemLeft = previewItem
-
-        -- check if preview pos ~= item position, if not, don't split
-        previewItem = reaper.SplitMediaItem(previewItem, previewPos)
-
-        -- create table of items before they'll be glued, with GUID info
-        reaper.SetMediaItemSelected(previewItem, true)
-
-        -- Arrange view save and restore around glueing
-        -- start_time, end_time = reaper.GetSet_ArrangeView2(0, false, 0, 0)
-        -- reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
-
-        if previewItemIndex < #items then
+        if previewItemIndex ~= #items then
+            cursorPos = previewPos
+            previewItemLeft = previewItem
+            previewItem = reaper.SplitMediaItem(previewItem, previewPos)
+            reaper.SetMediaItemSelected(previewItemLeft, false)
             reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
-            reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
+            local timeSelectStart, timeSelectEnd = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
+            -- reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
+            reaper.GetSet_LoopTimeRange(true, false, previewPos, previewPos + previewLength, false)
+            reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
             previewItem = reaper.GetSelectedMediaItem(0, 0)
-        end
-        previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
-        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-        reaper.SetMediaItemSelected(previewItem, true)
-        if #items > 1 then
-            reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
-            previewItem = reaper.GetSelectedMediaItem(0, 0)
-            previewLength = reaper.GetMediaItemInfo_Value(previewItem, "D_LENGTH") -- override preview length
+            reaper.GetSet_LoopTimeRange(true, false, timeSelectStart, timeSelectEnd, false)
+            isGlued = true
+            isSplit = true
+        else
+            -- split at marker pos
+            previewItemLeft = previewItem
+            previewItem = reaper.SplitMediaItem(previewItem, previewPos)
+            reaper.SetMediaItemSelected(previewItemLeft, false)
+            reaper.SetMediaItemSelected(previewItem, true)
+            isSplit = true
         end
     end
-
-    -- return preview length, previewItem, table of item before glue if applicable
-    -- handle previewing in separate function
-end
-
-function timbert.PreviewContent(items, previewMarkerName, previewPos, toggle)
-    local previewLength, previewItem, itemsBackup = timbert.PreviewSetup(items, previewMarkerName)
 
     if toggle == true then
         timbert.swsCommand("_SWS_PREVIEWTRACKTOG") -- Xenakios/SWS: Preview selected media item through track (toggle)
     else
         timbert.swsCommand("_SWS_PREVIEWTRACK") -- Xenakios/SWS: Preview selected media item through track
     end
+
+    if isGlued == true then
+        reaper.DeleteTrackMediaItem(track, previewItem)
+        reaper.SetEditCurPos(cursorPos, false, false)
+        reaper.Main_OnCommand(42398, 0) -- Item: Paste items/tracks
+        for i = 1, #selectedItems do
+            reaper.SetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i - 1), "I_FIXEDLANE", laneIndex)
+        end
+        reaper.GetSet_ArrangeView2(0, true, 0, 0, start_time, end_time)
+    end
+    if (isGlued == true and isSplit == true) or isSplit == true then
+        reaper.SetMediaItemSelected(previewItemLeft, true)
+        reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
+    end
+    return previewLength
 end
