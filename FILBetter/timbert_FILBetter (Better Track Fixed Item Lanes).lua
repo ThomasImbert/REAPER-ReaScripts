@@ -1,6 +1,6 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.5
+-- @version 1.0pre1.6
 -- @changelog 
 --   # Added dependency check for reaImGui
 --   # Added script: Play from current content to last content on current track (seek playback)
