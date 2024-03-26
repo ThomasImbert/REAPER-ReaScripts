@@ -164,7 +164,7 @@ function filbGUI.ShowFILBWindow(open)
     local main_viewport = ImGui.GetMainViewport(ctx)
     local work_pos = {ImGui.Viewport_GetWorkPos(main_viewport)}
     ImGui.SetNextWindowPos(ctx, work_pos[1] + 20, work_pos[2] + 20, ImGui.Cond_FirstUseEver())
-    ImGui.SetNextWindowSize(ctx, 600, 570)
+    ImGui.SetNextWindowSize(ctx, 600, 660)
 
     if filbGUI.set_dock_id then
         ImGui.SetNextWindowDockID(ctx, filbGUI.set_dock_id)
@@ -173,7 +173,8 @@ function filbGUI.ShowFILBWindow(open)
 
     -- Main body of the window starts here.
     rv, open = ImGui.Begin(ctx, 'FILBetter settings', open, window_flags)
-
+    ImGui.Spacing(ctx)
+    ImGui.Spacing(ctx)
     ImGui.PushItemWidth(ctx, -ImGui.GetWindowWidth(ctx) * 0.75)
 
     filbGUI.UpdateFILBSettings()
@@ -214,6 +215,10 @@ function filbGUI.UpdateFILBSettings()
         filbSettings.curItemLaneCombo = indexOf(FILBetter.LanePriorities, filbCfg["lanePriority"]) - 1
         filbSettings.curItemCompCombo = indexOf(FILBetter.LanePriorities, filbCfg["compLanePriority"]) - 1
         filbSettings.curTimeSelectMode = indexOf(FILBetter.timeSelectModes, filbCfg["goToContentTimeSelectionMode"]) - 1
+        filbSettings.curSeekPlaybackRetriggCurPos = indexOf(FILBetter.seekPlaybackRetriggCurPos,
+            filbCfg["seekPlaybackRetriggCurPos"]) - 1
+        filbSettings.curSeekPlaybackEndCurPos = indexOf(FILBetter.seekPlaybackEndCurPos,
+            filbCfg["seekPlaybackEndCurPos"]) - 1
     end
 
     if reset == true then
@@ -230,6 +235,10 @@ function filbGUI.UpdateFILBSettings()
         filbSettings.curItemLaneCombo = indexOf(FILBetter.LanePriorities, filbCfg["lanePriority"]) - 1
         filbSettings.curItemCompCombo = indexOf(FILBetter.LanePriorities, filbCfg["compLanePriority"]) - 1
         filbSettings.curTimeSelectMode = indexOf(FILBetter.timeSelectModes, filbCfg["goToContentTimeSelectionMode"]) - 1
+        filbSettings.curSeekPlaybackRetriggCurPos = indexOf(FILBetter.seekPlaybackRetriggCurPos,
+            filbCfg["seekPlaybackRetriggCurPos"]) - 1
+        filbSettings.curSeekPlaybackEndCurPos = indexOf(FILBetter.seekPlaybackEndCurPos,
+            filbCfg["seekPlaybackEndCurPos"]) - 1
     end
 
     ImGui.SeparatorText(ctx, 'Navigation (Go to previous / next content)')
@@ -259,6 +268,19 @@ function filbGUI.UpdateFILBSettings()
         'When creating a preview marker at edit cursor, create it in priority lane item',
         filbCfg["findTakeInPriorityLanePreviewMarkerAtEditCursor"])
 
+    ImGui.SeparatorText(ctx, 'Seek Playback (Play from current content)')
+    ImGui.PushItemWidth(ctx, 100)
+    do
+        local seekPlaybackRetriggCurPos = 'current\0previous\0origin\0last\0'
+        rv, filbSettings.curSeekPlaybackRetriggCurPos = ImGui.Combo(ctx, 'Cursor position when retriggered',
+            filbSettings.curSeekPlaybackRetriggCurPos, seekPlaybackRetriggCurPos)
+    end
+    ImGui.PushItemWidth(ctx, 100)
+    do
+        local seekPlaybackEndCurPos = 'last\0after last\0'
+        rv, filbSettings.curSeekPlaybackEndCurPos = ImGui.Combo(ctx, 'Cursor position when playback finishes',
+            filbSettings.curSeekPlaybackEndCurPos, seekPlaybackEndCurPos)
+    end
     ImGui.SeparatorText(ctx, 'Recording')
     rv, filbCfg["recordingBellOn"] = ImGui.Checkbox(ctx, 'Enable recording bell when recording with context',
         filbCfg["recordingBellOn"])
@@ -298,6 +320,9 @@ function filbGUI.UpdateFILBSettings()
         filbNewCfg["lanePriority"] = FILBetter.LanePriorities[filbSettings.curItemLaneCombo + 1]
         filbNewCfg["compLanePriority"] = FILBetter.LanePriorities[filbSettings.curItemCompCombo + 1]
         filbNewCfg["goToContentTimeSelectionMode"] = FILBetter.timeSelectModes[filbSettings.curTimeSelectMode + 1]
+        filbNewCfg["seekPlaybackRetriggCurPos"] =
+            FILBetter.seekPlaybackRetriggCurPos[filbSettings.curSeekPlaybackRetriggCurPos + 1]
+        filbNewCfg["seekPlaybackEndCurPos"] = FILBetter.seekPlaybackEndCurPos[filbSettings.curSeekPlaybackEndCurPos + 1]
         FILBetter.save_json(FILBetter.scriptPath, "FILBetterConfig", filbNewCfg)
     end
 

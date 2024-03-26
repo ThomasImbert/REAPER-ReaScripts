@@ -3,6 +3,8 @@
 -- @version 1.0pre1.5
 -- @changelog 
 --   # Added dependency check for reaImGui
+--   # Added script: Play from current content to last content on current track (seek playback)
+--   # Added user settings for new seek playback script
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -80,11 +82,15 @@ local defaultFILBetter = {
     makePreviewMarkerAtMouseCursor = true, -- false = make take marker at edit cursor position
     findTakeInPriorityLanePreviewMarkerAtEditCursor = true, -- when makePreviewMarkerAtMouseCursor is false, make take marker in content in priority lane instead of clicked content
     previewMarkerName = "[FILB]",
+    seekPlaybackRetriggCurPos = "current", -- "previous", "origin", "last"
+    seekPlaybackEndCurPos = "last", -- "after last"
     recallCursPosWhenTrimOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}
 FILBetter.LanePriorities = {"first", "last"}
+FILBetter.seekPlaybackRetriggCurPos = {"current", "previous", "origin", "last"}
+FILBetter.seekPlaybackEndCurPos = {"last", "after last"}
 
 FILBetter.defaultFILBetter = defaultFILBetter
 
