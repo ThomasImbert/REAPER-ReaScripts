@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="dd023599b8706674464cbadeeffd88782c5537ae">
+<index version="1" name="TImbert Scripts" commit="8fc645b57a47f5cb59eba760b3c39140040ee038">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -79,6 +79,13 @@
       <version name="1.925" author="Thomas Imbert" time="2024-03-20T19:35:47Z">
         <changelog><![CDATA[# Fixed Preview markers for preview length]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/9ff14bde3fed5216cdc193b4d6f13c9291079216/Development/timbert_Lua%20Utilities.lua</source>
+      </version>
+      <version name="1.926" author="Thomas Imbert" time="2024-03-26T18:26:17Z">
+        <changelog><![CDATA[# Fixed Preview markers for preview length
+# Rewrite of PreviewLaneContent(), can now take care of glueing 
+# Rewrote SelectOnlyFirstItemPerLaneInSelection into GetOnlyFirstItemPerLaneInSelection and avoid changing item selection
+# Updated GetCompLanes accordingly]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8fc645b57a47f5cb59eba760b3c39140040ee038/Development/timbert_Lua%20Utilities.lua</source>
       </version>
     </reapack>
   </category>
