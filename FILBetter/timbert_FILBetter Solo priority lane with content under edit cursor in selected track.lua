@@ -12,7 +12,7 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.924 then
+if not timbert or timbert.version() < 1.926 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
