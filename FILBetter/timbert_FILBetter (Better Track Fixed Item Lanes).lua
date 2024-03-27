@@ -1,8 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.8
+-- @version 1.0pre1.9
 -- @changelog 
---   # Fixed Create a Preview Marker script tooltips and overall logic
+--   # Updated dialog window text 
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -58,7 +58,7 @@ end
 -- If run from action list, expain FILBetter and return
 if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2) then
     local response = reaper.MB(
-        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more! \n\nYou can change some script settings by going to your Reaper resource path folder > Scripts > TImbert Scripts > FILBetter, and modifying FILBetterConfig.json, which will generate as soon as you've used one of the scripts once \n\nby Thomas Imbert\n\nWould you like to open the tutorials playlist on youtube?",
+        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\n\nby Thomas Imbert\n\nWould you like to open the tutorials playlist on youtube?",
         script_name, 4)
     if response == 6 then
         reaper.CF_ShellExecute("https://www.youtube.com/playlist?list=PLSGyZ2r1eeOm8TQ_a4v7eFk3odHGxZNcb")
