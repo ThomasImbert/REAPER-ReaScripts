@@ -1,11 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.7
+-- @version 1.0pre1.8
 -- @changelog 
---   # Added ConfigFile generation in FILB settings
---   # Rewrote Create Preview marker, renamed and added marker cleanup functionality, renamed Remove preview marker script
---   # Message box now links to youtube playlists
---   # Fixed Seek Play script atExit being triggered at early return, time selection now fits content in priority lane
+--   # Fixed Create a Preview Marker script tooltips and overall logic
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
