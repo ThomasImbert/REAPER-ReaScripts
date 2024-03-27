@@ -33,6 +33,11 @@ timbert_FILBetter = reaper.GetResourcePath() ..
 dofile(timbert_FILBetter)
 
 ---------------------------
+reaper.set_action_options(1)
+
+
+-- Dummy config load to make sure FILBetterCFG.json is generated--
+local dummyConfig = FILBetter.LoadConfig("goToNextSnapToLastContent")
 
 local ImGui = {}
 for name, func in pairs(reaper) do
@@ -93,9 +98,11 @@ end
 function filbGUI.HelpMarker(desc)
     ImGui.TextDisabled(ctx, '(?)')
     if ImGui.IsItemHovered(ctx, ImGui.HoveredFlags_DelayShort()) and ImGui.BeginTooltip(ctx) then
-        ImGui.PushTextWrapPos(ctx, ImGui.GetFontSize(ctx) * 35.0)
+        ImGui.PushTextWrapPos(ctx, ImGui.GetFontSize(ctx) * 30.0)
+        ImGui.Spacing(ctx)
         ImGui.Text(ctx, desc)
         ImGui.PopTextWrapPos(ctx)
+        ImGui.Spacing(ctx)
         ImGui.EndTooltip(ctx)
     end
 end
@@ -247,9 +254,14 @@ function filbGUI.UpdateFILBSettings()
     ImGui.SameLine(ctx, 0, 90)
     rv, filbCfg["goToNextSnapToLastContent"] = ImGui.Checkbox(ctx, 'Snap back to last content',
         filbCfg["goToNextSnapToLastContent"])
+        ImGui.SameLine(ctx)
+        filbGUI.HelpMarker(
+            'Changes the behaviour when the edit cursor is positioned before the first content or after the last content of the track.')
     rv, filbCfg["moveEditCurToStartOfContent"] = ImGui.Checkbox(ctx, 'Move edit cursor to start of item in lane',
         filbCfg["moveEditCurToStartOfContent"])
-
+        ImGui.SameLine(ctx)
+        filbGUI.HelpMarker(
+            'Especially useful when the content in lanes is not vertically aligned. Allows the user to start playback at the start of content.')
     ImGui.PushItemWidth(ctx, 80)
     do
         local navTimeSelectMode = 'clear\0recall\0content\0'
@@ -260,10 +272,16 @@ function filbGUI.UpdateFILBSettings()
     ImGui.SeparatorText(ctx, 'Preview')
     rv, filbCfg["previewOnLaneSelection"] = ImGui.Checkbox(ctx, 'Preview on lane selection change',
         filbCfg["previewOnLaneSelection"])
+        ImGui.SameLine(ctx)
+        filbGUI.HelpMarker(
+            'You can still preview the lane content with "Preview content under edit cursor in currently soloed lane" when set to off.')
     rv, filbCfg["previewMarkerName"] = ImGui.InputTextWithHint(ctx, 'Preview marker name', filbCfg["previewMarkerName"],
         filbCfg["previewMarkerName"])
-    rv, filbCfg["makePreviewMarkerAtMouseCursor"] = ImGui.Checkbox(ctx,
-        'Create preview markers at mouse cursor (off = at edit cursor)', filbCfg["makePreviewMarkerAtMouseCursor"])
+    rv, filbCfg["makePreviewMarkerAtMouseCursor"] = ImGui.Checkbox(ctx, 'Create preview markers at mouse cursor',
+        filbCfg["makePreviewMarkerAtMouseCursor"])
+    ImGui.SameLine(ctx);
+    filbGUI.HelpMarker('Off = create preview marker in content at edit cursor position instead.')
+
     rv, filbCfg["findTakeInPriorityLanePreviewMarkerAtEditCursor"] = ImGui.Checkbox(ctx,
         'When creating a preview marker at edit cursor, create it in priority lane item',
         filbCfg["findTakeInPriorityLanePreviewMarkerAtEditCursor"])
@@ -281,9 +299,16 @@ function filbGUI.UpdateFILBSettings()
         rv, filbSettings.curSeekPlaybackEndCurPos = ImGui.Combo(ctx, 'Cursor position when playback finishes',
             filbSettings.curSeekPlaybackEndCurPos, seekPlaybackEndCurPos)
     end
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        '"Stop/repeat playback at end of project" should be turned off in Preferences > Playback > Playback settings.')
+
     ImGui.SeparatorText(ctx, 'Recording')
     rv, filbCfg["recordingBellOn"] = ImGui.Checkbox(ctx, 'Enable recording bell when recording with context',
         filbCfg["recordingBellOn"])
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        'The recording bell uses the metronome tick sound. In Metronome setting, allow run during recording. Try Primary beat = 250Hz, 100ms duration and sine soft start for a gentle bell sound.')
     rv, filbCfg["recallCursPosWhenTrimOnStop"] = ImGui.Checkbox(ctx,
         'Recall cursor position when stopping recording with context', filbCfg["recallCursPosWhenTrimOnStop"])
     rv, filbCfg["pushNextContentTime"] = ImGui.InputInt(ctx, '"Push next content when recording" amount in seconds',

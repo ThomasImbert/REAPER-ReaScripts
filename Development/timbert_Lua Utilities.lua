@@ -1,6 +1,6 @@
 -- @description TImbert Lua Utilities
 -- @author Thomas Imbert
--- @version 1.926
+-- @version 1.927
 -- @metapackage
 -- @provides
 --   [main] .
@@ -8,10 +8,8 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Fixed Preview markers for preview length
---   # Rewrite of PreviewLaneContent(), can now take care of glueing 
---   # Rewrote SelectOnlyFirstItemPerLaneInSelection into GetOnlyFirstItemPerLaneInSelection and avoid changing item selection
---   # Updated GetCompLanes accordingly
+--   # Added TooltipMsg()
+--   # Fixed SelectContentForPreview() function in cases where the preview marker is at item start position or in crossfade between items 
 --[[
 
 -- Get this script's name and directory
@@ -760,21 +758,35 @@ function timbert.SelectContentForPreview(items, previewMarkerName)
 
     local previewItemIndex, previewItem
     local selectedItems = {}
-    for i = 1, #items do
-        if (reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") +
-            reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")) > previewPos then
-            if reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") < previewPos then
-                previewItem = items[i].item
-                previewItemIndex = i
-            end
-            reaper.SetMediaItemSelected(items[i].item, true)
-            table.insert(selectedItems, {
-                item = items[i].item
-            })
-        end
-    end
     previewLength = reaper.GetMediaItemInfo_Value(items[#items].item, "D_POSITION") +
                         reaper.GetMediaItemInfo_Value(items[#items].item, "D_LENGTH") - previewPos
+
+    if #items == 1 then
+        previewItem = items[1].item
+        previewItemIndex = 1
+        reaper.SetMediaItemSelected(items[1].item, true)
+        table.insert(selectedItems, {
+            item = items[1].item
+        })
+    else
+        for i = 1, #items do
+            if (reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") +
+                reaper.GetMediaItemInfo_Value(items[i].item, "D_LENGTH")) > previewPos then
+
+                if i < #items and previewPos >= reaper.GetMediaItemInfo_Value(items[i + 1].item, "D_POSITION") then
+                else
+                    reaper.SetMediaItemSelected(items[i].item, true)
+                    table.insert(selectedItems, {
+                        item = items[i].item
+                    })
+                end
+                if reaper.GetMediaItemInfo_Value(items[i].item, "D_POSITION") <= previewPos then
+                    previewItem = items[i].item
+                    previewItemIndex = i
+                end
+            end
+        end
+    end
     return selectedItems, previewLength, previewPos, previewItem, previewItemIndex
 end
 
@@ -791,7 +803,7 @@ function timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, toggle)
         cursorPos = reaper.GetMediaItemInfo_Value(selectedItems[1].item, "D_POSITION")
         reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
         reaper.Main_OnCommand(40362, 0) -- Item: Glue items, ignoring time selection
-        previewItem = reaper.GetSelectedMediaItem(0, 0)
+        previewItem = reaper.GetSelectedMediaItem(0, reaper.CountSelectedMediaItems(0) - 1)
         isGlued = true
     end
 
@@ -800,22 +812,26 @@ function timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, toggle)
         if previewItemIndex ~= #items then
             cursorPos = previewPos
             previewItemLeft = previewItem
-            previewItem = reaper.SplitMediaItem(previewItem, previewPos)
-            reaper.SetMediaItemSelected(previewItemLeft, false)
+            if previewPos ~= reaper.GetMediaItemInfo_Value(previewItem, "D_POSITION") then
+                previewItem = reaper.SplitMediaItem(previewItem, previewPos)
+                reaper.SetMediaItemSelected(previewItemLeft, false)
+            end
             reaper.Main_OnCommand(40698, 0) -- Edit: Copy items
             local timeSelectStart, timeSelectEnd = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
             -- reaper.Main_OnCommand(40635, 0) -- Time selection: Remove (unselect) time selection
             reaper.GetSet_LoopTimeRange(true, false, previewPos, previewPos + previewLength, false)
             reaper.Main_OnCommand(42432, 0) -- Item: Glue items within time selection
-            previewItem = reaper.GetSelectedMediaItem(0, 0)
+            previewItem = reaper.GetSelectedMediaItem(0, reaper.CountSelectedMediaItems(0) - 1)
             reaper.GetSet_LoopTimeRange(true, false, timeSelectStart, timeSelectEnd, false)
             isGlued = true
             isSplit = true
         else
             -- split at marker pos
             previewItemLeft = previewItem
-            previewItem = reaper.SplitMediaItem(previewItem, previewPos)
-            reaper.SetMediaItemSelected(previewItemLeft, false)
+            if previewPos ~= reaper.GetMediaItemInfo_Value(previewItem, "D_POSITION") then
+                previewItem = reaper.SplitMediaItem(previewItem, previewPos)
+                reaper.SetMediaItemSelected(previewItemLeft, false)
+            end
             reaper.SetMediaItemSelected(previewItem, true)
             isSplit = true
         end
@@ -841,4 +857,33 @@ function timbert.PreviewLaneContent(previewMarkerName, track, laneIndex, toggle)
         reaper.Main_OnCommand(40548, 0) -- Item: Heal splits in items
     end
     return previewLength
+end
+
+local function TooltipCountdown(duration, startTime, x, y)
+    local check = os.time()
+    if check - startTime >= duration then -- close the tooltip after duration
+        reaper.TrackCtl_SetToolTip("", x, y, false)
+        reaper.DeleteExtState("timbert", "ToolTipMsg", false)
+    else
+        reaper.defer(function()
+            TooltipCountdown(duration, startTime, x, y)
+        end)
+    end
+end
+
+function timbert.TooltipMsg(string, duration)
+    -- reaper.set_action_options(1 | 2) add this to caller script, either or both 1 and 2 flags (terminate and relaunch)
+    local x, y, h, startTime
+    x, y = reaper.GetMousePosition()
+    x = x + 10 -- slight horizontal offset to prevent tooltip under mouse cursor
+    if reaper.HasExtState("timbert", "ToolTipMsg") == false then
+        reaper.TrackCtl_SetToolTip(string, x, y, false)
+        reaper.SetExtState("timbert", "ToolTipMsg", 1, false)
+    else
+        reaper.TrackCtl_SetToolTip("", x, y, false)
+        reaper.TrackCtl_SetToolTip(string, x, y, false)
+    end
+    h = reaper.GetTooltipWindow()
+    startTime = os.time()
+    TooltipCountdown(duration, startTime, x, y)
 end

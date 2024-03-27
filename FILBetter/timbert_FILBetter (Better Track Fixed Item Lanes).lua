@@ -1,10 +1,11 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.6
+-- @version 1.0pre1.7
 -- @changelog 
---   # Added dependency check for reaImGui
---   # Added script: Play from current content to last content on current track (seek playback)
---   # Added user settings for new seek playback script
+--   # Added ConfigFile generation in FILB settings
+--   # Rewrote Create Preview marker, renamed and added marker cleanup functionality, renamed Remove preview marker script
+--   # Message box now links to youtube playlists
+--   # Fixed Seek Play script atExit being triggered at early return, time selection now fits content in priority lane
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -18,7 +19,6 @@
 --      [main] *.lua
 --      [nomain] utils/json.lua
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
-
 
 FILBetter = {}
 
@@ -60,12 +60,14 @@ end
 
 -- If run from action list, expain FILBetter and return
 if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2) then
-    reaper.MB(
-        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more! \n\nYou can change some script settings by going to your Reaper resource path folder > Scripts > TImbert Scripts > FILBetter, and modifying FILBetterConfig.json, which will generate as soon as you've used one of the scripts once \n\nby Thomas Imbert",
-        script_name, 0)
+    local response = reaper.MB(
+        "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more! \n\nYou can change some script settings by going to your Reaper resource path folder > Scripts > TImbert Scripts > FILBetter, and modifying FILBetterConfig.json, which will generate as soon as you've used one of the scripts once \n\nby Thomas Imbert\n\nWould you like to open the tutorials playlist on youtube?",
+        script_name, 4)
+    if response == 6 then
+        reaper.CF_ShellExecute("https://www.youtube.com/playlist?list=PLSGyZ2r1eeOm8TQ_a4v7eFk3odHGxZNcb")
+    end
     return
 end
-
 
 local defaultFILBetter = {
     recordingBellOn = false,
