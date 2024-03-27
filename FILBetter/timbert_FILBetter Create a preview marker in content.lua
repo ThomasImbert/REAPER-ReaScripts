@@ -12,7 +12,7 @@ if not reaper.file_exists(timbert_LuaUtils) then
     return
 end
 dofile(timbert_LuaUtils)
-if not timbert or timbert.version() < 1.926 then
+if not timbert or timbert.version() < 1.927 then
     reaper.MB(
         "This script requires a newer version of TImbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages",
         script_name, 0)
@@ -40,7 +40,7 @@ local makePreviewMarkerAtMouseCursor = FILBetter.LoadConfig("makePreviewMarkerAt
 local findTakeInPriorityLanePreviewMarkerAtEditCursor = FILBetter.LoadConfig(
     "findTakeInPriorityLanePreviewMarkerAtEditCursor")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName") -- default "[FILB]"
----------------
+---------------------------
 
 local function ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
@@ -70,42 +70,59 @@ local function FindTakeMarkerIndex(take)
     return index
 end
 
-local function MakeMarker(takeFound, sameItem, item, index, targetPosition)
-    if takeFound ~= nil then
-        if sameItem == true then
-            -- already exists, move it to mouse cursor pos
-            reaper.SetTakeMarker(reaper.GetActiveTake(item), index, previewMarkerName, targetPosition)
-        else
-            -- already exists on diffent item in content, delete 
-            reaper.DeleteTakeMarker(takeFound, index)
+local function MakeMarker(item, targetPosition, markersData)
+    local markerFound = false
+    if #markersData == 0 then
+        -- create a new take marker at mouse cursor pos
+        reaper.SetTakeMarker(reaper.GetActiveTake(item), -1, previewMarkerName, targetPosition)
+    else
+        for i = 1, #markersData do
+            if markersData[i].takeFound ~= nil then
+                -- marker already exist in one of the takes found
+                if markersData[i].isSameItem == false then
+                    -- already exists on diffent item in content, delete 
+                    reaper.DeleteTakeMarker(markersData[i].takeFound, markersData[i].index)
+
+                else
+                    -- already exists on that take, move it to mouse cursor pos
+                    reaper.SetTakeMarker(reaper.GetActiveTake(markersData[i].item), markersData[i].index,
+                        previewMarkerName, targetPosition)
+                    markerFound = true
+                end
+
+            end
+        end
+        if markerFound == false then
             -- and create it at mouse cursor pos
             reaper.SetTakeMarker(reaper.GetActiveTake(item), -1, previewMarkerName, targetPosition)
         end
-
-    else
-        -- create a new take marker at mouse cursor pos
-        reaper.SetTakeMarker(reaper.GetActiveTake(item), -1, previewMarkerName, targetPosition)
     end
 end
 
 local function MarkerExists(items, item)
-    local markerName, index, takeFound, indexFound, take, _
+    local markerName, index, takeFound, take, isSameItem, _
     local takeInput = reaper.GetActiveTake(item)
+    local markersData = {}
 
     for i = 1, #items do
         take = reaper.GetActiveTake(items[i].item)
         index = FindTakeMarkerIndex(take)
         if index ~= nil then
             takeFound = take
-            indexFound = index
-            break
+            if takeFound == takeInput then
+                isSameItem = true
+            else
+                isSameItem = false
+            end
+            table.insert(markersData, {
+                index = index,
+                item = items[i].item,
+                takeFound = takeFound,
+                isSameItem = isSameItem
+            })
         end
     end
-    if takeFound == takeInput then
-        return takeFound, true, indexFound
-    else
-        return takeFound, false, indexFound
-    end
+    return markersData
 end
 
 function main()
@@ -128,12 +145,13 @@ function main()
         reaper.GetSelectedMediaItem(0, i)
     end
 
-    local item, index, itemLane, items, takeFound, sameItem, targetPosition, takeRate
+    local item, indexes, itemLane, items, takeFound, sameItem, targetPosition, takeRate
 
     if makePreviewMarkerAtMouseCursor == true then
         local _, _, details = reaper.BR_GetMouseCursorContext()
         -- return if mouse not on an item
         if details ~= "item" then
+            timbert.TooltipMsg("FILBetter Create preview marker\nNo items under mouse cursor", 3)
             return
         end
 
@@ -143,17 +161,17 @@ function main()
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
         items = timbert.GetSelectedItemsInLaneInfo(itemLane)
         reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-
-        takeFound, sameItem, index = MarkerExists(items, item)
+        local markersData = MarkerExists(items, item)
         takeRate = reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_PLAYRATE")
         targetPosition =
             (reaper.BR_GetMouseCursorContext_Position() - reaper.GetMediaItemInfo_Value(item, "D_POSITION")) * takeRate +
                 reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_STARTOFFS")
+        MakeMarker(item, targetPosition, markersData)
 
-        MakeMarker(takeFound, sameItem, item, index, targetPosition)
     else -- if makePreviewMarkerAtMouseCursor == false, make take marker at edit cursor position on content in priority lane
 
         if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
+            timbert.TooltipMsg("FILBetter Create preview marker\nNo items at edit cursor position", 3)
             ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
             return
         end
@@ -161,6 +179,7 @@ function main()
         -- create marker at edit cursor on content in priority lane
         local items = {}
         local priorityLaneAtCursor
+
         if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
             dofile(timbert_SoloLanePriority) --  Solo priority lane
             local priorityLaneAtCursor = timbert.GetActiveTrackLane(track)
@@ -168,6 +187,7 @@ function main()
             items = timbert.GetSelectedItemsInLaneInfo(priorityLaneAtCursor)
 
             if items == nil or #items < 1 then
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo items at edit cursor position in priority lane", 3)
                 ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
                 return
             end
@@ -177,29 +197,48 @@ function main()
             items = timbert.GetSelectedItemsInLaneInfo(priorityLaneAtCursor)
             reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
             reaper.SetEditCurPos(cursPos, false, false)
-        else
-            local _, _, details = reaper.BR_GetMouseCursorContext()
-            -- return if mouse not on an item
-            if details ~= "item" then
+
+        else -- findTakeInPriorityLanePreviewMarkerAtEditCursor == false 
+            itemLane = timbert.GetActiveTrackLane(track)
+            local curPos = reaper.GetCursorPosition()
+            timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
+            items = timbert.GetSelectedItemsInLaneInfo(itemLane)
+
+            if #items == 0 then -- return if no items in active track lane
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo items in active track lane", 3)
                 ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
                 return
             end
 
-            item = reaper.BR_GetMouseCursorContext_Item()
-            table.insert(items, {
-                item = item
-            })
+            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+            reaper.SetEditCurPos(curPos, false, false)
+            for i = 1, #items do
+                if reaper.GetCursorPosition() >= items[i].itemPosition and reaper.GetCursorPosition() <=
+                    items[i].itemPosition + items[i].itemLength then
+                    if i < #items and reaper.GetCursorPosition() >= items[i + 1].itemPosition then
+                    else
+                        item = items[i].item
+                        reaper.SetMediaItemSelected(item, true)
+                    end
+                end
+            end
+            if item == nil then
+                timbert.TooltipMsg("FILBetter Create preview marker\nCursor outside active track lane content", 3)
+                ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
+                return
+            end
         end
 
-        takeFound, sameItem, index = MarkerExists(items, item)
+        local markersData = MarkerExists(items, item)
         takeRate = reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_PLAYRATE")
         targetPosition = (reaper.GetCursorPosition() - reaper.GetMediaItemInfo_Value(item, "D_POSITION")) * takeRate +
                              reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_STARTOFFS")
-
-        MakeMarker(takeFound, sameItem, item, index, targetPosition)
+        MakeMarker(item, targetPosition, markersData)
     end
     ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
 end
+
+reaper.set_action_options(1 | 2)
 
 reaper.PreventUIRefresh(1)
 
