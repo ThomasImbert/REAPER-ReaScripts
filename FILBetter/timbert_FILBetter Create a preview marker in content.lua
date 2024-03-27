@@ -145,13 +145,13 @@ function main()
         reaper.GetSelectedMediaItem(0, i)
     end
 
-    local item, indexes, itemLane, items, takeFound, sameItem, targetPosition, takeRate
+    local item, itemLane, items, takeFound, sameItem, targetPosition, takeRate
 
     if makePreviewMarkerAtMouseCursor == true then
         local _, _, details = reaper.BR_GetMouseCursorContext()
         -- return if mouse not on an item
         if details ~= "item" then
-            timbert.TooltipMsg("FILBetter Create preview marker\nNo items under mouse cursor", 3)
+            timbert.TooltipMsg("FILBetter Create preview marker\nNo content under mouse cursor", 3)
             return
         end
 
@@ -171,64 +171,54 @@ function main()
     else -- if makePreviewMarkerAtMouseCursor == false, make take marker at edit cursor position on content in priority lane
 
         if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
-            timbert.TooltipMsg("FILBetter Create preview marker\nNo items at edit cursor position", 3)
+            timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position", 3)
             ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
             return
         end
 
         -- create marker at edit cursor on content in priority lane
-        local items = {}
         local priorityLaneAtCursor
+        local editCurPosTarget = reaper.GetCursorPosition()
 
         if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
             dofile(timbert_SoloLanePriority) --  Solo priority lane
-            local priorityLaneAtCursor = timbert.GetActiveTrackLane(track)
-            timbert.swsCommand("_XENAKIOS_SELITEMSUNDEDCURSELTX") -- Xenakios/SWS: Select items under edit cursor on selected tracks
-            items = timbert.GetSelectedItemsInLaneInfo(priorityLaneAtCursor)
+        end
+        
+        itemLane = timbert.GetActiveTrackLane(track)
+        timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
+        items = timbert.GetSelectedItemsInLaneInfo(itemLane)
 
-            if items == nil or #items < 1 then
-                timbert.TooltipMsg("FILBetter Create preview marker\nNo items at edit cursor position in priority lane", 3)
-                ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
-                return
+        if items == nil or #items < 1 then
+            if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in priority lane", 3)
+            else
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in active lane", 3)
             end
-
-            item = items[1].item
-            timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
-            items = timbert.GetSelectedItemsInLaneInfo(priorityLaneAtCursor)
-            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-            reaper.SetEditCurPos(cursPos, false, false)
-
-        else -- findTakeInPriorityLanePreviewMarkerAtEditCursor == false 
-            itemLane = timbert.GetActiveTrackLane(track)
-            local curPos = reaper.GetCursorPosition()
-            timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
-            items = timbert.GetSelectedItemsInLaneInfo(itemLane)
-
-            if #items == 0 then -- return if no items in active track lane
-                timbert.TooltipMsg("FILBetter Create preview marker\nNo items in active track lane", 3)
-                ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
-                return
-            end
-
-            reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
-            reaper.SetEditCurPos(curPos, false, false)
-            for i = 1, #items do
-                if reaper.GetCursorPosition() >= items[i].itemPosition and reaper.GetCursorPosition() <=
-                    items[i].itemPosition + items[i].itemLength then
-                    if i < #items and reaper.GetCursorPosition() >= items[i + 1].itemPosition then
-                    else
-                        item = items[i].item
-                        reaper.SetMediaItemSelected(item, true)
-                    end
-                end
-            end
-            if item == nil then
-                timbert.TooltipMsg("FILBetter Create preview marker\nCursor outside active track lane content", 3)
-                ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
-                return
-            end
+            ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
+            return
         end
 
+        reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+        reaper.SetEditCurPos(editCurPosTarget, false, false)
+        for i = 1, #items do
+            if reaper.GetCursorPosition() >= items[i].itemPosition and reaper.GetCursorPosition() <=
+                items[i].itemPosition + items[i].itemLength then
+                if i < #items and reaper.GetCursorPosition() >= items[i + 1].itemPosition then
+                else
+                    item = items[i].item
+                    reaper.SetMediaItemSelected(item, true)
+                end
+            end
+        end
+        if item == nil then
+            if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in priority lane", 3)
+            else
+                timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in active lane", 3)
+            end
+            ResetUserSelection(track, cursPos, startTime, endTime, selectedItemsStart, activeTrackLane)
+            return
+        end
         local markersData = MarkerExists(items, item)
         takeRate = reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_PLAYRATE")
         targetPosition = (reaper.GetCursorPosition() - reaper.GetMediaItemInfo_Value(item, "D_POSITION")) * takeRate +
