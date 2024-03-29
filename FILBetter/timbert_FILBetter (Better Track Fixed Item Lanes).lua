@@ -1,8 +1,10 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre1.9
+-- @version 1.0pre2.0
 -- @changelog 
---   # Updated dialog window text 
+--   # Added Record in Place script, interops with record with context
+--   # Updated Record with context, now works without track selection, reworked recording bell
+--   # Reworked Push next content, now safe to use while editing
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
