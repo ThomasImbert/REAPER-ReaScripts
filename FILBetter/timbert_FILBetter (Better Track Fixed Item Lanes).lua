@@ -1,10 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.0
+-- @version 1.0pre2.1
 -- @changelog 
---   # Added Record in Place script, interops with record with context
---   # Updated Record with context, now works without track selection, reworked recording bell
---   # Reworked Push next content, now safe to use while editing
+--   # Minor comment fixes in FILBetter main script
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -26,7 +24,6 @@ FILBetter = {}
 local info = debug.getinfo(1, 'S');
 local ScriptPath = info.source:match [[^@?(.*[\/])[^\/]-$]];
 FILBetter.scriptPath = ScriptPath
--- reaper.ShowConsoleMsg( ScriptPath ) 
 
 -- Load json file from "./utils.json"
 -- Load the json functions
@@ -57,7 +54,7 @@ function FILBetter.load_json(path, name)
     return json.decode(raw_text)
 end
 
--- If run from action list, expain FILBetter and return
+-- If run from action list, explain FILBetter and return
 if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2) then
     local response = reaper.MB(
         "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\n\nby Thomas Imbert\n\nWould you like to open the tutorials playlist on youtube?",
@@ -95,7 +92,7 @@ FILBetter.seekPlaybackEndCurPos = {"last", "after last"}
 
 FILBetter.defaultFILBetter = defaultFILBetter
 
--- Load FILBETTER.cfg
+-- Load FILBetterConfig.json
 timbert_FILBetterCFG = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
 
 function FILBetter.LoadFullConfig()
