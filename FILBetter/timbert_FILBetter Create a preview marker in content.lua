@@ -36,9 +36,9 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
-local makePreviewMarkerAtMouseCursor = FILBetter.LoadConfig("makePreviewMarkerAtMouseCursor")
-local findTakeInPriorityLanePreviewMarkerAtEditCursor = FILBetter.LoadConfig(
-    "findTakeInPriorityLanePreviewMarkerAtEditCursor")
+local previewMarkerLocation = FILBetter.LoadConfig("previewMarkerLocation")
+local previewMarkerContentLane = FILBetter.LoadConfig(
+    "previewMarkerContentLane")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName") -- default "[FILB]"
 ---------------------------
 
@@ -147,7 +147,7 @@ function main()
 
     local item, itemLane, items, takeFound, sameItem, targetPosition, takeRate
 
-    if makePreviewMarkerAtMouseCursor == true then
+    if previewMarkerLocation == "mouse cursor" then
         local _, _, details = reaper.BR_GetMouseCursorContext()
         -- return if mouse not on an item
         if details ~= "item" then
@@ -168,7 +168,7 @@ function main()
                 reaper.GetMediaItemTakeInfo_Value(reaper.GetActiveTake(item), "D_STARTOFFS")
         MakeMarker(item, targetPosition, markersData)
 
-    else -- if makePreviewMarkerAtMouseCursor == false, make take marker at edit cursor position on content in priority lane
+    else -- if previewMarkerLocation == "edit cursor", make take marker at edit cursor position on content in priority lane
 
         if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
             timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position", 3)
@@ -180,7 +180,7 @@ function main()
         local priorityLaneAtCursor
         local editCurPosTarget = reaper.GetCursorPosition()
 
-        if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
+        if previewMarkerContentLane == "priority lane" then
             dofile(timbert_SoloLanePriority) --  Solo priority lane
         end
         
@@ -189,7 +189,7 @@ function main()
         items = timbert.GetSelectedItemsInLaneInfo(itemLane)
 
         if items == nil or #items < 1 then
-            if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
+            if previewMarkerContentLane == "priority lane" then
                 timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in priority lane", 3)
             else
                 timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in active lane", 3)
@@ -211,7 +211,7 @@ function main()
             end
         end
         if item == nil then
-            if findTakeInPriorityLanePreviewMarkerAtEditCursor == true then
+            if previewMarkerContentLane == "priority lane" then
                 timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in priority lane", 3)
             else
                 timbert.TooltipMsg("FILBetter Create preview marker\nNo content at edit cursor position in active lane", 3)

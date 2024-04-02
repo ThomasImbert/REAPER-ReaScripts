@@ -35,7 +35,6 @@ dofile(timbert_FILBetter)
 ---------------------------
 reaper.set_action_options(1)
 
-
 -- Dummy config load to make sure FILBetterCFG.json is generated--
 local dummyConfig = FILBetter.LoadConfig("goToNextSnapToLastContent")
 
@@ -171,7 +170,7 @@ function filbGUI.ShowFILBWindow(open)
     local main_viewport = ImGui.GetMainViewport(ctx)
     local work_pos = {ImGui.Viewport_GetWorkPos(main_viewport)}
     ImGui.SetNextWindowPos(ctx, work_pos[1] + 20, work_pos[2] + 20, ImGui.Cond_FirstUseEver())
-    ImGui.SetNextWindowSize(ctx, 600, 660)
+    ImGui.SetNextWindowSize(ctx, 600, 680)
 
     if filbGUI.set_dock_id then
         ImGui.SetNextWindowDockID(ctx, filbGUI.set_dock_id)
@@ -219,6 +218,9 @@ function filbGUI.UpdateFILBSettings()
         end
         filbSettings.clickedApply = 0
         filbSettings.clickedReset = 0
+        filbSettings.curMarkerLocation = indexOf(FILBetter.previewMarkerLocation, filbCfg["previewMarkerLocation"]) - 1
+        filbSettings.curMarkerLane = indexOf(FILBetter.previewMarkerContentLane, filbCfg["previewMarkerContentLane"]) -
+                                         1
         filbSettings.curItemLaneCombo = indexOf(FILBetter.LanePriorities, filbCfg["lanePriority"]) - 1
         filbSettings.curItemCompCombo = indexOf(FILBetter.LanePriorities, filbCfg["compLanePriority"]) - 1
         filbSettings.curTimeSelectMode = indexOf(FILBetter.timeSelectModes, filbCfg["goToContentTimeSelectionMode"]) - 1
@@ -239,6 +241,9 @@ function filbGUI.UpdateFILBSettings()
         end
         filbSettings.clickedApply = 0
         filbSettings.clickedReset = 1
+        filbSettings.curMarkerLocation = indexOf(FILBetter.previewMarkerLocation, filbCfg["previewMarkerLocation"]) - 1
+        filbSettings.curMarkerLane = indexOf(FILBetter.previewMarkerContentLane, filbCfg["previewMarkerContentLane"]) -
+                                         1
         filbSettings.curItemLaneCombo = indexOf(FILBetter.LanePriorities, filbCfg["lanePriority"]) - 1
         filbSettings.curItemCompCombo = indexOf(FILBetter.LanePriorities, filbCfg["compLanePriority"]) - 1
         filbSettings.curTimeSelectMode = indexOf(FILBetter.timeSelectModes, filbCfg["goToContentTimeSelectionMode"]) - 1
@@ -248,20 +253,21 @@ function filbGUI.UpdateFILBSettings()
             filbCfg["seekPlaybackEndCurPos"]) - 1
     end
 
+    -- NAVIGATION
     ImGui.SeparatorText(ctx, 'Navigation (Go to previous / next content)')
     rv, filbCfg["goToPreviousSnapTofirstContent"] = ImGui.Checkbox(ctx, 'Snap forward to first content',
         filbCfg["goToPreviousSnapTofirstContent"])
     ImGui.SameLine(ctx, 0, 90)
     rv, filbCfg["goToNextSnapToLastContent"] = ImGui.Checkbox(ctx, 'Snap back to last content',
         filbCfg["goToNextSnapToLastContent"])
-        ImGui.SameLine(ctx)
-        filbGUI.HelpMarker(
-            'Changes the behaviour when the edit cursor is positioned before the first content or after the last content of the track.')
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        'Changes the behaviour when the edit cursor is positioned before the first content or after the last content of the track.')
     rv, filbCfg["moveEditCurToStartOfContent"] = ImGui.Checkbox(ctx, 'Move edit cursor to start of item in lane',
         filbCfg["moveEditCurToStartOfContent"])
-        ImGui.SameLine(ctx)
-        filbGUI.HelpMarker(
-            'Especially useful when the content in lanes is not vertically aligned. Allows the user to start playback at the start of content.')
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        'Especially useful when the content in lanes is not vertically aligned. Allows the user to start playback at the start of content.')
     ImGui.PushItemWidth(ctx, 80)
     do
         local navTimeSelectMode = 'clear\0recall\0content\0'
@@ -269,23 +275,31 @@ function filbGUI.UpdateFILBSettings()
             navTimeSelectMode)
     end
 
+    -- PREVIEW
     ImGui.SeparatorText(ctx, 'Preview')
     rv, filbCfg["previewOnLaneSelection"] = ImGui.Checkbox(ctx, 'Preview on lane selection change',
         filbCfg["previewOnLaneSelection"])
-        ImGui.SameLine(ctx)
-        filbGUI.HelpMarker(
-            'You can still preview the lane content with "Preview content under edit cursor in currently soloed lane" when set to off.')
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        'You can still preview the lane content with "Preview content under edit cursor in currently soloed lane" when set to off.')
     rv, filbCfg["previewMarkerName"] = ImGui.InputTextWithHint(ctx, 'Preview marker name', filbCfg["previewMarkerName"],
         filbCfg["previewMarkerName"])
-    rv, filbCfg["makePreviewMarkerAtMouseCursor"] = ImGui.Checkbox(ctx, 'Create preview markers at mouse cursor',
-        filbCfg["makePreviewMarkerAtMouseCursor"])
+    ImGui.PushItemWidth(ctx, 130)
+    do
+        local markerLocation = 'mouse cursor\0edit cursor\0'
+        rv, filbSettings.curMarkerLocation = ImGui.Combo(ctx, 'Target location for preview marker creation',
+            filbSettings.curMarkerLocation, markerLocation)
+    end
+    ImGui.PushItemWidth(ctx, 130)
+    do
+        local markerLane = 'priority lane\0active lane\0'
+        rv, filbSettings.curMarkerLane = ImGui.Combo(ctx, 'Target lane when creating marker at edit cursor',
+            filbSettings.curMarkerLane, markerLane)
+    end
     ImGui.SameLine(ctx);
-    filbGUI.HelpMarker('Off = create preview marker in content at edit cursor position instead.')
+    filbGUI.HelpMarker('active lane = soloed lane')
 
-    rv, filbCfg["findTakeInPriorityLanePreviewMarkerAtEditCursor"] = ImGui.Checkbox(ctx,
-        'When creating a preview marker at edit cursor, create it in priority lane item',
-        filbCfg["findTakeInPriorityLanePreviewMarkerAtEditCursor"])
-
+    -- SEEK PLAYBACK
     ImGui.SeparatorText(ctx, 'Seek Playback (Play from current content)')
     ImGui.PushItemWidth(ctx, 100)
     do
@@ -303,17 +317,21 @@ function filbGUI.UpdateFILBSettings()
     filbGUI.HelpMarker(
         '"Stop/repeat playback at end of project" should be turned off in Preferences > Playback > Playback settings.')
 
+    -- RECORDING
     ImGui.SeparatorText(ctx, 'Recording')
-    rv, filbCfg["recordingBellOn"] = ImGui.Checkbox(ctx, 'Enable recording bell when recording with context',
-        filbCfg["recordingBellOn"])
+    rv, filbCfg["recordingBellOn"] = ImGui.Checkbox(ctx, 'Enable recording bell', filbCfg["recordingBellOn"])
     ImGui.SameLine(ctx)
     filbGUI.HelpMarker(
         'The recording bell uses the metronome tick sound. In Metronome setting, allow run during recording. Try Primary beat = 250Hz, 100ms duration and sine soft start for a gentle bell sound.')
-    rv, filbCfg["recallCursPosWhenTrimOnStop"] = ImGui.Checkbox(ctx,
-        'Recall cursor position when stopping recording with context', filbCfg["recallCursPosWhenTrimOnStop"])
+    rv, filbCfg["recallCursPosWhenRetriggRec"] = ImGui.Checkbox(ctx,
+        'Recall cursor position when retriggering Record in place / with context',
+        filbCfg["recallCursPosWhenRetriggRec"])
+    rv, filbCfg["scrollViewToEditCursorOnStopRecording"] = ImGui.Checkbox(ctx, 'Scroll view to edit cursor on stop',
+        filbCfg["scrollViewToEditCursorOnStopRecording"])
     rv, filbCfg["pushNextContentTime"] = ImGui.InputInt(ctx, '"Push next content when recording" amount in seconds',
         filbCfg["pushNextContentTime"])
 
+    -- LANE PRIORITY
     ImGui.SeparatorText(ctx, 'Lane Priority')
     rv, filbCfg["prioritizeCompLaneOverLastLane"] = ImGui.Checkbox(ctx, 'Prioritize comp lanes over last lane',
         filbCfg["prioritizeCompLaneOverLastLane"])
@@ -330,11 +348,12 @@ function filbGUI.UpdateFILBSettings()
             compPriority)
     end
 
+    -- ERROR MESSAGES
     ImGui.SeparatorText(ctx, 'Error Messages')
     rv, filbCfg["showValidationErrorMsg"] = ImGui.Checkbox(ctx,
         'Display error messages when user selection is incorrect', filbCfg["showValidationErrorMsg"])
 
-    ------
+    -- APPLY / RESET
     ImGui.SeparatorText(ctx, '')
 
     if ImGui.Button(ctx, 'Apply settings') then
@@ -342,6 +361,8 @@ function filbGUI.UpdateFILBSettings()
         for k, v in pairs(filbCfg) do
             filbNewCfg[k] = v
         end
+        filbNewCfg["previewMarkerLocation"] = FILBetter.previewMarkerLocation[filbSettings.curMarkerLocation + 1]
+        filbNewCfg["previewMarkerContentLane"] = FILBetter.previewMarkerContentLane[filbSettings.curMarkerLane + 1]
         filbNewCfg["lanePriority"] = FILBetter.LanePriorities[filbSettings.curItemLaneCombo + 1]
         filbNewCfg["compLanePriority"] = FILBetter.LanePriorities[filbSettings.curItemCompCombo + 1]
         filbNewCfg["goToContentTimeSelectionMode"] = FILBetter.timeSelectModes[filbSettings.curTimeSelectMode + 1]

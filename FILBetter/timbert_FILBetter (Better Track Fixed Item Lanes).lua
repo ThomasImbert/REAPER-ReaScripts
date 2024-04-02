@@ -1,8 +1,15 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.1
+-- @version 1.0pre2.2
 -- @changelog 
---   # Minor comment fixes in FILBetter main script
+--   # Renamed recording bell text in settings
+--   # Rewrote settings displayed text for clarity
+--   # Changed settings for preview marker creation, now uses a combo box (list)
+--   # Updated relevant script to adapt to new settings
+--   # New setting to scroll view to edit cursor on stop record
+--   # Updated Record in place / with context scripts to fit new setting, cursorRecall now split into 2 settings
+--   # Comments for clarity in the filbGUI.UpdateFILBSettings() function of settings script
+--   # Fixed Seek playback undo blocks
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -77,18 +84,21 @@ local defaultFILBetter = {
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
     moveEditCurToStartOfContent = false, -- When going to next / previous lane 
-    makePreviewMarkerAtMouseCursor = true, -- false = make take marker at edit cursor position
-    findTakeInPriorityLanePreviewMarkerAtEditCursor = true, -- when makePreviewMarkerAtMouseCursor is false, make take marker in content in priority lane instead of clicked content
+    previewMarkerLocation = "mouse cursor",
+    previewMarkerContentLane = "priority lane", -- "active lane"
     previewMarkerName = "[FILB]",
     seekPlaybackRetriggCurPos = "current", -- "previous", "origin", "last"
     seekPlaybackEndCurPos = "last", -- "after last"
-    recallCursPosWhenTrimOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    recallCursPosWhenRetriggRec = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    scrollViewToEditCursorOnStopRecording = true
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}
 FILBetter.LanePriorities = {"first", "last"}
 FILBetter.seekPlaybackRetriggCurPos = {"current", "previous", "origin", "last"}
 FILBetter.seekPlaybackEndCurPos = {"last", "after last"}
+FILBetter.previewMarkerLocation = {"mouse cursor", "edit cursor"}
+FILBetter.previewMarkerContentLane = {"priority lane", "active lane"}
 
 FILBetter.defaultFILBetter = defaultFILBetter
 

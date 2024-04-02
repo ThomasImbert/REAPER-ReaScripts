@@ -27,6 +27,8 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
+local scrollView = FILBetter.LoadConfig("scrollViewToEditCursorOnStopRecording")
+local recallCursPosWhenRetriggRec = FILBetter.LoadConfig("recallCursPosWhenRetriggRec")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
@@ -68,13 +70,15 @@ local function FindRecordedItem(takesPre, takesPost)
     return recordedItem
 end
 
-local track, lane, item, error, recPosition, takesPost, itemsPost, _, recSeriesStarted
+local track, lane, item, error, recPosition, takesPost, itemsPost, _, recSeriesStarted, cursorRecall
 
-local function RecordLoop()
+local function RecordLoop(cursorRecall)
     local _, recMode = reaper.GetProjExtState(0, "FILBetter", "Rec_Mode")
     if recMode == "context" then
         return -- interrupt loop if user triggered Record with context script for a new take
     end
+
+    cursorRecall = reaper.GetCursorPosition()
 
     -- If stopped
     if reaper.GetPlayState() == 0 then
@@ -88,7 +92,7 @@ local function RecordLoop()
         lane = reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE")
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- unsolo all Lanes
         reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(lane), 1)
-        reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), false, false)
+        reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), scrollView, false)
         reaper.UpdateArrange()
         reaper.PreventUIRefresh(-1)
 
@@ -99,7 +103,9 @@ local function RecordLoop()
         return
     end
     -- Rerun if not stopped
-    reaper.defer(RecordLoop)
+    reaper.defer(function()
+        RecordLoop(cursorRecall)
+    end)
 end
 
 local function RecordingBell(recPosition, bellMarker)
@@ -178,7 +184,7 @@ function main()
     end
 
     if reaper.GetPlayState() >= 4 then
-
+        cursorRecall = cursorRecall or reaper.GetCursorPosition()
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
         item = reaper.GetSelectedMediaItem(0, 0)
         reaper.Main_OnCommand(42938, 0) -- Track lanes: Move items up if possible to minimize lane usage
@@ -193,6 +199,9 @@ function main()
     reaper.Main_OnCommand(1013, 0) -- Transport: Record
     reaper.SetProjExtState(0, "FILBetter", "Rec_Mode", "inPlace")
     RecordLoop()
+    if recallCursPosWhenRetriggRec == true and cursorRecall ~= nil then
+        reaper.SetEditCurPos(cursorRecall, false, false)
+    end
 end
 
 reaper.PreventUIRefresh(1)
