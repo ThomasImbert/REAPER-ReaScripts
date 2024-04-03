@@ -50,6 +50,7 @@ local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
 local recallCursPosWhenRetriggRec = FILBetter.LoadConfig("recallCursPosWhenRetriggRec")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
 local scrollView = FILBetter.LoadConfig("scrollViewToEditCursorOnStopRecording")
+local recordPunchInAtNextContentIfAny = FILBetter.LoadConfig("recordPunchInAtNextContentIfAny")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
@@ -95,18 +96,13 @@ local function FindRecordedItem(takesPre, takesPost)
     return recordedItem
 end
 
-local function IsLastContentOnTrack(keepSelectionState)
+local function getNextContentPos()
     local cursorPos = reaper.GetCursorPosition()
-    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     dofile(timbert_GoToNext)
     if reaper.GetCursorPosition() == cursorPos then
         return
     end
     local nextContentPos = reaper.GetCursorPosition()
-    if keepSelectionState == true then
-        reaper.SetEditCurPos(cursorPos, false, false)
-        reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    end
     return nextContentPos
 end
 
@@ -256,7 +252,7 @@ function main()
         laneIndexContext = timbert.GetActiveTrackLane(track)
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", laneIndexContext)
 
-        if IsLastContentOnTrack(false) == nil then
+        if getNextContentPos() == nil or recordPunchInAtNextContentIfAny == false then
             reaper.SetEditCurPos(cursorPosInitial, false, false)
             punchInPos = cursorPosInitial
             itemsPre = {}

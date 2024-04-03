@@ -1,15 +1,12 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.2
+-- @version 1.0pre2.3
 -- @changelog 
---   # Renamed recording bell text in settings
---   # Rewrote settings displayed text for clarity
---   # Changed settings for preview marker creation, now uses a combo box (list)
---   # Updated relevant script to adapt to new settings
---   # New setting to scroll view to edit cursor on stop record
---   # Updated Record in place / with context scripts to fit new setting, cursorRecall now split into 2 settings
---   # Comments for clarity in the filbGUI.UpdateFILBSettings() function of settings script
---   # Fixed Seek playback undo blocks
+--   # FILBetter.LoadConfig() can now generate new config key at load time, init at default value
+--   # Settings script now loads each config key and generates new one following this change
+--   # New setting: recordPunchInAtNextContentIfAny, false by default
+--   # Updated Record with context to use new setting
+--   # Added Set edit cursor in between... script
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -90,7 +87,8 @@ local defaultFILBetter = {
     seekPlaybackRetriggCurPos = "current", -- "previous", "origin", "last"
     seekPlaybackEndCurPos = "last", -- "after last"
     recallCursPosWhenRetriggRec = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
-    scrollViewToEditCursorOnStopRecording = true
+    scrollViewToEditCursorOnStopRecording = true, 
+    recordPunchInAtNextContentIfAny = false
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}
@@ -110,7 +108,10 @@ function FILBetter.LoadFullConfig()
         -- Create default config if it doesn't already exist
         FILBetter.save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
     end
-    -- load configKey value
+    -- load configKey values, creating new ones if necessary, init at default value
+    for k, v in pairs(defaultFILBetter) do
+        FILBetter.LoadConfig(k)
+    end
     local table = FILBetter.load_json(ScriptPath, "FILBetterConfig")
 
     return table
@@ -123,5 +124,15 @@ function FILBetter.LoadConfig(configKeyString)
     end
     -- load configKey value
     local loadedValue = FILBetter.load_json(ScriptPath, "FILBetterConfig")
+
+    if loadedValue[configKeyString] == nil then
+        local filepath = ScriptPath .. "/" .. "FILBetterConfig" .. ".json"
+        local file = assert(io.open(filepath, "r+")) -- open in append mode
+        file:seek("end", -1)
+        local serialized = ',"'..configKeyString..'":'..tostring(defaultFILBetter[configKeyString]).."}"
+        assert(file:write(serialized))
+        file:close()
+        return defaultFILBetter[configKeyString]
+    end
     return loadedValue[configKeyString]
 end

@@ -170,7 +170,7 @@ function filbGUI.ShowFILBWindow(open)
     local main_viewport = ImGui.GetMainViewport(ctx)
     local work_pos = {ImGui.Viewport_GetWorkPos(main_viewport)}
     ImGui.SetNextWindowPos(ctx, work_pos[1] + 20, work_pos[2] + 20, ImGui.Cond_FirstUseEver())
-    ImGui.SetNextWindowSize(ctx, 600, 680)
+    ImGui.SetNextWindowSize(ctx, 600, 705)
 
     if filbGUI.set_dock_id then
         ImGui.SetNextWindowDockID(ctx, filbGUI.set_dock_id)
@@ -328,6 +328,12 @@ function filbGUI.UpdateFILBSettings()
         filbCfg["recallCursPosWhenRetriggRec"])
     rv, filbCfg["scrollViewToEditCursorOnStopRecording"] = ImGui.Checkbox(ctx, 'Scroll view to edit cursor on stop',
         filbCfg["scrollViewToEditCursorOnStopRecording"])
+        rv, filbCfg["recordPunchInAtNextContentIfAny"] = ImGui.Checkbox(ctx,
+        'Set punch-in to next content when recording with context',
+        filbCfg["recordPunchInAtNextContentIfAny"])
+        ImGui.SameLine(ctx)
+    filbGUI.HelpMarker(
+        'This prevents recording with context in between content.\nCan still use Record in place for that.')
     rv, filbCfg["pushNextContentTime"] = ImGui.InputInt(ctx, '"Push next content when recording" amount in seconds',
         filbCfg["pushNextContentTime"])
 
