@@ -170,7 +170,7 @@ function filbGUI.ShowFILBWindow(open)
     local main_viewport = ImGui.GetMainViewport(ctx)
     local work_pos = {ImGui.Viewport_GetWorkPos(main_viewport)}
     ImGui.SetNextWindowPos(ctx, work_pos[1] + 20, work_pos[2] + 20, ImGui.Cond_FirstUseEver())
-    ImGui.SetNextWindowSize(ctx, 600, 705)
+    ImGui.SetNextWindowSize(ctx, 600, 810)
 
     if filbGUI.set_dock_id then
         ImGui.SetNextWindowDockID(ctx, filbGUI.set_dock_id)
@@ -228,6 +228,7 @@ function filbGUI.UpdateFILBSettings()
             filbCfg["seekPlaybackRetriggCurPos"]) - 1
         filbSettings.curSeekPlaybackEndCurPos = indexOf(FILBetter.seekPlaybackEndCurPos,
             filbCfg["seekPlaybackEndCurPos"]) - 1
+        filbSettings.curAppendMode = indexOf(FILBetter.exportTrackAppendModes, filbCfg["exportTrackAppendMode"]) - 1
     end
 
     if reset == true then
@@ -251,6 +252,7 @@ function filbGUI.UpdateFILBSettings()
             filbCfg["seekPlaybackRetriggCurPos"]) - 1
         filbSettings.curSeekPlaybackEndCurPos = indexOf(FILBetter.seekPlaybackEndCurPos,
             filbCfg["seekPlaybackEndCurPos"]) - 1
+        filbSettings.curAppendMode = indexOf(FILBetter.exportTrackAppendModes, filbCfg["exportTrackAppendMode"]) - 1
     end
 
     -- NAVIGATION
@@ -267,7 +269,7 @@ function filbGUI.UpdateFILBSettings()
         filbCfg["moveEditCurToStartOfContent"])
     ImGui.SameLine(ctx)
     filbGUI.HelpMarker(
-        'Especially useful when the content in lanes is not vertically aligned. Allows the user to start playback at the start of content.')
+        'Especially useful when the content in lanes is not vertically aligned. Allows you to start playback at the start of content.')
     ImGui.PushItemWidth(ctx, 80)
     do
         local navTimeSelectMode = 'clear\0recall\0content\0'
@@ -281,7 +283,7 @@ function filbGUI.UpdateFILBSettings()
         filbCfg["previewOnLaneSelection"])
     ImGui.SameLine(ctx)
     filbGUI.HelpMarker(
-        'You can still preview the lane content with "Preview content under edit cursor in currently soloed lane" when set to off.')
+        'You can still preview the lane content with "Preview content under edit cursor in currently soloed lane" when toggled off.')
     rv, filbCfg["previewMarkerName"] = ImGui.InputTextWithHint(ctx, 'Preview marker name', filbCfg["previewMarkerName"],
         filbCfg["previewMarkerName"])
     ImGui.PushItemWidth(ctx, 130)
@@ -297,7 +299,7 @@ function filbGUI.UpdateFILBSettings()
             filbSettings.curMarkerLane, markerLane)
     end
     ImGui.SameLine(ctx);
-    filbGUI.HelpMarker('active lane = soloed lane')
+    filbGUI.HelpMarker('Active lane = Soloed lane / Toggled Lane')
 
     -- SEEK PLAYBACK
     ImGui.SeparatorText(ctx, 'Seek Playback (Play from current content)')
@@ -322,18 +324,17 @@ function filbGUI.UpdateFILBSettings()
     rv, filbCfg["recordingBellOn"] = ImGui.Checkbox(ctx, 'Enable recording bell', filbCfg["recordingBellOn"])
     ImGui.SameLine(ctx)
     filbGUI.HelpMarker(
-        'The recording bell uses the metronome tick sound. In Metronome setting, allow run during recording. Try Primary beat = 250Hz, 100ms duration and sine soft start for a gentle bell sound.')
+        'The recording bell uses the metronome tick sound. \nIn Metronome setting, allow run during recording. \nTry Primary beat = 250Hz, 100ms duration and sine soft start for a gentle bell sound.')
     rv, filbCfg["recallCursPosWhenRetriggRec"] = ImGui.Checkbox(ctx,
         'Recall cursor position when retriggering Record in place / with context',
         filbCfg["recallCursPosWhenRetriggRec"])
     rv, filbCfg["scrollViewToEditCursorOnStopRecording"] = ImGui.Checkbox(ctx, 'Scroll view to edit cursor on stop',
         filbCfg["scrollViewToEditCursorOnStopRecording"])
-        rv, filbCfg["recordPunchInAtNextContentIfAny"] = ImGui.Checkbox(ctx,
-        'Set punch-in to next content when recording with context',
-        filbCfg["recordPunchInAtNextContentIfAny"])
-        ImGui.SameLine(ctx)
+    rv, filbCfg["recordPunchInAtNextContentIfAny"] = ImGui.Checkbox(ctx,
+        'Set punch-in to next content when recording with context', filbCfg["recordPunchInAtNextContentIfAny"])
+    ImGui.SameLine(ctx)
     filbGUI.HelpMarker(
-        'This prevents recording with context in between content.\nCan still use Record in place for that.')
+        'This prevents "Record with context..." from starting in-between content.\nYou can still use Record in place for that.')
     rv, filbCfg["pushNextContentTime"] = ImGui.InputInt(ctx, '"Push next content when recording" amount in seconds',
         filbCfg["pushNextContentTime"])
 
@@ -353,6 +354,25 @@ function filbGUI.UpdateFILBSettings()
         rv, filbSettings.curItemCompCombo = ImGui.Combo(ctx, 'Comp lane priority', filbSettings.curItemCompCombo,
             compPriority)
     end
+    rv, filbCfg["exportTrackNameAppend"] = ImGui.InputTextWithHint(ctx, 'Append export track name',
+        filbCfg["exportTrackNameAppend"], filbCfg["exportTrackNameAppend"])
+    ImGui.SameLine(ctx, 0, 20)
+    do
+        local appendMode = 'prefix\0suffix\0'
+        rv, filbSettings.curAppendMode = ImGui.Combo(ctx, 'Append mode', filbSettings.curAppendMode, appendMode)
+    end
+    rv, filbCfg["makeRegionsForExport"] = ImGui.Checkbox(ctx,
+        'Create regions with "Select all priority content... for render"', filbCfg["makeRegionsForExport"])
+        ImGui.SameLine(ctx)
+        filbGUI.HelpMarker('Regions are auto-assigned to their export track in the region render matrix')
+        rv, filbCfg["regionNameLeadingZero"] = ImGui.InputInt(ctx, 'Add leading zeroes to region name',
+        filbCfg["regionNameLeadingZero"])
+        ImGui.SameLine(ctx)
+        filbGUI.HelpMarker('With 2 leading zeroes:\nName7 becomes Name007\nName13 becomes Name013')
+    rv, filbCfg["regionNameTrailingZero"] = ImGui.InputInt(ctx, 'Add trailing zeroes to region name',
+        filbCfg["regionNameTrailingZero"])
+    ImGui.SameLine(ctx)
+    filbGUI.HelpMarker('With 2 trailing zeroes:\nName7 becomes Name700\nName13 becomes Name1300')
 
     -- ERROR MESSAGES
     ImGui.SeparatorText(ctx, 'Error Messages')
@@ -375,6 +395,7 @@ function filbGUI.UpdateFILBSettings()
         filbNewCfg["seekPlaybackRetriggCurPos"] =
             FILBetter.seekPlaybackRetriggCurPos[filbSettings.curSeekPlaybackRetriggCurPos + 1]
         filbNewCfg["seekPlaybackEndCurPos"] = FILBetter.seekPlaybackEndCurPos[filbSettings.curSeekPlaybackEndCurPos + 1]
+        filbNewCfg["exportTrackAppendMode"] = FILBetter.exportTrackAppendModes[filbSettings.curAppendMode + 1]
         FILBetter.save_json(FILBetter.scriptPath, "FILBetterConfig", filbNewCfg)
     end
 

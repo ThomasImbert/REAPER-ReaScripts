@@ -1,12 +1,10 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.3
+-- @version 1.0pre2.4
 -- @changelog 
---   # FILBetter.LoadConfig() can now generate new config key at load time, init at default value
---   # Settings script now loads each config key and generates new one following this change
---   # New setting: recordPunchInAtNextContentIfAny, false by default
---   # Updated Record with context to use new setting
---   # Added Set edit cursor in between... script
+--   # New script : "Select priority lane content..." to help with exporting
+--   # New settings for export: regions & track name
+--   # Updated default settings and settings window text
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -88,7 +86,12 @@ local defaultFILBetter = {
     seekPlaybackEndCurPos = "last", -- "after last"
     recallCursPosWhenRetriggRec = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
     scrollViewToEditCursorOnStopRecording = true, 
-    recordPunchInAtNextContentIfAny = false
+    recordPunchInAtNextContentIfAny = false, 
+    makeRegionsForExport = true, 
+    regionNameLeadingZero = 0,
+    regionNameTrailingZero = 0,
+    exportTrackNameAppend = "export ", -- add to the name of the origin track
+    exportTrackAppendMode = "suffix" -- or "prefix"
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}
@@ -97,6 +100,7 @@ FILBetter.seekPlaybackRetriggCurPos = {"current", "previous", "origin", "last"}
 FILBetter.seekPlaybackEndCurPos = {"last", "after last"}
 FILBetter.previewMarkerLocation = {"mouse cursor", "edit cursor"}
 FILBetter.previewMarkerContentLane = {"priority lane", "active lane"}
+FILBetter.exportTrackAppendModes = {"prefix", "suffix"}
 
 FILBetter.defaultFILBetter = defaultFILBetter
 
