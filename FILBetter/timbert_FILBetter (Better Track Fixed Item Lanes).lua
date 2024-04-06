@@ -1,10 +1,10 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.4
+-- @version 1.0pre2.5
 -- @changelog 
---   # New script : "Select priority lane content..." to help with exporting
---   # New settings for export: regions & track name
---   # Updated default settings and settings window text
+--   # Moved "Move cursor away..." into Filbetter suite
+--   # Renamed Swap script to correct missing word
+--   # Changed default settings for export track name and append mode
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
@@ -90,8 +90,8 @@ local defaultFILBetter = {
     makeRegionsForExport = true, 
     regionNameLeadingZero = 0,
     regionNameTrailingZero = 0,
-    exportTrackNameAppend = "export ", -- add to the name of the origin track
-    exportTrackAppendMode = "suffix" -- or "prefix"
+    exportTrackNameAppend = "Export_", -- add to the name of the origin track
+    exportTrackAppendMode = "prefix" -- or "prefix"
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}

@@ -1,11 +1,5 @@
--- @description Move edit cursor forward away from last items on selected track
--- @author Thomas Imbert
--- @version 1.1
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Move edit cursor forward away from last items on selected track by timeGap seconds (timeGap = 2 by default)
--- @changelog 
---   # Now uses SetTimeSelectionToAllItemsInVerticalStack
--- Get this script's name and directory
+-- @noindex
+-- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
 
@@ -25,8 +19,13 @@ else
     return
 end
 
--- USER SETTINGS --
-local timeGap = 3
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
+-- USERSETTING Loaded from FILBetterCFG.json--
+local timeGap = FILBetter.LoadConfig("pushNextContentTime") -- use the same duration as Push next content...
 -------------------
 
 function main()
