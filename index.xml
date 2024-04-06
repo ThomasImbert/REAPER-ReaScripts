@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="3c8c39a198bac9be9cd6ddadf00e3ed50b955f0b">
+<index version="1" name="TImbert Scripts" commit="d5ae426f82034526271005c57f7d051035b41a2c">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -400,6 +400,33 @@
         <source main="main" file="timbert_FILBetter settings.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3c8c39a198bac9be9cd6ddadf00e3ed50b955f0b/FILBetter/timbert_FILBetter%20settings.lua</source>
         <source file="utils/json.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/3c8c39a198bac9be9cd6ddadf00e3ed50b955f0b/FILBetter/utils/json.lua</source>
       </version>
+      <version name="1.0pre2.5" author="Thomas Imbert" time="2024-04-06T12:01:01Z">
+        <changelog><![CDATA[# Moved "Move cursor away..." into Filbetter suite
+# Renamed Swap script to correct missing word
+# Changed default settings for export track name and append mode]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20(Better%20Track%20Fixed%20Item%20Lanes).lua</source>
+        <source main="main" file="timbert_FILBetter Create a preview marker in content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Create%20a%20preview%20marker%20in%20content.lua</source>
+        <source main="main" file="timbert_FILBetter Go to next content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Go%20to%20next%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Go%20to%20previous%20content%20in%20fixed%20lanes%20of%20currently%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Move edit cursor forward away from last items on selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Move%20edit%20cursor%20forward%20away%20from%20last%20items%20on%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Play from current content to last content on current track (seek playback).lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Play%20from%20current%20content%20to%20last%20content%20on%20current%20track%20(seek%20playback).lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in currently soloed lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in first lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20first%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in last lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20last%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in next lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20next%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in previous lane of selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20previous%20lane%20of%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Preview content under edit cursor in priority lane.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Preview%20content%20under%20edit%20cursor%20in%20priority%20lane.lua</source>
+        <source main="main" file="timbert_FILBetter Push next content when recording.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Push%20next%20content%20when%20recording.lua</source>
+        <source main="main" file="timbert_FILBetter Record in place.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Record%20in%20place.lua</source>
+        <source main="main" file="timbert_FILBetter Record with context preview of previous content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Record%20with%20context%20preview%20of%20previous%20content.lua</source>
+        <source main="main" file="timbert_FILBetter Remove preview markers from selected items.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Remove%20preview%20markers%20from%20selected%20items.lua</source>
+        <source main="main" file="timbert_FILBetter Select all priority content on selected tracks and copy to new track for render.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Select%20all%20priority%20content%20on%20selected%20tracks%20and%20copy%20to%20new%20track%20for%20render.lua</source>
+        <source main="main" file="timbert_FILBetter Set edit cursor in between current and next content on selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Set%20edit%20cursor%20in%20between%20current%20and%20next%20content%20on%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Solo priority lane with content under edit cursor in selected track.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Solo%20priority%20lane%20with%20content%20under%20edit%20cursor%20in%20selected%20track.lua</source>
+        <source main="main" file="timbert_FILBetter Swap content under edit cursor in currently soloed lane with priority lane content.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20Swap%20content%20under%20edit%20cursor%20in%20currently%20soloed%20lane%20with%20priority%20lane%20content.lua</source>
+        <source main="main" file="timbert_FILBetter settings.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/timbert_FILBetter%20settings.lua</source>
+        <source file="utils/json.lua">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/d5ae426f82034526271005c57f7d051035b41a2c/FILBetter/utils/json.lua</source>
+      </version>
     </reapack>
   </category>
   <category name="Items">
@@ -490,26 +517,6 @@
     </reapack>
   </category>
   <category name="Transport">
-    <reapack name="timbert_Move edit cursor forward away from last items on selected track.lua" type="script" desc="Move edit cursor forward away from last items on selected track">
-      <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
-{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
-
-{\pard \ql \f0 \sa180 \li0 \fi0 Move edit cursor forward away from last items on selected track by timeGap seconds (timeGap = 2 by default)\par}
-}
-]]></description>
-        <link rel="website" href="https://github.com/ThomasImbert/REAPER-ReaScripts">GitHub repository</link>
-      </metadata>
-      <version name="1.0" author="Thomas Imbert" time="2024-03-03T18:18:44Z">
-        <changelog><![CDATA[# intial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/bfa193169fc65bb5d2442b53743af36b3be2d7a7/Transport/timbert_Move%20edit%20cursor%20forward%20away%20from%20last%20items%20on%20selected%20track.lua</source>
-      </version>
-      <version name="1.1" author="Thomas Imbert" time="2024-03-26T14:47:43Z">
-        <changelog><![CDATA[# Now uses SetTimeSelectionToAllItemsInVerticalStack]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b96b2b30471558eab1b1158efd781ec02e86e312/Transport/timbert_Move%20edit%20cursor%20forward%20away%20from%20last%20items%20on%20selected%20track.lua</source>
-      </version>
-    </reapack>
     <reapack name="timbert_Stop and record at edit cursor.lua" type="script" desc="Stop and record at edit cursor">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
