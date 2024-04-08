@@ -40,6 +40,14 @@ if not reaper.file_exists(timbert_GoToNext) then
     return
 end
 
+-- Load lua 'Move edit cursor forward away from last items on selected track' script
+timbert_MoveEditCurAway = reaper.GetResourcePath() ..
+                              '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor forward away from last items on selected track.lua'
+
+-- Load lua 'Move edit cursor in between current and next content on selected track' script
+timbert_MoveEditCurBetween = reaper.GetResourcePath() ..
+                                 '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor in between current and next content on selected track.lua'
+
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
@@ -160,6 +168,18 @@ local function RecordLoop(retrigg, punchInPos, cursorRecall)
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
             reaper.SetProjExtState(0, "FILBetter", "Rec_PunchInPos", "")
             reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
+
+            local _, moveAwayCall = reaper.GetProjExtState(0, "FILBetter", "MoveEditCurAway")
+            if moveAwayCall == "true" then
+                reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "false")
+                dofile(timbert_MoveEditCurAway)
+            end
+
+            local _, moveBetweenCall = reaper.GetProjExtState(0, "FILBetter", "MoveEditCurBetween")
+            if moveBetweenCall == "true" then
+                reaper.SetProjExtState(0, "FILBetter", "MoveEditCurBetween", "false")
+                dofile(timbert_MoveEditCurBetween)
+            end
             return
         else
             reaper.Main_OnCommand(40006, 0) -- Item: Remove items

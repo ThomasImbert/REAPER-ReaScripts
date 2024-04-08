@@ -1,10 +1,9 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.5
+-- @version 1.0pre2.6
 -- @changelog 
---   # Moved "Move cursor away..." into Filbetter suite
---   # Renamed Swap script to correct missing word
---   # Changed default settings for export track name and append mode
+--   # Renamed Record with context
+--   # Move edit cursor in between or away also stops before moving, logic to be triggered by Record scripts when their defer loops finish
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio

@@ -1,7 +1,7 @@
 -- @noindex
 -- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
-local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
+local reaper = reaper
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
@@ -32,12 +32,12 @@ function main()
     -- Validate track selection
     if reaper.CountSelectedTracks(0) == 0 then
         timbert.msg("Please select a track first", script_name)
-		return
+        return
     end
 
     if reaper.CountSelectedTracks(0) > 1 then
         timbert.msg("Please only select one track", script_name)
-        return 
+        return
     end
     local track = reaper.GetSelectedTrack(0, 0)
 
@@ -46,12 +46,19 @@ function main()
         return
     end
 
+    local _, isRec = reaper.GetProjExtState(0, "FILBetter", "Rec_Series")
+    if isRec == "true" then
+        reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "true")
+        reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        return
+    end
+
     local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, startTime, endTime, false)
     local item = reaper.GetTrackMediaItem(track, itemCount - 1)
     reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), true, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     reaper.Main_OnCommand(40631, 0) -- Go to end of time selection
-    reaper.MoveEditCursor( timeGap, false )
+    reaper.MoveEditCursor(timeGap, false)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items	
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
 end

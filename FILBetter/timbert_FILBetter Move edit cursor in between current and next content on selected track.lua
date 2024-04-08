@@ -1,7 +1,4 @@
 -- @noindex
--- Record and immediately preview the previous content on the same track, in last lane or first comp lane
--- TrimOnStop auto expands recorded item end beyond the timeselection auto punch
-----------------------------
 -- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
@@ -76,14 +73,22 @@ function main()
     if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
         return
     end
-    local startTime, endTime,endCurrContent, nextContentPos, _
 
+    local _, isRec = reaper.GetProjExtState(0, "FILBetter", "Rec_Series")
+    if isRec == "true" then
+        reaper.SetProjExtState(0, "FILBetter", "MoveEditCurBetween", "true")
+        reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        return
+    end
+
+    local startTime, endTime, endCurrContent, nextContentPos, _
+    
     startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     _, endCurrContent = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     nextContentPos = getNextContentPos()
     if nextContentPos ~= nil then
-        reaper.SetEditCurPos( (endCurrContent + nextContentPos) / 2 , false, false )
+        reaper.SetEditCurPos((endCurrContent + nextContentPos) / 2, false, false)
     end
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
 end
