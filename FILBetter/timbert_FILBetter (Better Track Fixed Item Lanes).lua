@@ -1,9 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.6
+-- @version 1.0pre2.61
 -- @changelog 
---   # Renamed Record with context
---   # Move edit cursor in between or away also stops before moving, logic to be triggered by Record scripts when their defer loops finish
+--   # Fix for edge cases when Move edit cursor away / in between... while recording and no items on track / no content at position
 -- @link 
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio

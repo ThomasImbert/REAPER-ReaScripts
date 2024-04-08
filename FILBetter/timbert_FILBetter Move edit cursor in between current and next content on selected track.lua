@@ -67,10 +67,18 @@ function main()
     end
 
     if reaper.CountTrackMediaItems(track) == 0 then
+        if reaper.GetPlayState() >= 4 then
+            reaper.SetProjExtState(0, "FILBetter", "MoveEditCurBetween", "true")
+            reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        end
         return
     end
 
     if timbert.ValidateItemsUnderEditCursorOnSelectedTracks() == false then
+        if reaper.GetPlayState() >= 4 then
+            reaper.SetProjExtState(0, "FILBetter", "MoveEditCurBetween", "true")
+            reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        end
         return
     end
 
@@ -82,7 +90,7 @@ function main()
     end
 
     local startTime, endTime, endCurrContent, nextContentPos, _
-    
+
     startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     _, endCurrContent = reaper.GetSet_LoopTimeRange(false, false, _, _, false)

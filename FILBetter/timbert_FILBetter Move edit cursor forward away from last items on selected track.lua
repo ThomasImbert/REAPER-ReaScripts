@@ -43,6 +43,10 @@ function main()
 
     local itemCount = reaper.CountTrackMediaItems(track)
     if itemCount == 0 then
+        if reaper.GetPlayState() >= 4 then
+            reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "true")
+            reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        end
         return
     end
 
