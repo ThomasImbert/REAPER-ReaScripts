@@ -163,6 +163,9 @@ local function RecordLoop(retrigg, punchInPos, cursorRecall)
         if isPlayAfterPunchIn == true then
             reaper.Undo_BeginBlock() -- Begining of the undo block. 
             TrimOnStop(retrigg)
+            if scrollView == false then
+                reaper.SetEditCurPos(cursorRecall, scrollView, false)
+            end
             reaper.SetProjExtState(0, "FILBetter", "Rec_Track", "")
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")

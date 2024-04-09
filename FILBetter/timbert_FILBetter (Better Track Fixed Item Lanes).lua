@@ -1,9 +1,11 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.61
+-- @version 1.0
 -- @changelog 
---   # Fix for edge cases when Move edit cursor away / in between... while recording and no items on track / no content at position
+--   # Official Release!
+--   # Made sure edit cursor and arrange view are properly recalled when scroll to view setting is off
 -- @link 
+--      Forum post: https://forum.cockos.com/showthread.php?t=289793
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
 -- @about 

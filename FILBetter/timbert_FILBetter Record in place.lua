@@ -78,7 +78,7 @@ local function FindRecordedItem(takesPre, takesPost)
     return recordedItem
 end
 
-local track, lane, item, error, recPosition, takesPost, itemsPost, _, recSeriesStarted, cursorRecall
+local track, lane, item, error, recPosition, takesPost, itemsPost, _, recSeriesStarted, cursorRecall, arrgStart, arrgEnd
 
 local function RecordLoop(cursorRecall)
     local _, recMode = reaper.GetProjExtState(0, "FILBetter", "Rec_Mode")
@@ -100,7 +100,11 @@ local function RecordLoop(cursorRecall)
         lane = reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE")
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- unsolo all Lanes
         reaper.SetMediaTrackInfo_Value(track, "C_LANEPLAYS:" .. tostring(lane), 1)
-        reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), scrollView, false)
+        if scrollView == false then
+            reaper.SetEditCurPos(cursorRecall, scrollView, false)
+        else
+            reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), scrollView, false)
+        end
         reaper.UpdateArrange()
         reaper.PreventUIRefresh(-1)
 
@@ -205,6 +209,7 @@ function main()
 
     if reaper.GetPlayState() >= 4 then
         cursorRecall = cursorRecall or reaper.GetCursorPosition()
+        arrgStart, arrgEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, _, _)
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
         item = reaper.GetSelectedMediaItem(0, 0)
         reaper.Main_OnCommand(42938, 0) -- Track lanes: Move items up if possible to minimize lane usage
@@ -221,6 +226,7 @@ function main()
     RecordLoop()
     if recallCursPosWhenRetriggRec == true and cursorRecall ~= nil then
         reaper.SetEditCurPos(cursorRecall, false, false)
+        reaper.GetSet_ArrangeView2(0, true, 0, 0, arrgStart, arrgEnd)
     end
 end
 
