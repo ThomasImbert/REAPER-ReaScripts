@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="TImbert Scripts" commit="15c84270ef248ee536ecc67601c32520650b5d24">
+<index version="1" name="TImbert Scripts" commit="be5d8970f692ae2123976b51c919ab2c976c8262">
   <category name="Development">
     <reapack name="timbert_Lua Utilities.lua" type="script" desc="TImbert Lua Utilities">
       <metadata>
@@ -550,6 +550,105 @@
       <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
         <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
         <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move item under mouse to edit cursor (end position).lua" type="script" desc="Move item under mouse to edit cursor (end position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move item under mouse to edit cursor (end position)\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(end%20position).lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move item under mouse to edit cursor (snap offset position).lua" type="script" desc="Move item under mouse to edit cursor (snap offset position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move item under mouse to edit cursor (snap offset position)\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move item under mouse to edit cursor (start position).lua" type="script" desc="Move item under mouse to edit cursor (start position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move item under mouse to edit cursor (start position)\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(start%20position).lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move selected items to edit cursor (end position).lua" type="script" desc="Move selected items to edit cursor (end position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move selected items to edit cursor (end position)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Supports keeping relative item position by changing keepRelativePosition to true in the script\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Anchor item is the selected item under mouse OR selected item on only selected track\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 If no item can be identified as anchor, script behave as if keepRelativePosition was false\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(end%20position).lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move selected items to edit cursor (snap offset position).lua" type="script" desc="Move selected items to edit cursor (snap offset position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move selected items to edit cursor (snap offset position)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Supports keeping relative item position by changing keepRelativePosition to true in the script\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Anchor item is the selected item under mouse OR selected item on only selected track\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 If no item can be identified as anchor, script behave as if keepRelativePosition was false\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
+      </version>
+    </reapack>
+    <reapack name="timbert_Move selected items to edit cursor (start position).lua" type="script" desc="Move selected items to edit cursor (start position)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Move selected items to edit cursor (start position)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Supports keeping relative item position by changing keepRelativePosition to true in the script\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Anchor item is the selected item under mouse OR selected item on only selected track\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 If no item can be identified as anchor, script behave as if keepRelativePosition was false\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
+        <changelog><![CDATA[#Initial release]]></changelog>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(start%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Swap take with alt take under mouse cursor.lua" type="script" desc="Swap item with alt take (item) under mouse cursor">
