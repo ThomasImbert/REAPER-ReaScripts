@@ -2,6 +2,13 @@
 -- @author Thomas Imbert
 -- @version 1.0
 -- @about
+--		Move selected items to edit cursor (end position)
+--
+--		Supports keeping relative item position by changing keepRelativePosition to true in the script
+--
+--		Anchor item is the selected item under mouse OR selected item on only selected track
+--
+--		If no item can be identified as anchor, script behave as if keepRelativePosition was false
 -- @changelog
 --   #Initial release
 
