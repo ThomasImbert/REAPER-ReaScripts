@@ -1,8 +1,8 @@
 -- @description Move item under mouse to edit cursor (end position)
 -- @author Thomas Imbert
 -- @version 1.0
--- @about  
---      Move item under mouse to edit cursor (end position)
+-- @about 
+--      # Move item under mouse to edit cursor (end position)
 -- @changelog
 --   #Initial release
 

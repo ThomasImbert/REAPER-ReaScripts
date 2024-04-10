@@ -1,8 +1,8 @@
 -- @description Move selected items to edit cursor (end position)
 -- @author Thomas Imbert
 -- @version 1.0
--- @about  
---      Move selected items to edit cursor (end position)
+-- @about 
+--      # Move selected items to edit cursor (end position)
 --
 --      Supports keeping relative item position by changing keepRelativePosition to true in the script
 --

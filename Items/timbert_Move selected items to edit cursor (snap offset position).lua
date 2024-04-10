@@ -1,8 +1,8 @@
 -- @description Move selected items to edit cursor (snap offset position)
 -- @author Thomas Imbert
 -- @version 1.0
--- @about  
---      Move selected items to edit cursor (snap offset position)
+-- @about 
+--      # Move selected items to edit cursor (snap offset position)
 --
 --      Supports keeping relative item position by changing keepRelativePosition to true in the script
 --
