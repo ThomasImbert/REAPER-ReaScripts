@@ -3,8 +3,7 @@
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
 
-reaImGui = reaper.GetResourcePath() .. '/UserPlugins/reaper_imgui-x64.dll'
-if not reaper.file_exists(reaImGui) then
+if not reaper.ImGui_GetVersion then
     reaper.MB(
         "This script requires the ReaImGui extension! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'ReaImGui: ReaScript binding for Dear ImGui'",
         script_name, 0)

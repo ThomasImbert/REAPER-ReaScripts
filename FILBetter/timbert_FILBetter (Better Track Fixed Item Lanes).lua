@@ -1,9 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0
+-- @version 1.01
 -- @changelog 
---   # Official Release!
---   # Made sure edit cursor and arrange view are properly recalled when scroll to view setting is off
+--   # Fixed Settings ImGui dependency check on MacOs
 -- @link 
 --      Forum post: https://forum.cockos.com/showthread.php?t=289793
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
