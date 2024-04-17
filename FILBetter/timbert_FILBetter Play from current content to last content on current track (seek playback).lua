@@ -61,6 +61,7 @@ end
 local function Exit()
     reaper.Main_OnCommand(1016, 0) -- Transport: Stop
 
+    reaper.Undo_BeginBlock() -- Begining of the undo block. 
     reaper.PreventUIRefresh(1)
     if isFinished == true then
         if seekPlaybackEndCurPos == "last" then
@@ -86,12 +87,13 @@ local function Exit()
             reaper.Main_OnCommand(40630, 0) -- Go to start of time selection
         end
     end
-    reaper.UpdateArrange()
-    reaper.PreventUIRefresh(-1)
 
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
     reaper.set_action_options(8)
+    reaper.UpdateArrange()
+    reaper.PreventUIRefresh(-1)
     reaper.SetToggleCommandState(sectionID, cmdID, 0)
+    reaper.Undo_EndBlock("FILBetter Stopped content playback", 0) -- End of the undo block. 
 end
 
 local function Seek()
@@ -114,11 +116,13 @@ local function Seek()
         startNext, endNext = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
         curPosPrevious = startCurr
         curPosCurrent = startNext
+        reaper.SetEditCurPos(curPosCurrent, true, false)
         if startNext == startCurr then
             isFinished = true
-            reaper.Undo_EndBlock("FILBetter Play last content ", 0) -- End of the undo block. 
             reaper.UpdateArrange()
             reaper.PreventUIRefresh(-1)
+            reaper.SetToggleCommandState(sectionID, cmdID, 0)
+            reaper.Undo_EndBlock("FILBetter Stopped content playback", 0) -- End of the undo block. 
             return
         end
         startCurr, endCurr = startNext, endNext
@@ -149,13 +153,14 @@ function main()
         return
     end
 
+    dofile(timbert_SoloLanePriority)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     items = timbert.GetSelectedItemsInLaneInfo(timbert.GetActiveTrackLane(track))
     reaper.GetSet_LoopTimeRange(true, false, items[1].itemPosition,
         items[#items].itemPosition + items[#items].itemLength, false)
     startCurr, endCurr = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     curPosOrigin, curPosCurrent, curPosPrevious = startCurr, startCurr, startCurr
-    dofile(timbert_SoloLanePriority) -- Solo priority lane
+    reaper.SetEditCurPos(curPosOrigin, true, false)
     reaper.Main_OnCommand(1007, 0) -- Transport: Play
 
     reaper.UpdateArrange()

@@ -1,13 +1,7 @@
--- @description Move edit cursor forward away from last items on selected track
--- @author Thomas Imbert
--- @version 1.1
--- @link GitHub repository https://github.com/ThomasImbert/REAPER-ReaScripts
--- @about Move edit cursor forward away from last items on selected track by timeGap seconds (timeGap = 2 by default)
--- @changelog 
---   # Now uses SetTimeSelectionToAllItemsInVerticalStack
--- Get this script's name and directory
+-- @noindex
+-- Get this script's name
 local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
-local script_directory = ({reaper.get_action_context()})[2]:sub(1, ({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
+local reaper = reaper
 
 -- Load lua utilities
 timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
@@ -25,25 +19,41 @@ else
     return
 end
 
--- USER SETTINGS --
-local timeGap = 3
+-- Load Config
+timbert_FILBetter = reaper.GetResourcePath() ..
+                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+dofile(timbert_FILBetter)
+
+-- USERSETTING Loaded from FILBetterCFG.json--
+local timeGap = FILBetter.LoadConfig("pushNextContentTime") -- use the same duration as Push next content...
 -------------------
 
 function main()
     -- Validate track selection
     if reaper.CountSelectedTracks(0) == 0 then
         timbert.msg("Please select a track first", script_name)
-		return
+        return
     end
 
     if reaper.CountSelectedTracks(0) > 1 then
         timbert.msg("Please only select one track", script_name)
-        return 
+        return
     end
     local track = reaper.GetSelectedTrack(0, 0)
 
     local itemCount = reaper.CountTrackMediaItems(track)
     if itemCount == 0 then
+        if reaper.GetPlayState() >= 4 then
+            reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "true")
+            reaper.Main_OnCommand(1016, 0) -- Transport: Stop
+        end
+        return
+    end
+
+    local _, isRec = reaper.GetProjExtState(0, "FILBetter", "Rec_Series")
+    if isRec == "true" then
+        reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "true")
+        reaper.Main_OnCommand(1016, 0) -- Transport: Stop
         return
     end
 
@@ -52,7 +62,7 @@ function main()
     reaper.SetEditCurPos(reaper.GetMediaItemInfo_Value(item, "D_POSITION"), true, false)
     timbert.SetTimeSelectionToAllItemsInVerticalStack()
     reaper.Main_OnCommand(40631, 0) -- Go to end of time selection
-    reaper.MoveEditCursor( timeGap, false )
+    reaper.MoveEditCursor(timeGap, false)
     reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items	
     reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
 end

@@ -40,6 +40,14 @@ if not reaper.file_exists(timbert_GoToNext) then
     return
 end
 
+-- Load lua 'Move edit cursor forward away from last items on selected track' script
+timbert_MoveEditCurAway = reaper.GetResourcePath() ..
+                              '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor forward away from last items on selected track.lua'
+
+-- Load lua 'Move edit cursor in between current and next content on selected track' script
+timbert_MoveEditCurBetween = reaper.GetResourcePath() ..
+                                 '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor in between current and next content on selected track.lua'
+
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
                         '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
@@ -47,14 +55,16 @@ dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--
 local showValidationErrorMsg = FILBetter.LoadConfig("showValidationErrorMsg")
-local recallCursPosWhenTrimOnStop = FILBetter.LoadConfig("recallCursPosWhenTrimOnStop")
+local recallCursPosWhenRetriggRec = FILBetter.LoadConfig("recallCursPosWhenRetriggRec")
 local previewMarkerName = FILBetter.LoadConfig("previewMarkerName")
+local scrollView = FILBetter.LoadConfig("scrollViewToEditCursorOnStopRecording")
+local recordPunchInAtNextContentIfAny = FILBetter.LoadConfig("recordPunchInAtNextContentIfAny")
 local recordingBellOn = FILBetter.LoadConfig("recordingBellOn")
 -- In Metronome setting, allow run during recording
 -- Try Primary beat = 250Hz and 100ms duration and sine soft start for a gentle rec bell
 ---------------
 
-local punchInPos, track, previewLength, laneIndexContext, bellMarker, _
+local punchInPos, track, previewLength, laneIndexContext, bellMarker, cursorRecall, arrgStart, arrgEnd, _
 local itemsPre, takesPre, itemsPost, takesPost = {}, {}, {}, {}
 
 local function GetTakes(items)
@@ -94,27 +104,21 @@ local function FindRecordedItem(takesPre, takesPost)
     return recordedItem
 end
 
-local function IsLastContentOnTrack(keepSelectionState)
+local function getNextContentPos()
     local cursorPos = reaper.GetCursorPosition()
-    local startTime, endTime = reaper.GetSet_LoopTimeRange(false, false, _, _, false)
     dofile(timbert_GoToNext)
     if reaper.GetCursorPosition() == cursorPos then
         return
     end
     local nextContentPos = reaper.GetCursorPosition()
-    if keepSelectionState == true then
-        reaper.SetEditCurPos(cursorPos, false, false)
-        reaper.GetSet_LoopTimeRange(true, false, startTime, endTime, false)
-    end
     return nextContentPos
 end
 
 local function TrimOnStop(retrigg) -- get last recorded item and trim start to current content stack
-    local item, cursorRecall, punchInPos
+    local item, punchInPos
     reaper.PreventUIRefresh(1)
     if not retrigg or retrigg == false then
         reaper.Main_OnCommand(40252, 0) -- Record: Set record mode to normal
-        cursorRecall = reaper.GetCursorPosition()
         _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "Rec_PunchInPos")
         reaper.SetEditCurPos(tonumber(punchInPos) + 0.01, false, false) -- +0.01 as a security, making sure we're on item despite converting punchinPos back to number from string
         timbert.SetTimeSelectionToAllItemsInVerticalStack(true)
@@ -126,7 +130,7 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
             return
         end
         reaper.SetMediaItemSelected(item, true)
-        reaper.SetEditCurPos(punchInPos, false, false)
+        reaper.SetEditCurPos(punchInPos, scrollView, false)
     else
         item = reaper.GetSelectedMediaItem(0, 0)
     end
@@ -137,13 +141,10 @@ local function TrimOnStop(retrigg) -- get last recorded item and trim start to c
         "C_LANEPLAYS:" .. reaper.GetMediaItemInfo_Value(item, "I_FIXEDLANE"), 1)
 
     reaper.PreventUIRefresh(-1)
-    if not retrigg and recallCursPosWhenTrimOnStop == true then
-        reaper.SetEditCurPos(cursorRecall, false, false)
-    end
     return
 end
 
-local function RecordLoop(retrigg, punchInPos)
+local function RecordLoop(retrigg, punchInPos, cursorRecall)
     local _, recMode = reaper.GetProjExtState(0, "FILBetter", "Rec_Mode")
     if recMode == "inPlace" then
         return
@@ -154,20 +155,38 @@ local function RecordLoop(retrigg, punchInPos)
         isPlayAfterPunchIn = true
     end
 
+    cursorRecall = reaper.GetCursorPosition()
+
     -- If stopped, trimOnStop and exit
     if reaper.GetPlayState() == 0 then
         reaper.SetProjExtState(0, "FILBetter", "Rec_Series", "false") -- set to stop when transport is stopped outside of retrigg
         if isPlayAfterPunchIn == true then
             reaper.Undo_BeginBlock() -- Begining of the undo block. 
             TrimOnStop(retrigg)
+            if scrollView == false then
+                reaper.SetEditCurPos(cursorRecall, scrollView, false)
+            end
             reaper.SetProjExtState(0, "FILBetter", "Rec_Track", "")
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextPos", "")
             reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", "")
             reaper.SetProjExtState(0, "FILBetter", "Rec_PunchInPos", "")
             reaper.Undo_EndBlock("FILBetter Trim on stop", -1) -- End of the undo block.
+
+            local _, moveAwayCall = reaper.GetProjExtState(0, "FILBetter", "MoveEditCurAway")
+            if moveAwayCall == "true" then
+                reaper.SetProjExtState(0, "FILBetter", "MoveEditCurAway", "false")
+                dofile(timbert_MoveEditCurAway)
+            end
+
+            local _, moveBetweenCall = reaper.GetProjExtState(0, "FILBetter", "MoveEditCurBetween")
+            if moveBetweenCall == "true" then
+                reaper.SetProjExtState(0, "FILBetter", "MoveEditCurBetween", "false")
+                dofile(timbert_MoveEditCurBetween)
+            end
             return
         else
             reaper.Main_OnCommand(40006, 0) -- Item: Remove items
+            reaper.SetEditCurPos(punchInPos, scrollView, false)
             return
         end
     end
@@ -175,7 +194,7 @@ local function RecordLoop(retrigg, punchInPos)
     -- if not recording
     if reaper.GetPlayState() < 4 then
         return reaper.defer(function()
-            RecordLoop(retrigg, punchInPos)
+            RecordLoop(retrigg, punchInPos, cursorRecall)
         end)
     end
 
@@ -202,7 +221,7 @@ local function RecordLoop(retrigg, punchInPos)
         reaper.PreventUIRefresh(-1)
     end
     return reaper.defer(function()
-        RecordLoop(retrigg, punchInPos)
+        RecordLoop(retrigg, punchInPos, cursorRecall)
     end)
 end
 
@@ -210,6 +229,8 @@ function main()
     local cursorPosInitial, cursorPosContext
     reaper.Undo_BeginBlock() -- Begining of the undo block. 
     if reaper.GetPlayState() >= 4 then
+        arrgStart, arrgEnd = reaper.GetSet_ArrangeView2(0, false, 0, 0, _, _)
+        cursorRecall = cursorRecall or reaper.GetCursorPosition()
         reaper.Main_OnCommand(1016, 0) -- Transport: Stop
         _, punchInPos = reaper.GetProjExtState(0, "FILBetter", "Rec_PunchInPos")
         reaper.SetEditCurPos(tonumber(punchInPos) + 0.01, false, false)
@@ -254,7 +275,7 @@ function main()
         laneIndexContext = timbert.GetActiveTrackLane(track)
         reaper.SetProjExtState(0, "FILBetter", "RecWithContext_ContextLane", laneIndexContext)
 
-        if IsLastContentOnTrack(false) == nil then
+        if getNextContentPos() == nil or recordPunchInAtNextContentIfAny == false then
             reaper.SetEditCurPos(cursorPosInitial, false, false)
             punchInPos = cursorPosInitial
             itemsPre = {}
@@ -287,6 +308,10 @@ function main()
     reaper.SetEditCurPos(punchInPos, false, false)
     reaper.Undo_EndBlock(script_name, -1) -- End of the undo block.
     RecordLoop(false, punchInPos)
+    if recallCursPosWhenRetriggRec == true and cursorRecall ~= nil then
+        reaper.SetEditCurPos(cursorRecall, false, false)
+        reaper.GetSet_ArrangeView2(0, true, 0, 0, arrgStart, arrgEnd)
+    end
 end
 
 reaper.PreventUIRefresh(1)

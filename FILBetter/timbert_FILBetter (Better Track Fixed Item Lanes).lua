@@ -1,11 +1,10 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.0pre2.0
+-- @version 1.01
 -- @changelog 
---   # Added Record in Place script, interops with record with context
---   # Updated Record with context, now works without track selection, reworked recording bell
---   # Reworked Push next content, now safe to use while editing
+--   # Fixed Settings ImGui dependency check on MacOs
 -- @link 
+--      Forum post: https://forum.cockos.com/showthread.php?t=289793
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
 --      Website: https://thomasimbert.wixsite.com/audio
 -- @about 
@@ -26,7 +25,6 @@ FILBetter = {}
 local info = debug.getinfo(1, 'S');
 local ScriptPath = info.source:match [[^@?(.*[\/])[^\/]-$]];
 FILBetter.scriptPath = ScriptPath
--- reaper.ShowConsoleMsg( ScriptPath ) 
 
 -- Load json file from "./utils.json"
 -- Load the json functions
@@ -57,7 +55,7 @@ function FILBetter.load_json(path, name)
     return json.decode(raw_text)
 end
 
--- If run from action list, expain FILBetter and return
+-- If run from action list, explain FILBetter and return
 if select(2, reaper.get_action_context()) == debug.getinfo(1, 'S').source:sub(2) then
     local response = reaper.MB(
         "FILBetter is a suite of scripts that expands on the track fixed item lanes functionalities added in reaper 7 \n\nAllows for session navigation, lane solo-ing and previewing based on lanes content, recording with context, and more!\n\nby Thomas Imbert\n\nWould you like to open the tutorials playlist on youtube?",
@@ -80,22 +78,32 @@ local defaultFILBetter = {
     showValidationErrorMsg = true,
     pushNextContentTime = 3,
     moveEditCurToStartOfContent = false, -- When going to next / previous lane 
-    makePreviewMarkerAtMouseCursor = true, -- false = make take marker at edit cursor position
-    findTakeInPriorityLanePreviewMarkerAtEditCursor = true, -- when makePreviewMarkerAtMouseCursor is false, make take marker in content in priority lane instead of clicked content
+    previewMarkerLocation = "mouse cursor",
+    previewMarkerContentLane = "priority lane", -- "active lane"
     previewMarkerName = "[FILB]",
     seekPlaybackRetriggCurPos = "current", -- "previous", "origin", "last"
     seekPlaybackEndCurPos = "last", -- "after last"
-    recallCursPosWhenTrimOnStop = true -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    recallCursPosWhenRetriggRec = true, -- in Record with context script, TrimOnStop(), recall edit cursor position after trimming last recorded item
+    scrollViewToEditCursorOnStopRecording = true, 
+    recordPunchInAtNextContentIfAny = false, 
+    makeRegionsForExport = true, 
+    regionNameLeadingZero = 0,
+    regionNameTrailingZero = 0,
+    exportTrackNameAppend = "Export_", -- add to the name of the origin track
+    exportTrackAppendMode = "prefix" -- or "prefix"
 }
 
 FILBetter.timeSelectModes = {"clear", "recall", "content"}
 FILBetter.LanePriorities = {"first", "last"}
 FILBetter.seekPlaybackRetriggCurPos = {"current", "previous", "origin", "last"}
 FILBetter.seekPlaybackEndCurPos = {"last", "after last"}
+FILBetter.previewMarkerLocation = {"mouse cursor", "edit cursor"}
+FILBetter.previewMarkerContentLane = {"priority lane", "active lane"}
+FILBetter.exportTrackAppendModes = {"prefix", "suffix"}
 
 FILBetter.defaultFILBetter = defaultFILBetter
 
--- Load FILBETTER.cfg
+-- Load FILBetterConfig.json
 timbert_FILBetterCFG = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
 
 function FILBetter.LoadFullConfig()
@@ -103,7 +111,10 @@ function FILBetter.LoadFullConfig()
         -- Create default config if it doesn't already exist
         FILBetter.save_json(ScriptPath, "FILBetterConfig", defaultFILBetter)
     end
-    -- load configKey value
+    -- load configKey values, creating new ones if necessary, init at default value
+    for k, v in pairs(defaultFILBetter) do
+        FILBetter.LoadConfig(k)
+    end
     local table = FILBetter.load_json(ScriptPath, "FILBetterConfig")
 
     return table
@@ -116,5 +127,15 @@ function FILBetter.LoadConfig(configKeyString)
     end
     -- load configKey value
     local loadedValue = FILBetter.load_json(ScriptPath, "FILBetterConfig")
+
+    if loadedValue[configKeyString] == nil then
+        local filepath = ScriptPath .. "/" .. "FILBetterConfig" .. ".json"
+        local file = assert(io.open(filepath, "r+")) -- open in append mode
+        file:seek("end", -1)
+        local serialized = ',"'..configKeyString..'":'..tostring(defaultFILBetter[configKeyString]).."}"
+        assert(file:write(serialized))
+        file:close()
+        return defaultFILBetter[configKeyString]
+    end
     return loadedValue[configKeyString]
 end
