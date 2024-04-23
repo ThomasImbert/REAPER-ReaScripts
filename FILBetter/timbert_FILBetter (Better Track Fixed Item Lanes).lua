@@ -1,8 +1,8 @@
 -- @description FILBetter (Better Track Fixed Item Lanes)
 -- @author Thomas Imbert
--- @version 1.01
+-- @version 1.02
 -- @changelog 
---   # Fixed Settings ImGui dependency check on MacOs
+--   # Added VASCO detection and new behavior to navigation scripts
 -- @link 
 --      Forum post: https://forum.cockos.com/showthread.php?t=289793
 --      GitHub repository: https://github.com/ThomasImbert/REAPER-ReaScripts
