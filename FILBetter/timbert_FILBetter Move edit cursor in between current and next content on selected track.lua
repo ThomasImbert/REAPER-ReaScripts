@@ -4,7 +4,7 @@ local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if not reaper.file_exists(timbert_LuaUtils) then
     reaper.MB(
         "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'",
@@ -21,7 +21,7 @@ end
 
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToPrevious = reaper.GetResourcePath() ..
-                           '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua'
+                           '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to previous content in fixed lanes of currently selected track.lua'
 if not reaper.file_exists(timbert_GoToPrevious) then
     reaper.ShowConsoleMsg(
         "This script requires 'Go to previous content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'");
@@ -30,7 +30,7 @@ end
 
 -- Load lua 'Go to previous item stack in currently selected track fixed lanes' script
 timbert_GoToNext = reaper.GetResourcePath() ..
-                       '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to next content in fixed lanes of currently selected track.lua'
+                       '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter Go to next content in fixed lanes of currently selected track.lua'
 if not reaper.file_exists(timbert_GoToNext) then
     reaper.ShowConsoleMsg(
         "This script requires 'Go to next content in fixed lanes of currently selected track'! Please install it here:\n\nExtensions > ReaPack > Browse Packages > 'FILBetter (Better Track Fixed Item Lanes)'");
@@ -39,7 +39,7 @@ end
 
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
-                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+                        '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
 dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--

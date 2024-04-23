@@ -5,7 +5,7 @@ local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local reaper = reaper
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if not reaper.file_exists(timbert_LuaUtils) then
     reaper.MB(
         "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'",
@@ -22,15 +22,15 @@ end
 
 -- Load lua 'Move edit cursor forward away from last items on selected track' script
 timbert_MoveEditCurAway = reaper.GetResourcePath() ..
-                              '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor forward away from last items on selected track.lua'
+                              '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor forward away from last items on selected track.lua'
 
 -- Load lua 'Move edit cursor in between current and next content on selected track' script
 timbert_MoveEditCurBetween = reaper.GetResourcePath() ..
-                                 '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor in between current and next content on selected track.lua'
+                                 '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter Move edit cursor in between current and next content on selected track.lua'
 
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
-                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+                        '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
 dofile(timbert_FILBetter)
 
 -- USERSETTING Loaded from FILBetterCFG.json--

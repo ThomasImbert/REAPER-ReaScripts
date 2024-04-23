@@ -11,7 +11,7 @@ if not reaper.ImGui_GetVersion then
 end
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if not reaper.file_exists(timbert_LuaUtils) then
     reaper.MB(
         "This script requires TImbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'TImbert Lua Utilities'",
@@ -28,7 +28,7 @@ end
 
 -- Load Config
 timbert_FILBetter = reaper.GetResourcePath() ..
-                        '/scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
+                        '/Scripts/TImbert Scripts/FILBetter/timbert_FILBetter (Better Track Fixed Item Lanes).lua'
 dofile(timbert_FILBetter)
 
 ---------------------------

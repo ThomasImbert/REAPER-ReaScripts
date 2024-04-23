@@ -8,7 +8,7 @@
 -- @about
 --   # Lua Utilities
 -- @changelog
---   # Added GetRegionsAtCursor() which returns current, next and previous region
+--   # Fixed dependency paths for case sensitive systems like Linux
 --[[
 
 -- Get this script's name and directory
@@ -16,7 +16,7 @@ local script_name = ({reaper.get_action_context()})[2]:match("([^/\\_]+)%.lua$")
 local script_directory = ({reaper.get_action_context()})[2]:sub(1,({reaper.get_action_context()})[2]:find("\\[^\\]*$"))
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath()..'/scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath()..'/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
 if reaper.file_exists( timbert_LuaUtils ) then dofile( timbert_LuaUtils ); if not timbert or timbert.version() < 1.926 then timbert.msg('This script requires a newer version of timbert Lua Utilities. Please run:\n\nExtensions > ReaPack > Synchronize Packages',"timbert Lua Utilities"); return end else reaper.ShowConsoleMsg("This script requires timbert Lua Utilities! Please install them here:\n\nExtensions > ReaPack > Browse Packages > 'timbert Lua Utilities'"); return end
 
 ]]
@@ -876,67 +876,4 @@ function timbert.TooltipMsg(string, duration)
     h = reaper.GetTooltipWindow()
     startTime = os.time()
     TooltipCountdown(duration, startTime, x, y)
-end
-
-function timbert.GetRegionsAtCursor()
-    -- return region at cursor position and surrounding regions if any
-    local markerCount, _, num_regions = reaper.CountProjectMarkers(0)
-    local ret, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(0)
-    local regionsAtCursor = {}
-    for i = 0, markerCount - 1 do
-        _, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i)
-        if isrgn and reaper.GetCursorPosition() >= pos and reaper.GetCursorPosition() <= rgnend then
-            regionsAtCursor.current = {
-                pos = pos,
-                rgnend = rgnend,
-                name = name,
-                index = markrgnindexnumber,
-            }
-        end
-        if regionsAtCursor.current and i > 0 then
-            _, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i - 1)
-            if isrgn then
-                regionsAtCursor.previous = {
-                    pos = pos,
-                    rgnend = rgnend,
-                    name = name,
-                    index = markrgnindexnumber,
-                }
-            end
-        else
-            if isrgn and reaper.GetCursorPosition() > rgnend then
-                regionsAtCursor.previous = {
-                    pos = pos,
-                    rgnend = rgnend,
-                    name = name,
-                    index = markrgnindexnumber,
-                }
-            end
-        end
-        if regionsAtCursor.current and i < markerCount - 1 then
-            _, isrgn, pos, rgnend, name, markrgnindexnumber = reaper.EnumProjectMarkers(i + 1)
-            if isrgn then
-                regionsAtCursor.next = {
-                    pos = pos,
-                    rgnend = rgnend,
-                    name = name,
-                    index = markrgnindexnumber,
-                }
-            else
-                break
-            end
-            break
-        else
-            if isrgn and reaper.GetCursorPosition() < pos and not regionsAtCursor.next then
-                regionsAtCursor.next = {
-                    pos = pos,
-                    rgnend = rgnend,
-                    name = name,
-                    index = markrgnindexnumber,
-                }
-            end
-        end
-        if regionsAtCursor.current then break end
-    end
-    return regionsAtCursor
 end

@@ -104,7 +104,7 @@ FILBetter.exportTrackAppendModes = {"prefix", "suffix"}
 FILBetter.defaultFILBetter = defaultFILBetter
 
 -- Load FILBetterConfig.json
-timbert_FILBetterCFG = reaper.GetResourcePath() .. '/scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
+timbert_FILBetterCFG = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/FILBetter/FILBetterConfig.json'
 
 function FILBetter.LoadFullConfig()
     if not reaper.file_exists(timbert_FILBetterCFG) then
