@@ -34,11 +34,20 @@ if not reaper.file_exists(timbert_SoloLanePriority) then
     return
 end
 
+-- Load 'VASO functions' script
+local vascoReady
+vasco_functions = reaper.GetResourcePath() ..
+    '/Scripts/TImbert Scripts/VASCO/timbert_VASCO functions.lua'
+if not reaper.file_exists(vasco_functions) then
+    vascoReady = false
+else
+    dofile(vasco_functions)
+    vascoReady = vasco.IsProjectReady()
+end
+
 -- USERSETTING Loaded from FILBetterCFG.json--
 local goToNextSnapToLastContent = FILBetter.LoadConfig("goToNextSnapToLastContent")
 local goToContentTimeSelectionMode = FILBetter.LoadConfig("goToContentTimeSelectionMode")
-local retVasco, vascoReady = reaper.GetProjExtState(0, "VASCO", "vascoReady")
-if retVasco == 1 and vascoReady == "true" then vascoReady = true else vascoReady = false end
 ---------------
 local function GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
     if goToContentTimeSelectionMode == "recall" then
@@ -51,22 +60,13 @@ end
 
 local vascoRegion = {}
 if vascoReady == true then
-    vascoRegion = timbert.GetRegionsAtCursor()
-end
-local function GetCurrentOrPreviousVascoRegion()
-    local pos, rgnend
-    if not vascoRegion.current then
-        pos, rgnend = vascoRegion.previous.pos, vascoRegion.previous.rgnend
-    else
-        pos, rgnend = vascoRegion.current.pos, vascoRegion.current.rgnend
-    end
-    return pos, rgnend
+    vascoRegion = vasco.GetRegionsAtCursor()
 end
 
 local function GoToNextVascoRegion(track, startTime, endTime)
     reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 0) -- DeActivate all lanes
     reaper.TrackList_AdjustWindows(true)
-    reaper.Main_OnCommand(40289, 0) -- Item: Unselect (clear selection of) all items
+    reaper.Main_OnCommand(40289, 0)                            -- Item: Unselect (clear selection of) all items
     reaper.SetEditCurPos(vascoRegion.next.pos, true, false)
     reaper.GetSet_LoopTimeRange(true, false, vascoRegion.next.pos, vascoRegion.next.rgnend, false)
     GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
@@ -79,7 +79,7 @@ function main()
         if not vascoReady or (not vascoRegion.next and goToNextSnapToLastContent == false) then
             return
         elseif not vascoRegion.next and goToNextSnapToLastContent == true and (vascoRegion.current or vascoRegion.previous) then
-            local pos, rgnend = GetCurrentOrPreviousVascoRegion()
+            local pos, rgnend = vasco.GetCurrentOrPreviousVascoRegion(vascoRegion)
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             return
@@ -115,7 +115,6 @@ function main()
             GoToNextVascoRegion(track, startTime, endTime)
             return
         end
-
     else
         reaper.SetMediaTrackInfo_Value(track, "C_ALLLANESPLAY", 1) -- Activate all lanes
         reaper.Main_OnCommand(40417, 0)                            -- Item navigation: Select and move to next item
@@ -141,7 +140,7 @@ function main()
             return
         end
         if vascoRegion.current or vascoRegion.previous then
-            local pos, rgnend = GetCurrentOrPreviousVascoRegion()
+            local pos, rgnend = vasco.GetCurrentOrPreviousVascoRegion(vascoRegion)
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             return

@@ -35,11 +35,20 @@ if not reaper.file_exists(timbert_SoloLanePriority) then
     return
 end
 
+-- Load 'VASCO functions' script
+local vascoReady
+vasco_functions = reaper.GetResourcePath() ..
+    '/Scripts/TImbert Scripts/VASCO/timbert_VASCO functions.lua'
+if not reaper.file_exists(vasco_functions) then
+    vascoReady = false
+else
+    dofile(vasco_functions)
+    vascoReady = vasco.IsProjectReady()
+end
+
 -- USERSETTING Loaded from FILBetterCFG.json--
 local goToPreviousSnapTofirstContent = FILBetter.LoadConfig("goToPreviousSnapTofirstContent")
 local goToContentTimeSelectionMode = FILBetter.LoadConfig("goToContentTimeSelectionMode")
-local retVasco, vascoReady = reaper.GetProjExtState(0, "VASCO", "vascoReady")
-if retVasco == 1 and vascoReady == "true" then vascoReady = true else vascoReady = false end
 ---------------
 
 local function GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
@@ -53,16 +62,7 @@ end
 
 local vascoRegion = {}
 if vascoReady == true then
-    vascoRegion = timbert.GetRegionsAtCursor()
-end
-local function GetCurrentOrNextVascoRegion()
-    local pos, rgnend
-    if not vascoRegion.current then
-        pos, rgnend = vascoRegion.next.pos, vascoRegion.next.rgnend
-    else
-        pos, rgnend = vascoRegion.current.pos, vascoRegion.current.rgnend
-    end
-    return pos, rgnend
+    vascoRegion = vasco.GetRegionsAtCursor()
 end
 
 local function GoToPreviousVascoRegion(track, startTime, endTime)
@@ -81,7 +81,7 @@ function main()
         if not vascoReady or (not vascoRegion.previous and goToPreviousSnapTofirstContent == false) then
             return
         elseif not vascoRegion.previous and goToPreviousSnapTofirstContent == true and (vascoRegion.current or vascoRegion.next) then
-            local pos, rgnend = GetCurrentOrNextVascoRegion()
+            local pos, rgnend = vasco.GetCurrentOrAdjacentVascoRegion(vascoRegion, "next")
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             return
@@ -154,7 +154,7 @@ function main()
             return
         end
         if vascoRegion.current or vascoRegion.next then
-            local pos, rgnend = GetCurrentOrNextVascoRegion()
+            local pos, rgnend = vasco.GetCurrentOrAdjacentVascoRegion(vascoRegion, "next")
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             GetTimeSelectionMode(goToContentTimeSelectionMode, startTime, endTime)
