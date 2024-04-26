@@ -79,7 +79,7 @@ function main()
         if not vascoReady or (not vascoRegion.next and goToNextSnapToLastContent == false) then
             return
         elseif not vascoRegion.next and goToNextSnapToLastContent == true and (vascoRegion.current or vascoRegion.previous) then
-            local pos, rgnend = vasco.GetCurrentOrPreviousVascoRegion(vascoRegion)
+            local pos, rgnend = vasco.GetCurrentOrAdjacentVascoRegion(vascoRegion, "previous")
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             return
@@ -140,7 +140,7 @@ function main()
             return
         end
         if vascoRegion.current or vascoRegion.previous then
-            local pos, rgnend = vasco.GetCurrentOrPreviousVascoRegion(vascoRegion)
+            local pos, rgnend = vasco.GetCurrentOrAdjacentVascoRegion(vascoRegion, "previous")
             reaper.SetEditCurPos(pos, true, false)
             reaper.GetSet_LoopTimeRange(true, false, pos, rgnend, false)
             return
