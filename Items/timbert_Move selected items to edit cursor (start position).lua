@@ -1,7 +1,7 @@
 -- @description Move selected items to edit cursor (start position)
 -- @author Thomas Imbert
 -- @version 1.0
--- @about 
+-- @about
 --      # Move selected items to edit cursor (start position)
 --
 --      Supports keeping relative item position by changing keepRelativePosition to true in the script
@@ -18,10 +18,10 @@ local reaper = reaper
 local luaUtils = true
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath() .. "/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua"
 if reaper.file_exists(timbert_LuaUtils) then
 	dofile(timbert_LuaUtils)
-	if not timbert or timbert.version() < 1.927 then
+	if not timbert or timbert.version() < 1.929 then
 		luaUtils = false
 	end
 else
@@ -33,7 +33,6 @@ local keepRelativePosition = false
 -- default = false
 -- if set to true, the selected item under mouse OR item on the selected track will move as expected
 -- other items will keep their relative position
-
 
 function main()
 	if reaper.CountSelectedMediaItems(0) == 0 then
@@ -52,7 +51,9 @@ function main()
 		else
 			if reaper.CountSelectedTracks(0) == 1 then
 				for i = 0, reaper.CountSelectedMediaItems(0) - 1 do
-					if reaper.GetMediaItem_Track(reaper.GetSelectedMediaItem(0, i)) == reaper.GetSelectedTrack(0, 0) then
+					if
+						reaper.GetMediaItem_Track(reaper.GetSelectedMediaItem(0, i)) == reaper.GetSelectedTrack(0, 0)
+					then
 						itemMain = reaper.GetSelectedMediaItem(0, i)
 						itemMainPos = reaper.GetMediaItemInfo_Value(itemMain, "D_POSITION")
 						-- itemMainLength = reaper.GetMediaItemInfo_Value(itemMain, "D_LENGTH")
@@ -67,15 +68,21 @@ function main()
 	-- Move
 	local itemPos, itemLength
 	for i = 0, reaper.CountSelectedMediaItems(0) - 1 do
-		itemPos, itemLength = reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_POSITION"),
+		itemPos, itemLength =
+			reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_POSITION"),
 			reaper.GetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_LENGTH")
-		if reaper.GetSelectedMediaItem(0, i) == itemMain or itemMain == nil or reaper.CountSelectedMediaItems(0) == 1 then
-			reaper.SetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_POSITION",
-				reaper.GetCursorPosition())
+		if
+			reaper.GetSelectedMediaItem(0, i) == itemMain
+			or itemMain == nil
+			or reaper.CountSelectedMediaItems(0) == 1
+		then
+			reaper.SetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_POSITION", reaper.GetCursorPosition())
 		else
-			reaper.SetMediaItemInfo_Value(reaper.GetSelectedMediaItem(0, i), "D_POSITION",
-				reaper.GetCursorPosition() -
-				((itemMainPos - itemPos)))
+			reaper.SetMediaItemInfo_Value(
+				reaper.GetSelectedMediaItem(0, i),
+				"D_POSITION",
+				reaper.GetCursorPosition() - (itemMainPos - itemPos)
+			)
 		end
 	end
 
@@ -84,11 +91,9 @@ function main()
 		return
 	end
 	if keepRelativePosition == true and itemMain ~= nil and reaper.CountSelectedMediaItems(0) > 1 then
-		local _, trackID = reaper.GetSetMediaTrackInfo_String(reaper.GetMediaItem_Track(itemMain), "P_NAME", "",
-			false)
+		local _, trackID = reaper.GetSetMediaTrackInfo_String(reaper.GetMediaItem_Track(itemMain), "P_NAME", "", false)
 		if trackID == "" then
-			trackID = reaper.GetMediaTrackInfo_Value(reaper.GetMediaItem_Track(itemMain),
-				"IP_TRACKNUMBER")
+			trackID = reaper.GetMediaTrackInfo_Value(reaper.GetMediaItem_Track(itemMain), "IP_TRACKNUMBER")
 			trackID = math.floor(trackID)
 		end
 		timbert.TooltipMsg(script_name .. "\nRelative to item on track " .. trackID, 3)

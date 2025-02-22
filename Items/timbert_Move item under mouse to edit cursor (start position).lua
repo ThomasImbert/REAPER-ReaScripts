@@ -1,7 +1,7 @@
 -- @description Move item under mouse to edit cursor (start position)
 -- @author Thomas Imbert
 -- @version 1.0
--- @about 
+-- @about
 --      # Move item under mouse to edit cursor (start position)
 -- @changelog
 --   #Initial release
@@ -12,10 +12,10 @@ local reaper = reaper
 local luaUtils = true
 
 -- Load lua utilities
-timbert_LuaUtils = reaper.GetResourcePath() .. '/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua'
+timbert_LuaUtils = reaper.GetResourcePath() .. "/Scripts/TImbert Scripts/Development/timbert_Lua Utilities.lua"
 if reaper.file_exists(timbert_LuaUtils) then
 	dofile(timbert_LuaUtils)
-	if not timbert or timbert.version() < 1.927 then
+	if not timbert or timbert.version() < 1.929 then
 		luaUtils = false
 	end
 else

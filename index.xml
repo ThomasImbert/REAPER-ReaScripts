@@ -42,15 +42,15 @@
       </version>
       <version name="1.7" author="Thomas Imbert" time="2022-11-10T14:06:20Z">
         <changelog><![CDATA[# Updated Select Guide to search for "VASC_GUIDE"]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/eb02a9a0595cf05d5d87c4e7930a965b9309f54a/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/7e4548e8c8311fdda4d9ad0081bc9f324511de77/Development/timbert_Lua%20Utilities.lua</source>
       </version>
       <version name="1.8" author="Thomas Imbert" time="2022-11-11T00:19:22Z">
         <changelog><![CDATA[# Updated Select Guide to include "Reference"]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/db16388ccc9d70fa12460662d3b2c7b4abccfa80/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8a6d4de85444e8780d1cac4d843b78fe73cadb6c/Development/timbert_Lua%20Utilities.lua</source>
       </version>
       <version name="1.9" author="Thomas Imbert" time="2024-02-29T15:52:27Z">
         <changelog><![CDATA[# Updated timbert.moveEditCursor_LeftByTimeSelLength by adding "invert" bool parameter to allow moving the cursor right instead when set to true]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8eae14c6b46d69b207fbe1ac28483e44b810e16c/Development/timbert_Lua%20Utilities.lua</source>
       </version>
       <version name="1.91" author="Thomas Imbert" time="2024-03-03T17:29:41Z">
         <changelog><![CDATA[# Added GetTableLength, MakeItemArrayByLaneIndex and GetActiveTrackLane]]></changelog>
@@ -66,7 +66,7 @@
       </version>
       <version name="1.922" author="Thomas Imbert" time="2024-03-09T20:23:37Z">
         <changelog><![CDATA[# Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/8ff50c2d03fbcf441b535fbe200f237208745f76/Development/timbert_Lua%20Utilities.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/e2a1143e648f96222870d353cae844cc987b3dd9/Development/timbert_Lua%20Utilities.lua</source>
       </version>
       <version name="1.923" author="Thomas Imbert" time="2024-03-13T16:56:46Z">
         <changelog><![CDATA[# Added MakeItemArraySortByLane, ValidateLanesPreviewScriptsSetup, GetCompLanes, PreviewLaneContent, SelectOnlyFirstItemPerLaneInSelection and reworked tables scripts added in 1.92, Fixed GetActiveLane isFirst mode]]></changelog>
@@ -578,7 +578,7 @@
       </version>
       <version name="1.2" author="Thomas Imbert" time="2022-11-13T02:34:12Z">
         <changelog><![CDATA[#Fixed META marker and validation EXT data getting erased]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/c30d77850c65a699a435ec26a59b45f3e0659218/Items/timbert_Move%20all%20but%20first%20take%20to%20Alt%20tracks%20and%20assemble%20in%20one%20file.lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move item under mouse to edit cursor (end position).lua" type="script" desc="Move item under mouse to edit cursor (end position)">
@@ -593,7 +593,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(end%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(end%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move item under mouse to edit cursor (snap offset position).lua" type="script" desc="Move item under mouse to edit cursor (snap offset position)">
@@ -608,7 +608,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move item under mouse to edit cursor (start position).lua" type="script" desc="Move item under mouse to edit cursor (start position)">
@@ -623,7 +623,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(start%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20item%20under%20mouse%20to%20edit%20cursor%20(start%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move selected items to edit cursor (end position).lua" type="script" desc="Move selected items to edit cursor (end position)">
@@ -641,7 +641,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(end%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(end%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move selected items to edit cursor (snap offset position).lua" type="script" desc="Move selected items to edit cursor (snap offset position)">
@@ -659,7 +659,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(snap%20offset%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Move selected items to edit cursor (start position).lua" type="script" desc="Move selected items to edit cursor (start position)">
@@ -677,7 +677,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2024-04-10T12:36:14Z">
         <changelog><![CDATA[#Initial release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/be5d8970f692ae2123976b51c919ab2c976c8262/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(start%20position).lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/b10eb67b0d346e9f8ed400bf742d22a9f48f35b4/Items/timbert_Move%20selected%20items%20to%20edit%20cursor%20(start%20position).lua</source>
       </version>
     </reapack>
     <reapack name="timbert_Swap take with alt take under mouse cursor.lua" type="script" desc="Swap item with alt take (item) under mouse cursor">
@@ -693,7 +693,7 @@
       </metadata>
       <version name="1.0" author="Thomas Imbert" time="2022-10-20T15:03:44Z">
         <changelog><![CDATA[#Initial Release]]></changelog>
-        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/6b028836aab29504f54a9f5d32272ee5abbc3200/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
+        <source main="main">https://github.com/ThomasImbert/REAPER-ReaScripts/raw/801e91c64a682efe9b8774b8a6b897ec4f375669/Items/timbert_Swap%20take%20with%20alt%20take%20under%20mouse%20cursor.lua</source>
       </version>
     </reapack>
   </category>
